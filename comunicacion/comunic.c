@@ -2,6 +2,7 @@
 #include "comunic.h"
 
 
+//----------------------FUNCION DE SERIALIZAR------------------------------------------
 void* serializar_paquete(t_paquete* paquete, int *bytes)
 {
 	int size_serializado= sizeof(op_code) + sizeof(int) + paquete->buffer->size;
@@ -23,6 +24,8 @@ void* serializar_paquete(t_paquete* paquete, int *bytes)
 	return buffer;
 }
 
+
+//----------------------CREAR COEXION------------------------------------------
 int crear_conexion(char *ip, char* puerto)
 {
 	struct addrinfo hints;
@@ -48,11 +51,15 @@ int crear_conexion(char *ip, char* puerto)
 
 void enviar_mensaje(char* mensaje, int socket_cliente)
 {
+	
+//----------------------EMPAQUETAR MENSAJE------------------------------------------
 		t_paquete *paquete = malloc(sizeof(t_paquete));
 		paquete->codigo_operacion= MENSAJE;
 		paquete->buffer = malloc(sizeof(t_buffer));
 		paquete->buffer->stream= mensaje;
 		paquete->buffer->size= strlen(mensaje) + 1 ;
+
+//----------------------SERIALIZAR PAQUETE------------------------------------------
 		int size_serializado;
 		void* serializado= serializar_paquete(paquete, &size_serializado);
 		send(socket_cliente,serializado,size_serializado,0);
