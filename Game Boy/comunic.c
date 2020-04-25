@@ -1,6 +1,4 @@
-
 #include "comunic.h"
-
 
 //----------------------FUNCION DE SERIALIZAR------------------------------------------
 void* serializar_paquete(t_paquete* paquete, int *bytes)
