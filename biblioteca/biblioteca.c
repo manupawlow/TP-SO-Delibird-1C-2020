@@ -61,6 +61,7 @@ void process_request(int cod_op, int cliente_fd) {
 		case MENSAJE:
 			msg = recibir_mensaje(cliente_fd, &size);
 			devolver_mensaje(msg, size, cliente_fd);
+
 			free(msg);
 			break;
 		case 0:
@@ -185,7 +186,7 @@ void enviar_mensaje(char* mensaje, int socket_cliente)
 }
 
 
-char* recibir_mensaje(int socket_cliente)
+char* recibir_mensaje_cliente(int socket_cliente)
 {
 	op_code operacion;
 		recv(socket_cliente,&operacion,sizeof(operacion),0);
@@ -206,3 +207,16 @@ void liberar_conexion(int socket_cliente)
 	close(socket_cliente);
 }
 
+
+void terminar_programa(int conexion, t_log* logger, t_config* config)
+{
+	if(logger != NULL){
+	 log_destroy(logger);
+	}
+
+	if(config != NULL){
+		config_destroy(config);
+	}
+
+	liberar_conexion(conexion);
+}

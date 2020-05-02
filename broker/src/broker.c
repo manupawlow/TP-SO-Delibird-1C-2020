@@ -21,9 +21,11 @@ int main(void) {
 	ip= config_get_string_value(config,"IP_BROKER");
 	puerto= config_get_string_value(config,"PUERTO_BROKER");
 
-	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
+	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
 	iniciar_servidor(ip,puerto);
+
+	//char *mensaje = recibir_mensaje(conexion);
 
 
 	return EXIT_SUCCESS;

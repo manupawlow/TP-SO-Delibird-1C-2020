@@ -35,8 +35,10 @@ int main(void){
 	iniciar_servidor(ip,puerto);
 
 */
+	char *mensaje = recibir_mensaje_cliente(conexionAppeared);
 
-
+		log_info(logger,"El mensaje recibido es %s\n",mensaje);
+	terminar_programa(conexionAppeared,logger,config);
 
 }
 
