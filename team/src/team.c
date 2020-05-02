@@ -11,7 +11,7 @@ int main(void){
 	t_config* config;
 
 
-	char* conf = "/home/utnso/tp-2020-1c-NN/team/Debug/team.config";
+	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 
 	logger =log_create("team.log", "Team", 1, LOG_LEVEL_INFO);
 
