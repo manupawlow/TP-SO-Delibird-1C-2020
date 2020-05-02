@@ -43,3 +43,5 @@ void process_request(int cod_op, int cliente_fd);
 void serve_client(int *socket);
 void* serializar_paquete(t_paquete* paquete, int bytes);
 void devolver_mensaje(void* payload, int size, int socket_cliente);
+
+int crear_conexion(char*, char*);
