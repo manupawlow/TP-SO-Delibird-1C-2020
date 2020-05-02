@@ -10,7 +10,6 @@ int main(void){
 	t_log* logger;
 	t_config* config;
 
-
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 
 	logger =log_create("team.log", "Team", 1, LOG_LEVEL_INFO);
@@ -24,11 +23,18 @@ int main(void){
 
 	//Conectarse al broker
 	conexionAppeared = crear_conexion(ip,puerto);
+
+	enviar_mensaje("Hola",conexionAppeared);
+
+	log_info(logger,"Envie mensaje");
+/*
 	conexionCaugth = crear_conexion(ip,puerto);
 	conexionLocalized =	crear_conexion(ip,puerto);
 
     //Escuchar gameboy
 	iniciar_servidor(ip,puerto);
+
+*/
 
 
 
