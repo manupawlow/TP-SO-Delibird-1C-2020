@@ -10,7 +10,11 @@ int main(void){
 	t_log* logger;
 	t_config* config;
 
-	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
+
+	fflush(stdout);
+
+
+	char* conf = "/home/utnso/tp-2020-1C-NN/team/src/team.config";
 
 	logger =log_create("team.log", "Team", 1, LOG_LEVEL_INFO);
 

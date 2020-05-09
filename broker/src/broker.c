@@ -12,7 +12,9 @@ int main(void) {
 	t_log* logger;
 	t_config* config;
 
-	char* conf = "/home/utnso/tp-2020-1c-NN/broker/src/broker.config";
+	fflush(stdout);
+
+	char* conf = "/home/utnso/tp-2020-1C-NN/broker/src/broker.config";
 
 	logger =log_create("broker.log", "Broker", 1, LOG_LEVEL_INFO);
 
@@ -23,10 +25,10 @@ int main(void) {
 
 	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
+	
 	iniciar_servidor(ip,puerto);
 
 	//char *mensaje = recibir_mensaje(conexion);
-
 
 	return EXIT_SUCCESS;
 }

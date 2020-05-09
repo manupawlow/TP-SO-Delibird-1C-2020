@@ -7,10 +7,13 @@ int main(void) {
 	char* puerto;
 	int conexion;
 
+	fflush(stdout);
+
+
 	t_log* logger;
 	t_config* config;
 
-	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
+	char* conf = "/home/utnso/tp-2020-1C-NN/gamecard/src/gamecard.config";
 
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
 
@@ -22,14 +25,16 @@ int main(void) {
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
 	//Conectarse al broker
+
 	conexion= crear_conexion(ip,puerto);
 
-	enviar_mensaje("subscripcion",conexion);
+	while(1);
+	/*enviar_mensaje("subscripcion",conexion);
 
 	char *mensaje = recibir_mensaje_cliente(conexion);
 
 	log_info(logger,"El mensaje recibido es %s\n",mensaje);
-
+*/
 	terminar_programa(conexion,logger,config);
 
 	return EXIT_SUCCESS;

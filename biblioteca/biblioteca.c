@@ -6,6 +6,8 @@ void iniciar_servidor(char* ip, char* puerto)
 
     struct addrinfo hints, *servinfo, *p;
 
+    fflush(stdout);
+
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
@@ -29,6 +31,26 @@ void iniciar_servidor(char* ip, char* puerto)
 
     freeaddrinfo(servinfo);
 
+    struct sockaddr_in dir_cliente;
+
+    fflush(stdout);
+
+/*
+    int tam_direccion = sizeof(struct sockaddr_in);
+
+    int socket_cliente1 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+    int socket_cliente2 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+
+    while(socket_cliente1 == -1){
+    	socket_cliente1 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+    	socket_cliente2 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+    }
+   printf("Socket: %d\n",socket_cliente1);
+
+    printf("Socket: %d\n", socket_cliente2);
+*/
+    fflush(stdout);
+
     while(1)
     	esperar_cliente(socket_servidor);
 }
@@ -41,6 +63,7 @@ void esperar_cliente(int socket_servidor)
 
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
+	printf("Socket: %d\n",socket_cliente);
 	pthread_create(&thread,NULL,(void*)serve_client,&socket_cliente);
 	pthread_detach(thread);
 
