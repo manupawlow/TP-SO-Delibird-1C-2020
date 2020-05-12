@@ -13,7 +13,7 @@ int main(void) {
 	t_log* logger;
 	t_config* config;
 
-	char* conf = "/home/utnso/tp-2020-1C-NN/gamecard/src/gamecard.config";
+	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
 
@@ -28,7 +28,7 @@ int main(void) {
 
 	conexion= crear_conexion(ip,puerto);
 
-	while(1);
+	enviar_mensaje("Hola soy el gamecard breo",conexion);
 	/*enviar_mensaje("subscripcion",conexion);
 
 	char *mensaje = recibir_mensaje_cliente(conexion);

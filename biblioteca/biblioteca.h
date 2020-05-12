@@ -36,7 +36,7 @@ pthread_t thread;
 void* recibir_buffer(int*, int);
 
 void iniciar_servidor(char*, char*);
-void esperar_cliente(int);
+void esperar_cliente(int, int[], int);
 void* recibir_mensaje(int socket_cliente, int* size);
 int recibir_operacion(int);
 void process_request(int cod_op, int cliente_fd);

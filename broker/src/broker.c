@@ -14,7 +14,7 @@ int main(void) {
 
 	fflush(stdout);
 
-	char* conf = "/home/utnso/tp-2020-1C-NN/broker/src/broker.config";
+	char* conf = "/home/utnso/tp-2020-1c-NN/broker/src/broker.config";
 
 	logger =log_create("broker.log", "Broker", 1, LOG_LEVEL_INFO);
 

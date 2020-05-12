@@ -28,42 +28,29 @@ void iniciar_servidor(char* ip, char* puerto)
     }
 
 	listen(socket_servidor, SOMAXCONN);
-
     freeaddrinfo(servinfo);
 
-    struct sockaddr_in dir_cliente;
-
     fflush(stdout);
 
-/*
-    int tam_direccion = sizeof(struct sockaddr_in);
+    int i=0;
+    int socketero[100];
 
-    int socket_cliente1 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
-    int socket_cliente2 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
-
-    while(socket_cliente1 == -1){
-    	socket_cliente1 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
-    	socket_cliente2 = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
+    while(1){
+    	esperar_cliente(socket_servidor, socketero, i);
+    	i++;
     }
-   printf("Socket: %d\n",socket_cliente1);
-
-    printf("Socket: %d\n", socket_cliente2);
-*/
-    fflush(stdout);
-
-    while(1)
-    	esperar_cliente(socket_servidor);
 }
 
-void esperar_cliente(int socket_servidor)
+void esperar_cliente(int socket_servidor, int socketero[], int i)
 {
 	struct sockaddr_in dir_cliente;
 
 	int tam_direccion = sizeof(struct sockaddr_in);
-
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
-	printf("Socket: %d\n",socket_cliente);
+	socketero[i]= socket_cliente;
+	printf("socketero: %d\n", socketero[i]);
+
 	pthread_create(&thread,NULL,(void*)serve_client,&socket_cliente);
 	pthread_detach(thread);
 
