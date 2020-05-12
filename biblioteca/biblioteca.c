@@ -1,5 +1,9 @@
 #include "biblioteca.h"
 
+//no se crea anda a saber por que
+//mati puto
+//t_queue *NEW_POKEMON = create_queue();
+
 void iniciar_servidor(char* ip, char* puerto)
 {
 	int socket_servidor;
@@ -35,6 +39,7 @@ void iniciar_servidor(char* ip, char* puerto)
     int i=0;
     int socketero[100];
 
+
     while(1){
     	esperar_cliente(socket_servidor, socketero, i);
     	i++;
@@ -67,13 +72,62 @@ void serve_client(int* socket)
 void process_request(int cod_op, int cliente_fd) {
 	int size;
 	void* msg;
+
 		switch (cod_op) {
-		case MENSAJE:
+
+		/*case MENSAJE:
 			msg = recibir_mensaje(cliente_fd, &size);
+			printf("%s\n",msg);
 			devolver_mensaje(msg, size, cliente_fd);
 
 			free(msg);
+			break;*/
+
+		//CASO SUSCRIPCION
+		case SUSCRIBIR:
+			printf("SE QUIEREN SUSCRIBIR BREO\n");
+			msg = recibir_mensaje(cliente_fd, &size);
+			printf("%s\n",msg);
+			//devolver_mensaje(msg, size, cliente_fd);
+
+			free(msg);
+		break;
+
+		case SUS_NEW:
+			while(1){
+			//msg= queue_pop(NEW_POKEMON);
+			if(msg != "Hola")
+				//log
+				printf("Esta vacio, ves? No hay mensajes aqui.\n");
+				//msg = recibir_mensaje(cliente_fd, &size);
+					//		printf("%s\n",msg);
+			//}else{
+			//	printf("%s\n",msg);
+				//devolver_mensaje(msg, size, cliente_fd, cod_op);
+
+				//free(msg);
+
+
+		}
+		//}
+		break;
+
+/*Si hay un solo suscribir
+			 if(msg="new")
+				susNew(socket)
+
+				susnew(int socket)
+				colaNew
+				esperar
+				enviarmensaje(socket,colanew)
+*/
+/* Si hay 6 suscribir
+		case SUS_NEW:
+			while(1)
+			enviar o sea send
+
 			break;
+*/
 		case 0:
 			pthread_exit(NULL);
 		case -1:
@@ -107,11 +161,11 @@ void* serializar_paquete(t_paquete* paquete, int bytes)
 	return magic;
 }
 
-void devolver_mensaje(void* payload, int size, int socket_cliente)
+void devolver_mensaje(void* payload, int size, int socket_cliente, op_code codigo)
 {
 	t_paquete* paquete = malloc(sizeof(t_paquete));
 
-	paquete->codigo_operacion = MENSAJE;
+	paquete->codigo_operacion = codigo;
 	paquete->buffer = malloc(sizeof(t_buffer));
 	paquete->buffer->size = size;
 	paquete->buffer->stream = malloc(paquete->buffer->size);
@@ -176,12 +230,12 @@ void* serializar_paquete_cliente(t_paquete* paquete, int *bytes)
 
 }
 
-void enviar_mensaje(char* mensaje, int socket_cliente)
+void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 {
 
 	//----------------EMPAQUETAMIENTO----------------
 			t_paquete *paquete = malloc(sizeof(t_paquete));
-			paquete->codigo_operacion= MENSAJE;
+			paquete->codigo_operacion= codigo;
 			paquete->buffer = malloc(sizeof(t_buffer));
 			paquete->buffer->stream= mensaje;
 			paquete->buffer->size= strlen(mensaje) + 1 ;

@@ -10,6 +10,7 @@ int main(void) {
 	fflush(stdout);
 
 
+
 	t_log* logger;
 	t_config* config;
 
@@ -28,7 +29,7 @@ int main(void) {
 
 	conexion= crear_conexion(ip,puerto);
 
-	enviar_mensaje("Hola soy el gamecard breo",conexion);
+	enviar_mensaje("Hola soy el gamecard breo",conexion, SUSCRIBIR);
 	/*enviar_mensaje("subscripcion",conexion);
 
 	char *mensaje = recibir_mensaje_cliente(conexion);

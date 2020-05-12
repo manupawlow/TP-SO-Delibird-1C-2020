@@ -28,7 +28,18 @@ int main(void){
 	//Conectarse al broker
 	conexionAppeared = crear_conexion(ip,puerto);
 
-	enviar_mensaje("Hola",conexionAppeared);
+	//conexionCaugth = crear_conexion(ip,puerto);
+
+	//conexionLocalized = crear_conexion(ip,puerto);
+
+
+	enviar_mensaje("Hola",conexionAppeared,SUS_NEW);
+
+	//enviar_mensaje("Chau",conexionCaugth,MENSAJE);
+
+	//enviar_mensaje("Hola y Chau",conexionLocalized,MENSAJE);
+
+
 
 	log_info(logger,"Envie mensaje");
 /*
@@ -39,13 +50,20 @@ int main(void){
 	iniciar_servidor(ip,puerto);
 
 */
-	char *mensaje = recibir_mensaje_cliente(conexionAppeared);
+	//char *mensaje = recibir_mensaje_cliente(conexionAppeared);
 
-		log_info(logger,"El mensaje recibido es %s\n",mensaje);
+		//log_info(logger,"El mensaje recibido es %s\n",mensaje);
 	terminar_programa(conexionAppeared,logger,config);
 
 }
 
 
+/*
+for(int i=0;i<algo;i++)
+pthread_create(&hiloEntrena,(void)funcionEntrena,&entrenador[i]);
+pthread_join(hiloEntrena);
 
+
+void funcionEntrena(t_entrenador)
+*/
 
