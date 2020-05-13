@@ -10,14 +10,9 @@ int main(void){
 	t_log* logger;
 	t_config* config;
 
-
-	fflush(stdout);
-
-
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 
 	logger =log_create("team.log", "Team", 1, LOG_LEVEL_INFO);
-
 	config=config_create(conf);
 
 	ip= config_get_string_value(config,"IP_BROKER");
@@ -26,37 +21,36 @@ int main(void){
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
 	//Conectarse al broker
-	conexionAppeared = crear_conexion(ip,puerto);
-
+	//conexionAppeared = crear_conexion(ip,puerto);
 	//conexionCaugth = crear_conexion(ip,puerto);
+    conexionLocalized =	crear_conexion(ip,puerto);
 
-	//conexionLocalized = crear_conexion(ip,puerto);
+    enviar_mensaje("Suscribime",conexionAppeared, SUS_LOC);
 
-
-	enviar_mensaje("Hola",conexionAppeared,SUS_NEW);
-
-	//enviar_mensaje("Chau",conexionCaugth,MENSAJE);
-
-	//enviar_mensaje("Hola y Chau",conexionLocalized,MENSAJE);
-
-
-
-	log_info(logger,"Envie mensaje");
-/*
-	conexionCaugth = crear_conexion(ip,puerto);
-	conexionLocalized =	crear_conexion(ip,puerto);
+    log_info(logger,"Envie mensaje");
 
     //Escuchar gameboy
-	iniciar_servidor(ip,puerto);
+	//iniciar_servidor(ip,puerto);
 
-*/
-	//char *mensaje = recibir_mensaje_cliente(conexionAppeared);
+    //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
-		//log_info(logger,"El mensaje recibido es %s\n",mensaje);
+    int pokemones [5];
+    int i,get;
+    for (i = 0;  i < pokemones; i++) {
+		get = crear_conexion(ip,puerto);
+		enviar_mensaje(pokemones[i],get,GET_POKEMON);
+		close(get);
+	}
+
+    //Espero respuestas del get en la cola LOCALIZED
+
+	char *posicion = recibir_mensaje_cliente(conexionLocalized);
+
+	//log_info(logger,"El mensaje recibido es %s\n",mensaje);
+
 	terminar_programa(conexionAppeared,logger,config);
 
 }
-
 
 /*
 for(int i=0;i<algo;i++)

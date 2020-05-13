@@ -74,6 +74,33 @@ void process_request(int cod_op, int cliente_fd) {
 	void* msg;
 
 		switch (cod_op) {
+		case SUS_GET:
+			//Agregar a la cola y enviar todo el tiempo los mensajes que le llegen
+			break;
+		case SUS_LOC:
+		    //Agregar a la cola
+			break;
+		case SUS_CAUGTH:
+
+			break;
+
+		case SUS_NEW:
+
+			break;
+
+		case SUS_CATCH:
+
+			break;
+		case SUS_APP:
+
+			break;
+		case GET_POKEMON:
+			//Envia el mensaje a la cola get
+
+			break;
+
+		case LOCALIZED_POKEMON:
+			//Envia el mensaje a la cola localized
 
 		/*case MENSAJE:
 			msg = recibir_mensaje(cliente_fd, &size);
@@ -92,7 +119,7 @@ void process_request(int cod_op, int cliente_fd) {
 
 			free(msg);
 		break;
-
+/*
 		case SUS_NEW:
 			while(1){
 			//msg= queue_pop(NEW_POKEMON);
@@ -111,7 +138,7 @@ void process_request(int cod_op, int cliente_fd) {
 		}
 		//}
 		break;
-
+*/
 /*Si hay un solo suscribir
 			 if(msg="new")
 				susNew(socket)

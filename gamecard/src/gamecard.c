@@ -5,11 +5,7 @@ int main(void) {
 
 	char* ip;
 	char* puerto;
-	int conexion;
-
-	fflush(stdout);
-
-
+	int conexionGet, conexionCatch, conexionNew;
 
 	t_log* logger;
 	t_config* config;
@@ -17,8 +13,7 @@ int main(void) {
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
-
-    config=config_create(conf);
+	config=config_create(conf);
 
 	ip= config_get_string_value(config,"IP_BROKER");
 	puerto= config_get_string_value(config,"PUERTO_BROKER");
@@ -26,17 +21,25 @@ int main(void) {
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
 	//Conectarse al broker
+	conexionGet= crear_conexion(ip,puerto);
+	//conexionCatch = crear_conexion(ip,puerto);
+	//conexionNew = crear_conexion(ip,puerto);
 
-	conexion= crear_conexion(ip,puerto);
+	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
 
-	enviar_mensaje("Hola soy el gamecard breo",conexion, SUSCRIBIR);
-	/*enviar_mensaje("subscripcion",conexion);
+	//Se queda esperando que le llegue algun mensaje a la cola GET
+	char *mensaje = recibir_mensaje_cliente(conexionGet);
 
-	char *mensaje = recibir_mensaje_cliente(conexion);
+	//TODO: se fija posicion pokemon
 
-	log_info(logger,"El mensaje recibido es %s\n",mensaje);
-*/
-	terminar_programa(conexion,logger,config);
+	//Envia posicion pokemon a la cola LOCALIZED
+	int conexionLocalized = crear_conexion(ip,puerto);
+	enviar_mensaje("Posicion x y",conexionLocalized, LOCALIZED_POKEMON);
+	close(conexionLocalized);
+
+    //log_info(logger,"El mensaje recibido es %s\n",mensaje);
+
+	terminar_programa(conexionGet,logger,config);
 
 	return EXIT_SUCCESS;
 }
