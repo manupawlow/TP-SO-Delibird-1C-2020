@@ -29,6 +29,7 @@ int main(void) {
 
 	//Se queda esperando que le llegue algun mensaje a la cola GET
 	char *mensaje = recibir_mensaje_cliente(conexionGet);
+	log_info(logger,"Buscar posicion de %s\n",mensaje);
 
 	//TODO: se fija posicion pokemon
 

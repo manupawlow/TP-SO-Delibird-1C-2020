@@ -27,26 +27,26 @@ int main(void){
 
     enviar_mensaje("Suscribime",conexionAppeared, SUS_LOC);
 
-    log_info(logger,"Envie mensaje");
+    log_info(logger,"Me suscribi a la cola LOCALIZED!");
 
     //Escuchar gameboy
 	//iniciar_servidor(ip,puerto);
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
-    int pokemones [5];
-    int i,get;
-    for (i = 0;  i < pokemones; i++) {
-		get = crear_conexion(ip,puerto);
-		enviar_mensaje(pokemones[i],get,GET_POKEMON);
+    //int pokemones [5];
+    //int i,get;
+    //for (i = 0;  i < pokemones; i++) {
+		int get = crear_conexion(ip,puerto);
+		enviar_mensaje("Pikachu",get,GET_POKEMON);
+		log_info("Le pedi posicion de Pikachu");
 		close(get);
-	}
+	//}
 
     //Espero respuestas del get en la cola LOCALIZED
 
 	char *posicion = recibir_mensaje_cliente(conexionLocalized);
-
-	//log_info(logger,"El mensaje recibido es %s\n",mensaje);
+	log_info(logger,"La posicion de pikachu es %s\n",posicion);
 
 	terminar_programa(conexionAppeared,logger,config);
 

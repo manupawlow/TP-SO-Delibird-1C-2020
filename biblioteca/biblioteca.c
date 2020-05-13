@@ -1,8 +1,7 @@
 #include "biblioteca.h"
 
-//no se crea anda a saber por que
-//mati puto
-//t_queue *NEW_POKEMON = create_queue();
+t_queue *GET_POKEMON = create_queue();
+t_queue *LOCALIZED = create_queue();
 
 void iniciar_servidor(char* ip, char* puerto)
 {
@@ -95,12 +94,18 @@ void process_request(int cod_op, int cliente_fd) {
 
 			break;
 		case GET_POKEMON:
-			//Envia el mensaje a la cola get
-
+			//Agrega el mensaje a la cola get
+			msg = recibir_mensaje(cliente_fd, &size);
+			queue_push(GET_POKEMON*,(void*)msg);
+			free(msg);
 			break;
 
 		case LOCALIZED_POKEMON:
-			//Envia el mensaje a la cola localized
+			//Agrega el mensaje a la cola localized
+			msg = recibir_mensaje(cliente_fd, &size);
+			queue_push(LOCALIZED*,(void*)msg);
+			free(msg);
+			break;
 
 		/*case MENSAJE:
 			msg = recibir_mensaje(cliente_fd, &size);
