@@ -1,7 +1,7 @@
 #include "biblioteca.h"
 
-t_queue *GET_POKEMON = create_queue();
-t_queue *LOCALIZED = create_queue();
+//t_queue *GET_POKEMON = create_queue();
+//t_queue *LOCALIZED = create_queue();
 
 void iniciar_servidor(char* ip, char* puerto)
 {
@@ -93,7 +93,7 @@ void process_request(int cod_op, int cliente_fd) {
 		case SUS_APP:
 
 			break;
-		case GET_POKEMON:
+		/*case GET_POKEMON:
 			//Agrega el mensaje a la cola get
 			msg = recibir_mensaje(cliente_fd, &size);
 			queue_push(GET_POKEMON*,(void*)msg);
@@ -105,7 +105,7 @@ void process_request(int cod_op, int cliente_fd) {
 			msg = recibir_mensaje(cliente_fd, &size);
 			queue_push(LOCALIZED*,(void*)msg);
 			free(msg);
-			break;
+			break;*/
 
 		/*case MENSAJE:
 			msg = recibir_mensaje(cliente_fd, &size);

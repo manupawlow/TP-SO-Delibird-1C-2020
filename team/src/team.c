@@ -39,7 +39,7 @@ int main(void){
     //for (i = 0;  i < pokemones; i++) {
 		int get = crear_conexion(ip,puerto);
 		enviar_mensaje("Pikachu",get,GET_POKEMON);
-		log_info("Le pedi posicion de Pikachu");
+		log_info(logger,"Le pedi posicion de Pikachu");
 		close(get);
 	//}
 

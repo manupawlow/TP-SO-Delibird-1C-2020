@@ -51,7 +51,7 @@ typedef struct
 
 pthread_t thread;
 
-t_queue *GET_POKEMON,*LOCALIZED;
+//t_queue *GET_POKEMON,*LOCALIZED;
 
 void* recibir_buffer(int*, int);
 void iniciar_servidor(char*, char*);
