@@ -54,12 +54,12 @@ pthread_t thread;
 //t_queue *GET_POKEMON,*LOCALIZED;
 
 void* recibir_buffer(int*, int);
-void iniciar_servidor(char*, char*);
-void esperar_cliente(int, int[], int);
+int iniciar_servidor(char*, char*);
+int esperar_cliente(int);
 void* recibir_mensaje(int socket_cliente, int* size);
 int recibir_operacion(int);
-void process_request(int cod_op, int cliente_fd);
-void serve_client(int *socket);
+//void process_request(int cod_op, int cliente_fd);
+//void serve_client(int *socket);
 void* serializar_paquete(t_paquete* paquete, int bytes);
 void devolver_mensaje(void* payload, int size, int socket_cliente, op_code codigo);
 

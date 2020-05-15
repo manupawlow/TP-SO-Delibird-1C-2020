@@ -12,6 +12,7 @@ void concatena(char *inicio, char *fin){
 	}
 	*inicio='\0';
 }
+
 int main(int argc, char *argv[]) {
 
 	char *ip;
@@ -20,6 +21,7 @@ int main(int argc, char *argv[]) {
 
 	char ips[20] = "IP_";
 	char puertos[20] = "PUERTO_";
+	//code_op codigo = argv[2];
 
 	fflush(stdout);
 
@@ -39,7 +41,12 @@ int main(int argc, char *argv[]) {
 	puerto= config_get_string_value(config,puertos);
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
-
+/*
+	switch(codigo){
+	case CATCH:
+	   enviar
+	}
+	*/
 	//Conectarse al broker
 
 	conexion = crear_conexion(ip,puerto);
