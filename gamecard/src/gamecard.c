@@ -28,9 +28,10 @@ int main(void) {
 	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
 
 	//Se queda esperando que le llegue algun mensaje a la cola GET
+	while(1){
 	char *mensaje = recibir_mensaje_cliente(conexionGet);
 	log_info(logger,"Buscar posicion de %s\n",mensaje);
-
+	}
 	//TODO: se fija posicion pokemon
 
 	//Envia posicion pokemon a la cola LOCALIZED

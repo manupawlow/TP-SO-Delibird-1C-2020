@@ -34,3 +34,154 @@
 [INFO] 23:32:05:46 Broker/(13268:13268): hola
 [INFO] 23:32:17:704 Broker/(13268:13268): hola
 [INFO] 23:32:29:726 Broker/(13268:13268): hola
+[INFO] 17:35:44:675 Broker/(5188:5188): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 17:36:09:486 Broker/(5188:5188): socketero: 5
+
+[INFO] 17:36:12:88 Broker/(5188:5188): socketero: 7
+
+[INFO] 17:36:32:194 Broker/(5188:5188): socketero: 8
+
+[INFO] 17:36:43:748 Broker/(5188:5188): socketero: 9
+
+[INFO] 17:36:45:715 Broker/(5188:5188): socketero: 10
+
+[INFO] 17:46:09:584 Broker/(5839:5839): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 17:46:13:184 Broker/(5839:5839): socketero: 5
+
+[INFO] 17:46:23:244 Broker/(5839:5839): socketero: 7
+
+[INFO] 17:46:24:772 Broker/(5839:5839): socketero: 8
+
+[INFO] 17:46:25:476 Broker/(5839:5839): socketero: 9
+
+[INFO] 17:46:26:44 Broker/(5839:5839): socketero: 10
+
+[INFO] 17:48:54:687 Broker/(5839:5839): socketero: 11
+
+[INFO] 17:48:56:466 Broker/(5839:5839): socketero: 12
+
+[INFO] 17:49:08:697 Broker/(5839:5839): socketero: 13
+
+[INFO] 17:49:13:690 Broker/(5839:5839): socketero: 14
+
+[INFO] 17:53:14:934 Broker/(6506:6506): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 17:53:17:490 Broker/(6506:6506): socketero: 5
+
+[INFO] 17:53:52:861 Broker/(6506:6506): socketero: 7
+
+[INFO] 17:54:00:393 Broker/(6506:6506): socketero: 8
+
+[INFO] 17:56:07:588 Broker/(6631:6631): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 17:56:11:528 Broker/(6631:6631): socketero: 5
+
+[INFO] 19:51:48:352 Broker/(12408:12408): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:51:54:755 Broker/(12412:12412): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:51:59:467 Broker/(12412:12412): socketero: 5
+
+[INFO] 19:52:07:740 Broker/(12412:12412): socketero: 7
+
+[INFO] 19:52:20:317 Broker/(12412:12412): socketero: 8
+
+[INFO] 19:52:38:175 Broker/(12412:12412): socketero: 9
+
+[INFO] 19:52:39:131 Broker/(12412:12412): socketero: 10
+
+[INFO] 19:52:39:763 Broker/(12412:12412): socketero: 11
+
+[INFO] 19:52:40:341 Broker/(12412:12412): socketero: 12
+
+[INFO] 19:52:41:642 Broker/(12412:12412): socketero: 13
+
+[INFO] 19:52:42:233 Broker/(12412:12412): socketero: 14
+
+[INFO] 19:52:42:802 Broker/(12412:12412): socketero: 15
+
+[INFO] 19:52:43:339 Broker/(12412:12412): socketero: 16
+
+[INFO] 19:52:43:852 Broker/(12412:12412): socketero: 17
+
+[INFO] 19:52:44:451 Broker/(12412:12412): socketero: 18
+
+[INFO] 19:52:45:20 Broker/(12412:12412): socketero: 19
+
+[INFO] 19:52:45:515 Broker/(12412:12412): socketero: 20
+
+[INFO] 19:52:46:60 Broker/(12412:12412): socketero: 21
+
+[INFO] 19:52:46:588 Broker/(12412:12412): socketero: 22
+
+[INFO] 19:52:47:53 Broker/(12412:12412): socketero: 23
+
+[INFO] 19:52:47:597 Broker/(12412:12412): socketero: 24
+
+[INFO] 19:52:48:101 Broker/(12412:12412): socketero: 25
+
+[INFO] 19:52:48:526 Broker/(12412:12412): socketero: 26
+
+[INFO] 19:52:48:910 Broker/(12412:12412): socketero: 27
+
+[INFO] 19:52:49:334 Broker/(12412:12412): socketero: 28
+
+[INFO] 19:52:49:911 Broker/(12412:12412): socketero: 29
+
+[INFO] 19:52:50:599 Broker/(12412:12412): socketero: 30
+
+[INFO] 19:52:51:63 Broker/(12412:12412): socketero: 31
+
+[INFO] 19:52:51:639 Broker/(12412:12412): socketero: 32
+
+[INFO] 19:52:52:63 Broker/(12412:12412): socketero: 33
+
+[INFO] 19:52:52:504 Broker/(12412:12412): socketero: 34
+
+[INFO] 19:52:52:936 Broker/(12412:12412): socketero: 35
+
+[INFO] 19:52:53:401 Broker/(12412:12412): socketero: 36
+
+[INFO] 19:52:53:833 Broker/(12412:12412): socketero: 37
+
+[INFO] 19:52:54:320 Broker/(12412:12412): socketero: 38
+
+[INFO] 19:52:54:729 Broker/(12412:12412): socketero: 39
+
+[INFO] 19:52:55:170 Broker/(12412:12412): socketero: 40
+
+[INFO] 19:52:55:674 Broker/(12412:12412): socketero: 41
+
+[INFO] 19:52:56:226 Broker/(12412:12412): socketero: 42
+
+[INFO] 19:56:16:988 Broker/(12652:12652): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:56:20:698 Broker/(12652:12652): socketero: 5
+
+[INFO] 19:56:22:615 Broker/(12652:12652): socketero: 7
+
+[INFO] 19:56:29:757 Broker/(12652:12652): socketero: 8
+
+[INFO] 21:30:23:511 Broker/(17706:17706): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:30:29:24 Broker/(17706:17706): socketero: 5
+
+[INFO] 21:32:21:383 Broker/(17983:17983): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:32:35:675 Broker/(17983:17983): socketero: 5
+
+[INFO] 21:35:01:737 Broker/(18169:18169): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:35:04:952 Broker/(18169:18169): socketero: 5
+
+[INFO] 21:36:53:243 Broker/(18313:18313): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:36:55:673 Broker/(18313:18313): socketero: 5
+
+[INFO] 21:37:03:254 Broker/(18313:18313): socketero: 7
+
+[INFO] 21:37:04:4 Broker/(18313:18313): socketero: 8
+
+[INFO] 21:37:08:85 Broker/(18313:18313): socketero: 9
+
+[INFO] 21:37:21:599 Broker/(18313:18313): socketero: 10
+
+[INFO] 21:37:23:271 Broker/(18313:18313): socketero: 11
+
+[INFO] 21:37:24:22 Broker/(18313:18313): socketero: 12
+
+[INFO] 21:37:24:698 Broker/(18313:18313): socketero: 13
+
+[INFO] 21:37:25:429 Broker/(18313:18313): socketero: 14
+

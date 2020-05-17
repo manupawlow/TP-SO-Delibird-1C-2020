@@ -26,11 +26,11 @@ int main(void){
 
 	//conexionAppeared = crear_conexion(ip,puerto);
 	//conexionCaugth = crear_conexion(ip,puerto);
-    conexionLocalized =	crear_conexion(ip,puerto);
+    //conexionLocalized =	crear_conexion(ip,puerto);
 
-    enviar_mensaje("Suscribime",conexionAppeared, SUS_LOC);
+    //enviar_mensaje("Suscribime",conexionAppeared, SUS_LOC);
 
-    log_info(logger,"Me suscribi a la cola LOCALIZED!");
+    //log_info(logger,"Me suscribi a la cola LOCALIZED!");
 
     //Escuchar gameboy
 //  iniciar_servidor(ip,puerto);
@@ -43,12 +43,12 @@ int main(void){
 		int get = crear_conexion(ip,puerto);
 		enviar_mensaje("Pikachu", get, GET_POKEMON);
 		log_info(logger,"Le pedi posicion de Pikachu");
-		close(get);
+		//close(get);
 	//}
 
     //Espero respuestas del get en la cola LOCALIZED
 
-	char *posicion = recibir_mensaje_cliente(conexionLocalized);
+	//char *posicion = recibir_mensaje_cliente(conexionLocalized);
 
 	//Planificacion de los entrenadores para ir hasta la posicion del pokemon
 
@@ -69,9 +69,9 @@ int main(void){
 
 */
 
-	log_info(logger,"La posicion de pikachu es %s\n",posicion);
+	//log_info(logger,"La posicion de pikachu es \n");
 
-	terminar_programa(conexionAppeared,logger,config);
+	terminar_programa(get,logger,config);
 
 }
 

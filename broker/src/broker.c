@@ -4,24 +4,89 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct {
+	int socket_cliente;
+	int SUSCRITOS_GET[10];
+	int cant_suscritos_get;
+	t_log *logger;
+}pp;
 
-void process_request(int cliente_fd) {
+/*
+	int *SUSCRITOS_NEW[];
+	int cant_suscritos_new = 0;
+
+	int *SUSCRITOS_LOC[];
+	int cant_suscritos_loc = 0;
+
+	int *SUSCRITOS_APP[];
+	int cant_suscritos_app = 0;
+
+	int *SUSCRITOS_CAUGTH[];
+	int cant_suscritos_caugth = 0;
+
+	int *SUSCRITOS_CATCH[];
+	int cant_suscritos_catch = 0;
+*/
+
+	//t_list *SUSCRITOS_GET = create_list();
+	//t_list *COLA_GET = create_list();
+	/*
+	t_list *SUSCRITOS_GET = create_list();
+	t_list *SUSCRITOS_GET = create_list();
+	t_list *SUSCRITOS_GET = create_list();
+	t_list *SUSCRITOS_GET = create_list();
+	t_list SUSCRITOS_GET = create_list();
+    */
+
+void enviar_a_todos(int suscritos[], int cant, int msg,int size, int cod_op){
+
+	for(int i = 0; i < cant; i++){
+		devolver_mensaje(msg, size, suscritos[i], cod_op);
+	}
+
+}
+
+void process_request(pp loquito) {
 	int size;
 	void* msg;
 	int cod_op;
+
+	printf("%s",loquito.socket_cliente);
 
 	if(recv(*socket, &cod_op, sizeof(int), MSG_WAITALL) == -1)
 			cod_op = -1;
 
 
 		switch (cod_op) {
+
 		case SUS_GET:
-			//Agregar a la cola y enviar todo el tiempo los mensajes que le llegen
+			//Suscribir a la cola get
+			loquito.SUSCRITOS_GET[loquito.cant_suscritos_get] = loquito.socket_cliente;
+			loquito.cant_suscritos_get++;
+			fflush(stdout);
+			printf("Se Suscribio a la lista GET");
+			log_info(loquito.logger,"Se Suscribio a la lista GET");
 			break;
+
+		case GET_POKEMON:
+			//Agrega el mensaje a la cola get
+			msg = recibir_mensaje(loquito.socket_cliente, &size);
+			enviar_a_todos(loquito.SUSCRITOS_GET, loquito.cant_suscritos_get, msg, size, cod_op );
+			fflush(stdout);
+			//printf("Se envio mensaje a todos los suscriptos!");
+			log_info(loquito.logger,"Se envio mensaje a todos los suscriptos!");
+			//list_add(COLA_GET, msg);
+			free(msg);
+			break;
+
+		case SUSCRIBIR:
+			msg = recibir_mensaje(loquito.socket_cliente, &size);
+			printf("El mensaje es %s", msg);
+			break;
+/*
 		case SUS_LOC:
 			break;
 		case SUS_CAUGTH:
-
 			break;
 
 		case SUS_NEW:
@@ -34,73 +99,9 @@ void process_request(int cliente_fd) {
 		case SUS_APP:
 
 			break;
-		/*case GET_POKEMON:
-			//Agrega el mensaje a la cola get
-			msg = recibir_mensaje(cliente_fd, &size);
-			queue_push(GET_POKEMON*,(void*)msg);
-			free(msg);
-			break;
-
-		case LOCALIZED_POKEMON:
-			//Agrega el mensaje a la cola localized
-			msg = recibir_mensaje(cliente_fd, &size);
-			queue_push(LOCALIZED*,(void*)msg);
-			free(msg);
-			break;*/
-
-		/*case MENSAJE:
-			msg = recibir_mensaje(cliente_fd, &size);
-			printf("%s\n",msg);
-			devolver_mensaje(msg, size, cliente_fd);
-
-			free(msg);
-			break;*/
-
-		//CASO SUSCRIPCION
-		case SUSCRIBIR:
-			printf("SE QUIEREN SUSCRIBIR BREO\n");
-			msg = recibir_mensaje(cliente_fd, &size);
-			printf("%s\n",msg);
-			//devolver_mensaje(msg, size, cliente_fd);
-
-			free(msg);
-		break;
-/*
-		case SUS_NEW:
-			while(1){
-			//msg= queue_pop(NEW_POKEMON);
-			if(msg != "Hola")
-				//log
-				printf("Esta vacio, ves? No hay mensajes aqui.\n");
-				//msg = recibir_mensaje(cliente_fd, &size);
-					//		printf("%s\n",msg);
-			//}else{
-			//	printf("%s\n",msg);
-				//devolver_mensaje(msg, size, cliente_fd, cod_op);
-
-				//free(msg);
-
-
-		}
-		//}
-		break;
 */
-/*Si hay un solo suscribir
-			 if(msg="new")
-				susNew(socket)
 
-				susnew(int socket)
-				colaNew
-				esperar
-				enviarmensaje(socket,colanew)
-*/
-/* Si hay 6 suscribir
-		case SUS_NEW:
-			while(1)
-			enviar o sea send
 
-			break;
-*/
 		case 0:
 			pthread_exit(NULL);
 		case -1:
@@ -133,14 +134,19 @@ int main(void) {
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
-    while(1){
-    	int socket_cliente = esperar_cliente(socket_servidor);
+	pp ppp;
+	ppp.logger = logger;
+	ppp.cant_suscritos_get = 0;
 
-    	socketero[i]= socket_cliente;
+
+    while(1){
+    	ppp.socket_cliente = esperar_cliente(socket_servidor);
+
+    	socketero[i]= ppp.socket_cliente;
     	log_info(logger,"socketero: %d\n", socketero[i]);
     	i++;
 
-    	pthread_create(&thread,NULL,(void*) process_request,&socket_cliente);
+    	pthread_create(&thread,NULL,(void*) process_request,&ppp);
         pthread_detach(thread); // SIN LOS HILOS CORTA EL WHILE
     	//process_request(esperar_cliente(socket_servidor));
     }
