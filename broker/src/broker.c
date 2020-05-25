@@ -9,34 +9,7 @@ typedef struct {
 	int SUSCRITOS_GET[10];
 	int cant_suscritos_get;
 	t_log *logger;
-}pp;
-
-/*
-	int *SUSCRITOS_NEW[];
-	int cant_suscritos_new = 0;
-
-	int *SUSCRITOS_LOC[];
-	int cant_suscritos_loc = 0;
-
-	int *SUSCRITOS_APP[];
-	int cant_suscritos_app = 0;
-
-	int *SUSCRITOS_CAUGTH[];
-	int cant_suscritos_caugth = 0;
-
-	int *SUSCRITOS_CATCH[];
-	int cant_suscritos_catch = 0;
-*/
-
-	//t_list *SUSCRITOS_GET = create_list();
-	//t_list *COLA_GET = create_list();
-	/*
-	t_list *SUSCRITOS_GET = create_list();
-	t_list *SUSCRITOS_GET = create_list();
-	t_list *SUSCRITOS_GET = create_list();
-	t_list *SUSCRITOS_GET = create_list();
-	t_list SUSCRITOS_GET = create_list();
-    */
+}Colas;
 
 void enviar_a_todos(int suscritos[], int cant, int msg,int size, int cod_op){
 
@@ -46,14 +19,12 @@ void enviar_a_todos(int suscritos[], int cant, int msg,int size, int cod_op){
 
 }
 
-void process_request(pp loquito) {
+void process_request(Colas *loquito) {
 	int size;
 	void* msg;
 	int cod_op;
 
-	printf("%s",loquito.socket_cliente);
-
-	if(recv(*socket, &cod_op, sizeof(int), MSG_WAITALL) == -1)
+	if(recv(loquito->socket_cliente, &cod_op, sizeof(int), MSG_WAITALL) == -1)
 			cod_op = -1;
 
 
@@ -61,26 +32,23 @@ void process_request(pp loquito) {
 
 		case SUS_GET:
 			//Suscribir a la cola get
-			loquito.SUSCRITOS_GET[loquito.cant_suscritos_get] = loquito.socket_cliente;
-			loquito.cant_suscritos_get++;
-			fflush(stdout);
-			printf("Se Suscribio a la lista GET");
-			log_info(loquito.logger,"Se Suscribio a la lista GET");
+			loquito->SUSCRITOS_GET[loquito->cant_suscritos_get] = loquito->socket_cliente;
+			log_info(loquito->logger,"Se Suscribio a la lista GET %d", loquito->SUSCRITOS_GET[loquito->cant_suscritos_get]);
+			loquito->cant_suscritos_get++;
+
 			break;
 
 		case GET_POKEMON:
 			//Agrega el mensaje a la cola get
-			msg = recibir_mensaje(loquito.socket_cliente, &size);
-			enviar_a_todos(loquito.SUSCRITOS_GET, loquito.cant_suscritos_get, msg, size, cod_op );
-			fflush(stdout);
-			//printf("Se envio mensaje a todos los suscriptos!");
-			log_info(loquito.logger,"Se envio mensaje a todos los suscriptos!");
-			//list_add(COLA_GET, msg);
+			msg = recibir_mensaje(loquito->socket_cliente, &size);
+			enviar_a_todos(loquito->SUSCRITOS_GET, loquito->cant_suscritos_get, msg, size, cod_op );
+			//devolver_mensaje(msg,size,loquito.SUSCRITOS_GET[loquito.cant_suscritos_get],cod_op);
+			log_info(loquito->logger,"Se envio mensaje a todos los suscriptos!");
 			free(msg);
 			break;
 
 		case SUSCRIBIR:
-			msg = recibir_mensaje(loquito.socket_cliente, &size);
+			msg = recibir_mensaje(loquito->socket_cliente, &size);
 			printf("El mensaje es %s", msg);
 			break;
 /*
@@ -134,21 +102,19 @@ int main(void) {
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
-	pp ppp;
-	ppp.logger = logger;
-	ppp.cant_suscritos_get = 0;
+	Colas *colas = malloc(sizeof(Colas));
+	colas->logger = logger;
+	colas->cant_suscritos_get = 0;
 
 
     while(1){
-    	ppp.socket_cliente = esperar_cliente(socket_servidor);
+    	colas->socket_cliente = esperar_cliente(socket_servidor);
 
-    	socketero[i]= ppp.socket_cliente;
-    	log_info(logger,"socketero: %d\n", socketero[i]);
+    	socketero[i]= colas->socket_cliente;
+    	log_info(logger,"socketero: %d", socketero[i]);
     	i++;
 
-    	pthread_create(&thread,NULL,(void*) process_request,&ppp);
-        pthread_detach(thread); // SIN LOS HILOS CORTA EL WHILE
-    	//process_request(esperar_cliente(socket_servidor));
+    	process_request(colas);
     }
 
 	//char *mensaje = recibir_mensaje(conexion);

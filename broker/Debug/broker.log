@@ -185,3 +185,59 @@
 
 [INFO] 21:37:25:429 Broker/(18313:18313): socketero: 14
 
+[INFO] 18:23:01:45 Broker/(5118:5118): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:23:09:905 Broker/(5118:5118): socketero: 5
+
+[INFO] 18:23:24:971 Broker/(5129:5129): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:23:27:428 Broker/(5129:5129): socketero: 5
+
+[INFO] 18:23:46:856 Broker/(5162:5162): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:23:51:83 Broker/(5162:5162): socketero: 5
+
+[INFO] 18:24:04:652 Broker/(5171:5171): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:24:07:533 Broker/(5171:5171): socketero: 5
+
+[INFO] 18:39:47:822 Broker/(6336:6336): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:39:51:919 Broker/(6336:6336): socketero: 5
+[INFO] 18:39:51:919 Broker/(6336:6336): Se Suscribio a la lista GET
+[INFO] 18:40:27:953 Broker/(6336:6336): socketero: 7
+[INFO] 18:40:27:954 Broker/(6336:6336): Se envio mensaje a todos los suscriptos!
+[INFO] 18:42:12:803 Broker/(6540:6540): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:42:20:566 Broker/(6540:6540): socketero: 5
+[INFO] 18:42:20:566 Broker/(6540:6540): Se Suscribio a la lista GET
+[INFO] 18:42:24:859 Broker/(6540:6540): socketero: 7
+[INFO] 18:42:24:860 Broker/(6540:6540): Se envio mensaje a todos los suscriptos!
+[INFO] 18:45:53:251 Broker/(6852:6852): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:46:04:345 Broker/(6852:6852): socketero: 5
+[INFO] 18:46:04:345 Broker/(6852:6852): Se Suscribio a la lista GET 7
+[INFO] 18:47:57:515 Broker/(6957:6957): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:48:02:125 Broker/(6957:6957): socketero: 5
+[INFO] 18:48:02:126 Broker/(6957:6957): Se Suscribio a la lista GET 7
+[INFO] 18:48:05:50 Broker/(6957:6957): socketero: 7
+[INFO] 18:48:05:50 Broker/(6957:6957): Se envio mensaje a todos los suscriptos!
+[INFO] 18:51:37:67 Broker/(7025:7025): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:51:39:554 Broker/(7025:7025): socketero: 5
+[INFO] 18:51:39:554 Broker/(7025:7025): Se Suscribio a la lista GET 7
+[INFO] 18:53:10:975 Broker/(7073:7073): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:53:13:87 Broker/(7073:7073): socketero: 5
+[INFO] 18:53:30:730 Broker/(7073:7073): socketero: 7
+[INFO] 19:57:53:633 Broker/(5159:5159): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:57:53:641 Broker/(5159:5159): socketero: -1
+[INFO] 19:58:11:698 Broker/(5163:5163): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:58:11:699 Broker/(5163:5163): socketero: -1
+[INFO] 20:14:16:542 Broker/(6010:6010): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:15:37:309 Broker/(6010:6010): socketero: 5
+[INFO] 20:15:46:535 Broker/(6010:6010): Se Suscribio a la lista GET 5
+[INFO] 20:16:24:282 Broker/(6010:6010): socketero: 7
+[INFO] 20:16:24:283 Broker/(6010:6010): Se envio mensaje a todos los suscriptos!
+[INFO] 20:17:14:468 Broker/(6010:6010): socketero: 8
+[INFO] 20:17:14:468 Broker/(6010:6010): Se Suscribio a la lista GET 8
+[INFO] 20:29:10:452 Broker/(6596:6596): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:30:25:422 Broker/(6596:6596): socketero: 5
+[INFO] 20:30:25:422 Broker/(6596:6596): Se Suscribio a la lista GET 5
+[INFO] 20:30:34:238 Broker/(6596:6596): socketero: 7
+[INFO] 20:30:34:238 Broker/(6596:6596): Se Suscribio a la lista GET 7
+[INFO] 20:30:42:248 Broker/(6596:6596): socketero: 8
+[INFO] 20:30:42:248 Broker/(6596:6596): Se envio mensaje a todos los suscriptos!
+[INFO] 20:32:10:5 Broker/(6596:6596): socketero: 9
+[INFO] 20:32:10:7 Broker/(6596:6596): Se envio mensaje a todos los suscriptos!
