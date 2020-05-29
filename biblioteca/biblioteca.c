@@ -199,3 +199,15 @@ void terminar_programa(int conexion, t_log* logger, t_config* config)
 
 	liberar_conexion(conexion);
 }
+
+char* concatena(int cant, char* argv[]){
+	int i;
+	char *mensajeFinal = string_new();
+	for (i=3;i<cant;i++){
+		string_append_with_format(&mensajeFinal," %s",argv[i]);
+	}
+	string_append_with_format(&mensajeFinal," %s\n",argv[i]);
+
+	return mensajeFinal;
+
+}

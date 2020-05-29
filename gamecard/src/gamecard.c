@@ -5,7 +5,7 @@ int main(void) {
 
 	char* ip;
 	char* puerto;
-	int conexionGet, conexionCatch, conexionNew;
+	int conexion;
 
 	t_log* logger;
 	t_config* config;
@@ -15,22 +15,27 @@ int main(void) {
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
 	config=config_create(conf);
 
-	ip= config_get_string_value(config,"IP_BROKER");
-	puerto= config_get_string_value(config,"PUERTO_BROKER");
+	ip = config_get_string_value(config,"IP_BROKER");
+	puerto = config_get_string_value(config,"PUERTO_BROKER");
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
-	//Conectarse al broker
-	conexionGet= crear_conexion(ip,puerto);
-	//conexionCatch = crear_conexion(ip,puerto);
-	//conexionNew = crear_conexion(ip,puerto);
+	conexion = crear_conexion(ip,puerto);
 
-	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
+	ip = config_get_string_value(config,"IP_GAMECARD");
+	puerto = config_get_string_value(config,"PUERTO_GAMECARD");
+
+	iniciar_servidor(ip,puerto);
+
+	enviar_mensaje("Suscribime",conexion, SUS_GET);
+	enviar_mensaje("Suscribime",conexion, SUS_NEW);
+	enviar_mensaje("Suscribime",conexion, SUS_CATCH);
 
 	//Se queda esperando que le llegue algun mensaje a la cola GET
+
 	while(1){
-	char *mensaje = recibir_mensaje_cliente(conexionGet);
-	log_info(logger,"Buscar posicion de %s\n",mensaje);
+		char *mensaje = recibir_mensaje_cliente(conexion);
+		log_info(logger,"Buscar posicion de %s\n",mensaje);
 	}
 	//TODO: se fija posicion pokemon
 
@@ -41,7 +46,7 @@ int main(void) {
 
     //log_info(logger,"El mensaje recibido es %s\n",mensaje);
 
-	terminar_programa(conexionGet,logger,config);
+	terminar_programa(conexion,logger,config);
 
 	return EXIT_SUCCESS;
 }

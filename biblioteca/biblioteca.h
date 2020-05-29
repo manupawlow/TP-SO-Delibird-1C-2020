@@ -56,18 +56,20 @@ pthread_t thread;
 void* recibir_buffer(int*, int);
 int iniciar_servidor(char*, char*);
 int esperar_cliente(int);
-void* recibir_mensaje(int socket_cliente, int* size);
+void* recibir_mensaje(int , int* );
 int recibir_operacion(int);
 //void process_request(int cod_op, int cliente_fd);
 //void serve_client(int *socket);
-void* serializar_paquete(t_paquete* paquete, int bytes);
-void devolver_mensaje(void* payload, int size, int socket_cliente, op_code codigo);
+void* serializar_paquete(t_paquete* , int );
+void devolver_mensaje(void* , int , int , op_code );
 
 int crear_conexion(char*, char*);
-void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo);
-char* recibir_mensaje_cliente(int socket_cliente);
-void eliminar_paquete(t_paquete* paquete);
-void liberar_conexion(int socket_cliente);
-void* serializar_paquete_cliente(t_paquete* paquete, int*);
+void enviar_mensaje(char* , int , op_code );
+char* recibir_mensaje_cliente(int );
+void eliminar_paquete(t_paquete* );
+void liberar_conexion(int );
+void* serializar_paquete_cliente(t_paquete* , int*);
 
-void terminar_programa(int conexion, t_log* logger, t_config* config);
+char* concatena(int , char** );
+
+void terminar_programa(int , t_log* , t_config* );

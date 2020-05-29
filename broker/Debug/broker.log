@@ -267,3 +267,41 @@
 [INFO] 14:46:24:530 Broker/(4853:4853): socketero: 24
 [INFO] 14:47:12:810 Broker/(4853:4853): socketero: 25
 [INFO] 14:48:01:632 Broker/(4853:4853): socketero: 26
+[INFO] 15:52:03:33 Broker/(4853:4853): socketero: 27
+[INFO] 15:54:26:21 Broker/(9331:9331): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 15:54:28:771 Broker/(9331:9331): socketero: 5
+[INFO] 15:54:31:5 Broker/(9331:9331): socketero: 7
+[INFO] 15:54:36:949 Broker/(9331:9331): socketero: 8
+[INFO] 15:55:44:143 Broker/(9331:9331): socketero: 9
+[INFO] 15:56:47:846 Broker/(9331:9331): socketero: 10
+[INFO] 15:57:48:328 Broker/(9331:9331): socketero: 11
+[INFO] 15:57:50:440 Broker/(9331:9331): socketero: 12
+[INFO] 15:57:51:856 Broker/(9331:9331): socketero: 13
+[INFO] 15:59:10:421 Broker/(9331:9331): socketero: 14
+[INFO] 16:00:10:694 Broker/(9331:9331): socketero: 15
+[INFO] 16:01:25:512 Broker/(9759:9759): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 16:01:27:976 Broker/(9759:9759): socketero: 5
+[INFO] 16:01:30:363 Broker/(9759:9759): socketero: 7
+[INFO] 16:02:25:833 Broker/(9759:9759): socketero: 8
+[INFO] 16:03:01:510 Broker/(9759:9759): socketero: 9
+[INFO] 16:03:29:673 Broker/(9759:9759): socketero: 10
+[INFO] 16:04:59:712 Broker/(10096:10096): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 16:05:02:200 Broker/(10096:10096): socketero: 5
+[INFO] 16:05:05:843 Broker/(10096:10096): socketero: 7
+[INFO] 16:05:49:447 Broker/(10096:10096): socketero: 8
+[INFO] 16:06:09:851 Broker/(10096:10096): socketero: 9
+[INFO] 16:06:33:344 Broker/(10096:10096): socketero: 10
+[INFO] 16:08:20:433 Broker/(10096:10096): socketero: 11
+[INFO] 16:12:04:763 Broker/(10096:10096): socketero: 12
+[INFO] 16:12:07:968 Broker/(10096:10096): socketero: 13
+[INFO] 16:12:30:418 Broker/(10096:10096): socketero: 14
+[INFO] 16:16:17:629 Broker/(10096:10096): socketero: 15
+[INFO] 16:30:37:846 Broker/(11655:11655): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 16:30:40:722 Broker/(11655:11655): socketero: 5
+[INFO] 16:34:19:307 Broker/(11844:11844): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 16:34:22:824 Broker/(11844:11844): socketero: 5
+[INFO] 16:56:34:730 Broker/(11844:11844): socketero: 7
+[INFO] 16:56:34:730 Broker/(11844:11844): Se Suscribio a la lista GET 7
+[INFO] 16:56:46:197 Broker/(11844:11844): socketero: 8
+[INFO] 16:56:50:833 Broker/(11844:11844): socketero: 9
+[INFO] 16:56:50:833 Broker/(11844:11844): Se envio mensaje a todos los suscriptos!
