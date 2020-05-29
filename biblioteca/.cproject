@@ -37,8 +37,8 @@
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.701560605" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.so.debug.112778378" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.so.debug">
-								<option defaultValue="true" id="gnu.c.link.so.debug.option.shared.1992496204" name="Shared (-shared)" superClass="gnu.c.link.so.debug.option.shared" valueType="boolean"/>
-								<option id="gnu.c.link.option.libs.48217524" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
+								<option defaultValue="true" id="gnu.c.link.so.debug.option.shared.1992496204" name="Shared (-shared)" superClass="gnu.c.link.so.debug.option.shared" useByScannerDiscovery="false" valueType="boolean"/>
+								<option id="gnu.c.link.option.libs.48217524" name="Libraries (-l)" superClass="gnu.c.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="commons"/>
 									<listOptionValue builtIn="false" value="pthread"/>
 								</option>

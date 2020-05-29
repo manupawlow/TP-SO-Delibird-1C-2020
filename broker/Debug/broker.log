@@ -241,3 +241,29 @@
 [INFO] 20:30:42:248 Broker/(6596:6596): Se envio mensaje a todos los suscriptos!
 [INFO] 20:32:10:5 Broker/(6596:6596): socketero: 9
 [INFO] 20:32:10:7 Broker/(6596:6596): Se envio mensaje a todos los suscriptos!
+[INFO] 14:18:25:354 Broker/(4853:4853): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 14:19:57:615 Broker/(4853:4853): socketero: 5
+[INFO] 14:19:57:615 Broker/(4853:4853): Se envio mensaje a todos los suscriptos!
+[INFO] 14:20:07:442 Broker/(4853:4853): socketero: 7
+[INFO] 14:20:07:443 Broker/(4853:4853): Se Suscribio a la lista GET 7
+[INFO] 14:20:16:895 Broker/(4853:4853): socketero: 8
+[INFO] 14:20:16:895 Broker/(4853:4853): Se envio mensaje a todos los suscriptos!
+[INFO] 14:20:22:572 Broker/(4853:4853): socketero: 9
+[INFO] 14:20:22:572 Broker/(4853:4853): Se envio mensaje a todos los suscriptos!
+[INFO] 14:23:06:148 Broker/(4853:4853): socketero: 10
+[INFO] 14:23:08:747 Broker/(4853:4853): socketero: 11
+[INFO] 14:23:22:805 Broker/(4853:4853): socketero: 12
+[INFO] 14:23:30:516 Broker/(4853:4853): socketero: 13
+[INFO] 14:26:16:235 Broker/(4853:4853): socketero: 14
+[INFO] 14:26:20:497 Broker/(4853:4853): socketero: 15
+[INFO] 14:44:17:534 Broker/(4853:4853): socketero: 16
+[INFO] 14:44:19:981 Broker/(4853:4853): socketero: 17
+[INFO] 14:44:24:660 Broker/(4853:4853): socketero: 18
+[INFO] 14:45:13:879 Broker/(4853:4853): socketero: 19
+[INFO] 14:45:15:127 Broker/(4853:4853): socketero: 20
+[INFO] 14:46:02:401 Broker/(4853:4853): socketero: 21
+[INFO] 14:46:14:445 Broker/(4853:4853): socketero: 22
+[INFO] 14:46:19:323 Broker/(4853:4853): socketero: 23
+[INFO] 14:46:24:530 Broker/(4853:4853): socketero: 24
+[INFO] 14:47:12:810 Broker/(4853:4853): socketero: 25
+[INFO] 14:48:01:632 Broker/(4853:4853): socketero: 26
