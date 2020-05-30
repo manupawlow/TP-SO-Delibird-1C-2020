@@ -4,8 +4,6 @@
 
 int main(void){
 
-	int conexionAppeared, conexionCaugth, conexionLocalized;
-
 	t_log* logger;
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
@@ -16,10 +14,19 @@ int main(void){
 
 	//Obtener entrenadores y definir objetivo global
 
-    //t_list *entrenadores = config_team->pokemon_entrenadores;
+	 t_list *pokemonesEntrenadores = config_team->pokemon_entrenadores;
+	 t_list *objetivosEntrenadores = config_team->objetivos_entrenadores;
 
-    //int cantEntrenadores = list_size(entrenadores);
-    //log_info(logger,"Cantidad de entrenadores %d", cantEntrenadores);
+	 int cantEntrenadores = list_size(pokemonesEntrenadores);
+	 log_info(logger,"Cantidad de entrenadores %d", cantEntrenadores);
+
+	 t_list *objetivoUnificado = listaUnica(objetivosEntrenadores);
+	 t_list *pokemonesUnificado = listaUnica(pokemonesEntrenadores);
+	 t_list *objetivoGlobal = filtrado(pokemonesUnificado,objetivoUnificado);
+
+	 log_info(logger,"Objetivo Global:");
+	 recorrerLista(objetivoGlobal,logger);
+
 
 	//Conectarse al broker
 
@@ -27,9 +34,9 @@ int main(void){
 	char *puerto = config_team->puerto_broker;
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
-	//conexionAppeared = crear_conexion(ip,puerto);
-	//conexionCaugth = crear_conexion(ip,puerto);
-    //conexionLocalized =	crear_conexion(ip,puerto);
+	//int conexionAppeared = crear_conexion(ip,puerto);
+	//int conexionCaugth = crear_conexion(ip,puerto);
+    //int conexionLocalized =	crear_conexion(ip,puerto);
 
     //enviar_mensaje("Suscribime",conexionAppeared, SUS_LOC);
 
@@ -40,17 +47,6 @@ int main(void){
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
-    t_list *pokemonEntrenadores = config_team->pokemon_entrenadores;
-    t_list *objetivosEntrenadores = config_team->objetivos_entrenadores;
-
-    int cantEntrenadores = list_size(pokemonEntrenadores);
-    log_info(logger,"Cantidad de entrenadores %d", cantEntrenadores);
-
-    t_list *objetivoUnificado = listaUnica(objetivosEntrenadores);
-    t_list *pokemonesUnificado = listaUnica(pokemonEntrenadores);
-    t_list *objetivoReal = filtrado(pokemonesUnificado,objetivoUnificado);
-
-    recorrerLista(objetivoReal,logger);
 
 
     //Espero respuestas del get en la cola LOCALIZED
@@ -59,21 +55,13 @@ int main(void){
 
 	//Planificacion de los entrenadores para ir hasta la posicion del pokemon
 
-/*
 
+/*
 	pthread_t entrenador[cantidadEntrenadores];
-	/*
+
 	for(i=0;i<cantidadEntrenadores;i++)
 	pthread_create(&(entrenador[i]),NULL,(void)funcionEntrena,NULL);
 	pthread_join(entrenador[i],NULL);
-
-
-	void funcionEntrena(t_entrenador)
-
-
-	t_queue *entrenadores= create_queue();
-	queue_pop(entrenador);
-
 */
 
 	//log_info(logger,"La posicion de pikachu es \n");
@@ -133,6 +121,7 @@ Config_Team* construirConfigTeam(t_config* config){
 
 	config_team -> objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
 	config_team -> pokemon_entrenadores = listaDeListas(config, "POKEMON_ENTRENADORES");
+	config_team -> posiciones_entrenadores = listaDeListasPosiciones(config, "POSICIONES_ENTRENADORES");
 
 
 	return config_team;
@@ -167,4 +156,5 @@ t_list* listaDeListas(t_config* config, char* cadena) {
   free(array);
   return lista;
 }
+
 
