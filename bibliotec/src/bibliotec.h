@@ -13,6 +13,7 @@
 #include<commons/config.h>
 #include<commons/collections/queue.h>
 #include<readline/readline.h>
+#include<math.h>
 
 
 //CODIGO DE TIPOS DE MENSAJE
@@ -71,5 +72,10 @@ void liberar_conexion(int );
 void* serializar_paquete_cliente(t_paquete* , int*);
 
 char* concatena(int , char** );
+
+
+void* enviarACK(op_code* );
+void* recibir_mensaje_ACK(int);
+
 
 void terminar_programa(int , t_log* , t_config* );

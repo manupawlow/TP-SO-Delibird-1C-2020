@@ -1,5 +1,4 @@
-#include "/home/utnso/tp-2020-1c-NN/biblioteca/biblioteca.c"
-#include <commons/log.h>
+#include <bibliotec.h>
 
 int main(void) {
 
@@ -25,17 +24,17 @@ int main(void) {
 	ip = config_get_string_value(config,"IP_GAMECARD");
 	puerto = config_get_string_value(config,"PUERTO_GAMECARD");
 
-	iniciar_servidor(ip,puerto);
+	//iniciar_servidor(ip,puerto);
 
 	enviar_mensaje("Suscribime",conexion, SUS_GET);
-	enviar_mensaje("Suscribime",conexion, SUS_NEW);
-	enviar_mensaje("Suscribime",conexion, SUS_CATCH);
+	//enviar_mensaje("Suscribime",conexion, SUS_NEW);
+	//enviar_mensaje("Suscribime",conexion, SUS_CATCH);
 
 	//Se queda esperando que le llegue algun mensaje a la cola GET
 
 	while(1){
-		char *mensaje = recibir_mensaje_cliente(conexion);
-		log_info(logger,"Buscar posicion de %s\n",mensaje);
+		//char *mensaje = recibir_mensaje_cliente(conexion);
+		//log_info(logger,"Buscar posicion de %s\n",mensaje);
 	}
 	//TODO: se fija posicion pokemon
 

@@ -23,19 +23,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: broker
+all: libbibliotec.so
 
 # Tool invocations
-broker: $(OBJS) $(USER_OBJS)
+libbibliotec.so: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc -L"/home/utnso/tp-2020-1c-NN/bibliotec/Debug" -o "broker" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc -shared -o "libbibliotec.so" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) broker
+	-$(RM) $(LIBRARIES)$(OBJS)$(C_DEPS) libbibliotec.so
 	-@echo ' '
 
 .PHONY: all clean dependents

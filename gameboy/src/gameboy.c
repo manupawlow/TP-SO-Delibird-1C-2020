@@ -1,4 +1,4 @@
-#include "/home/utnso/tp-2020-1c-NN/biblioteca/biblioteca.c"
+#include <bibliotec.h>
 #include <commons/log.h>
 #include <commons/temporal.h>
 

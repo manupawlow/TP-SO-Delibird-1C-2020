@@ -1,8 +1,4 @@
-#include "/home/utnso/tp-2020-1c-NN/biblioteca/biblioteca.c"
-#include <commons/log.h>
-
-#include <stdio.h>
-#include <stdlib.h>
+#include <bibliotec.h>
 
 typedef struct {
 	int socket_cliente;
@@ -71,7 +67,7 @@ void process_request(Colas *loquito) {
 
 
 		case 0:
-			pthread_exit(NULL);
+			break;
 		case -1:
 			pthread_exit(NULL);
 		}

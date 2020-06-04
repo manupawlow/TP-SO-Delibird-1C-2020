@@ -1,4 +1,4 @@
-#include "biblioteca.h"
+#include "bibliotec.h"
 
 //t_queue *GET_POKEMON = create_queue();
 //t_queue *LOCALIZED = create_queue();
@@ -40,7 +40,7 @@ int esperar_cliente(int socket_servidor)
 {
 	struct sockaddr_in dir_cliente;
 
-	int tam_direccion = sizeof(struct sockaddr_in);
+	socklen_t tam_direccion = sizeof(struct sockaddr_in);
 	int socket_cliente = accept(socket_servidor, (void*) &dir_cliente, &tam_direccion);
 
 	//pthread_create(&thread,NULL,(void*)serve_client,&socket_cliente);
@@ -180,6 +180,64 @@ char* recibir_mensaje_cliente(int socket_cliente)
 		}
 		return buffer;
 }
+//------------------------------LOCURAS---------------------------------------------------------
+void* recibir_mensaje_ACK(int socket_cliente)
+{
+	op_code operacion;
+	pthread_t ack;
+
+	recv(socket_cliente,&operacion,sizeof(operacion),0);
+	int buffer_size;
+	recv(socket_cliente,&buffer_size,sizeof(buffer_size),0);
+	char *buffer = malloc(buffer_size);
+	recv(socket_cliente,buffer,buffer_size,0);
+	if (buffer[buffer_size - 1] != '\0'){
+			//ACA ES CON LOG
+		printf("WARN: El buffer no es un string\n");
+	}
+
+	printf("Recibi el mensaje: %s\n", buffer);
+
+	printf("Codigo: %d\n", operacion);
+
+	pthread_create(&ack,NULL,(void*)enviarACK,&operacion);
+	pthread_detach(ack);
+
+	//pthread_join(ack,NULL);
+	//pthread_exit(&ack);
+	return NULL;
+
+}
+
+void* enviarACK(op_code* operacion){
+
+	int socket_ACK;
+
+	printf("Codigo: %d\n", *operacion);
+
+	socket_ACK = crear_conexion("127.0.0.1","5003");
+
+	switch(*operacion){
+	case GET_POKEMON:
+		enviar_mensaje("Llego el Mensaje de suscripcion a la cola NEW.\n",socket_ACK,ACK);
+		break;
+	case SUS_NEW:
+		printf("HOLA LO ENVIO.");
+		enviar_mensaje("Llego el Mensaje de suscripcion a la cola NEW.\n",socket_ACK,ACK);
+		break;
+	case SUSCRIBIR:
+		enviar_mensaje("Llego el Mensaje de suscripcion a la cola MASTER OF PUPPETS.\n",socket_ACK,ACK);
+		break;
+	default:
+		printf("No anda como nada de lo que hacemos.\n");
+		break;
+	}
+	liberar_conexion(socket_ACK);
+	return NULL;
+}
+
+
+//-------------------------------------------------------------------------------------------------
 
 void liberar_conexion(int socket_cliente)
 {
