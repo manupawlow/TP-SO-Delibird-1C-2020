@@ -3,7 +3,7 @@
 
 #include "team.h"
 
-//void conexion_localized(Config_Team *config_team);
+void conexion_localized(Config_Team *config_team);
 void conexion_gameboy();
 void process_request(int socket_cliente);
 bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal);

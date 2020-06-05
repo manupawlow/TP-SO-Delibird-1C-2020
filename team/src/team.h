@@ -2,7 +2,6 @@
 #define TEAM_H_
 
 #include <bibliotec.h>
-#include "conexiones.h"
 #include "listas.h"
 
 const t_log* logger;

@@ -52,7 +52,6 @@ bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal){
 	return false;
 }
 
-/*
 void conexion_localized(Config_Team *config_team){
 	char *ip = config_team->ip_broker;
 	char *puerto = config_team->puerto_broker;
@@ -71,7 +70,7 @@ void conexion_localized(Config_Team *config_team){
 
 }
 
-
+/*
 void solicitar_pokemones(t_list *objetivoGlobal){
 	for(int i=0; i< list_size(objetivoGlobal); i++){
 		//int conexionGet = crearConexion()

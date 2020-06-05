@@ -1,4 +1,5 @@
 #include "team.h"
+#include "conexiones.h"
 
 int main(void){
 
@@ -18,8 +19,8 @@ int main(void){
 
 	//Conectarse al broker
 
-	//pthread_t *conexionLocalized;
-    //pthread_create(&conexionLocalized, NULL, conexion_localized, config_team);
+	pthread_t *conexionLocalized;
+    pthread_create(&conexionLocalized, NULL, conexion_localized, config_team);
 
     //Escuchar gameboy
 
@@ -30,6 +31,6 @@ int main(void){
 
     //solicitar_pokemones(objetivoGlobal);
 
-    //pthread_join(conexionLocalized,NULL);
+    pthread_join(conexionLocalized,NULL);
     pthread_join(conexionGameboy,NULL);
 }
