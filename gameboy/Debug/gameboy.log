@@ -144,3 +144,25 @@
 [INFO] 18:35:01:797 Gameboy/(9903:9903): Envie un mensaje a la cola APPEARED_POKEMON
 [INFO] 18:35:03:932 Gameboy/(9904:9904): Me conecte a la IP 127.0.0.2 y puerto 5002
 [INFO] 18:35:03:933 Gameboy/(9904:9904): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 19:50:09:330 Gameboy/(10665:10665): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 19:50:09:342 Gameboy/(10665:10665): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 19:50:29:403 Gameboy/(10666:10666): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 19:50:29:403 Gameboy/(10666:10666): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 19:50:31:5 Gameboy/(10667:10667): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 19:50:31:16 Gameboy/(10667:10667): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 19:50:47:496 Gameboy/(10671:10671): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 19:50:47:500 Gameboy/(10671:10671): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 19:50:50:636 Gameboy/(10672:10672): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 19:50:50:644 Gameboy/(10672:10672): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:09:20:232 Gameboy/(11306:11306): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:09:20:247 Gameboy/(11306:11306): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:09:56:263 Gameboy/(11309:11309): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:09:56:272 Gameboy/(11309:11309): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:10:04:970 Gameboy/(11312:11312): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:10:04:987 Gameboy/(11312:11312): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:13:56:368 Gameboy/(11400:11400): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:13:56:369 Gameboy/(11400:11400): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:13:58:126 Gameboy/(11403:11403): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:13:58:128 Gameboy/(11403:11403): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:13:58:852 Gameboy/(11404:11404): Me conecte a la IP 127.0.0.2 y puerto 5002
+[INFO] 20:13:58:853 Gameboy/(11404:11404): Envie un mensaje a la cola APPEARED_POKEMON

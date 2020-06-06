@@ -9528,3 +9528,28 @@
 [INFO] 22:55:11:154 Broker/(11059:11059): socketero: -1
 [INFO] 22:55:46:392 Broker/(11110:11110): Servidor con IP 127.0.0.1 y puerto 5003
 [INFO] 22:57:21:579 Broker/(10796:10796): socketero: 9
+[INFO] 19:06:48:623 Broker/(8398:8398): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:06:55:201 Broker/(8413:8413): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 19:06:55:205 Broker/(8413:8413): socketero: -1
+[INFO] 19:07:00:423 Broker/(8398:8398): socketero: 5
+[INFO] 19:07:00:423 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:16:15:306 Broker/(8398:8398): socketero: 6
+[INFO] 19:16:15:307 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:18:02:834 Broker/(8398:8398): socketero: 7
+[INFO] 19:18:02:834 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:46:14:894 Broker/(8398:8398): socketero: 8
+[INFO] 19:46:14:896 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:48:25:302 Broker/(8398:8398): socketero: 9
+[INFO] 19:48:25:302 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:48:39:100 Broker/(8398:8398): socketero: 10
+[INFO] 19:48:39:102 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:49:00:576 Broker/(8398:8398): socketero: 11
+[INFO] 19:49:00:578 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:49:03:867 Broker/(8398:8398): socketero: 12
+[INFO] 19:49:03:868 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 19:50:44:115 Broker/(8398:8398): socketero: 13
+[INFO] 19:50:44:117 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 20:08:38:172 Broker/(8398:8398): socketero: 14
+[INFO] 20:08:38:176 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 20:09:03:664 Broker/(8398:8398): socketero: 15
+[INFO] 20:09:03:664 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!

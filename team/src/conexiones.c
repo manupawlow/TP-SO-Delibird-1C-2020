@@ -10,7 +10,6 @@ void conexion_gameboy(){
 
     	process_request(socket_cliente);
     }
-
 }
 /*
 void conexion_appeared(Config_Team config_team){
@@ -91,7 +90,6 @@ void conexion_localized(Config_Team *config_team){
 	while(1){
 
 	}
-
 }
 
 void solicitar_pokemones(t_list *objetivoGlobal, Config_Team *config_team){

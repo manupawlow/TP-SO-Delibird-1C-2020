@@ -1,6 +1,6 @@
 #include "suscripciones.h"
 
-void enviar_a_todos(int suscritos[], int cant, int msg,int size, int cod_op){
+void enviar_a_todos(int suscritos[], int cant, char * msg,int size, int cod_op){
 
 	for(int i = 0; i < cant; i++){
 		devolver_mensaje(msg, size, suscritos[i], cod_op);
@@ -10,7 +10,7 @@ void enviar_a_todos(int suscritos[], int cant, int msg,int size, int cod_op){
 
 void process_request(Colas *loquito) {
 	int size;
-	void* msg;
+	char* msg;
 	int cod_op;
 
 	if(recv(loquito->socket_cliente, &cod_op, sizeof(int), MSG_WAITALL) == -1)

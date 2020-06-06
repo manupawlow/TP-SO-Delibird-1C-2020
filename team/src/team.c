@@ -20,16 +20,16 @@ int main(void){
 
 	//Conectarse al broker
 
-	pthread_t *conexionLocalized;
-    pthread_create(&conexionLocalized, NULL, conexion_localized, config_team);
+	pthread_t conexionLocalized;
+    pthread_create(&conexionLocalized, NULL,(void*) conexion_localized, config_team);
 
     //pthread_t *conexionAppeared;
     //pthread_create(&conexionAppeared, NULL,conexion_appeared ,config_team);
 
     //Escuchar gameboy
 
-    pthread_t *conexionGameboy;
-    pthread_create(&conexionGameboy, NULL, conexion_gameboy, NULL);
+    pthread_t conexionGameboy;
+    pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
