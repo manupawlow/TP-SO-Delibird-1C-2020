@@ -3,18 +3,17 @@
 #include<sys/socket.h>
 #include<unistd.h>
 #include<netdb.h>
-#include<commons/log.h>
-#include<commons/collections/list.h>
-#include<commons/config.h>
 #include<string.h>
 #include<pthread.h>
 #include<commons/log.h>
-#include<commons/string.h>
 #include<commons/config.h>
+#include<commons/collections/list.h>
 #include<commons/collections/queue.h>
+#include<commons/string.h>
+#include <commons/temporal.h>
 #include<readline/readline.h>
 #include<math.h>
-
+#include<time.h>
 
 //CODIGO DE TIPOS DE MENSAJE
 typedef enum
@@ -65,6 +64,7 @@ void* serializar_paquete(t_paquete* , int );
 void devolver_mensaje(void* , int , int , op_code );
 
 int crear_conexion(char*, char*);
+int reintentar_conexion(char* ip, char* puerto , int tiempo);
 void enviar_mensaje(char* , int , op_code );
 char* recibir_mensaje_cliente(int );
 void eliminar_paquete(t_paquete* );

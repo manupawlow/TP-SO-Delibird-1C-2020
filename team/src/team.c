@@ -22,6 +22,9 @@ int main(void){
 	pthread_t *conexionLocalized;
     pthread_create(&conexionLocalized, NULL, conexion_localized, config_team);
 
+    pthread_t *conexionAppeared;
+    pthread_create(&conexionAppeared, NULL,conexion_appeared ,config_team);
+
     //Escuchar gameboy
 
     pthread_t *conexionGameboy;
@@ -29,7 +32,9 @@ int main(void){
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
-    //solicitar_pokemones(objetivoGlobal);
+    //solicitar_pokemones(objetivoGlobal,config_team);
+
+    queue_create(ready);
 
     pthread_join(conexionLocalized,NULL);
     pthread_join(conexionGameboy,NULL);

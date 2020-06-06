@@ -115,11 +115,37 @@ int crear_conexion(char *ip, char* puerto)
 	int socket_cliente = socket(server_info->ai_family, server_info->ai_socktype, server_info->ai_protocol);
 
 	if(connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen) == -1)
-		printf("error");
+		return -1;
 
 	freeaddrinfo(server_info);
 
 	return socket_cliente;
+}
+
+int reintentar_conexion(char* ip, char* puerto , int tiempo)
+{
+	clock_t start, diff;
+	int elapsedsec;
+	int sec = tiempo;
+	int iterations = 0;
+	int conexion = -1;
+
+	while (iterations < 500 && (conexion== -1)) {
+		start = clock();
+
+		while (1) {
+			diff = clock() - start;
+	        elapsedsec = diff / CLOCKS_PER_SEC;
+
+	        if (elapsedsec >= sec) {
+	        	conexion =crear_conexion(ip,puerto);
+	        	iterations++;
+	            break;
+	            }
+	        }
+	    }
+	return conexion;
+
 }
 
 void* serializar_paquete_cliente(t_paquete* paquete, int *bytes)

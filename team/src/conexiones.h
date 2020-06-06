@@ -7,6 +7,7 @@ void conexion_localized(Config_Team *config_team);
 void conexion_gameboy();
 void process_request(int socket_cliente);
 bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal);
+void solicitar_pokemones(t_list *objetivoGlobal, Config_Team *config_team);
 
 
 #endif /* CONEXIONES_H_ */

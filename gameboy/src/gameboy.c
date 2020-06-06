@@ -1,6 +1,4 @@
 #include <bibliotec.h>
-#include <commons/log.h>
-#include <commons/temporal.h>
 
 int main(int argc, char *argv[]) {
 
@@ -28,6 +26,9 @@ int main(int argc, char *argv[]) {
 		puerto= config_get_string_value(config,"PUERTO_BROKER");
 
 		conexion = crear_conexion(ip,puerto);
+
+		if(conexion == -1)
+			log_info(logger,"No me pude conectar :(");
 
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 

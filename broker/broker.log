@@ -9515,3 +9515,16 @@
 [INFO] 03:56:25:907 Broker/(19144:19144): Servidor con IP 127.0.0.1 y puerto 5003
 [INFO] 20:57:33:291 Broker/(6674:6674): Servidor con IP 127.0.0.1 y puerto 5003
 [INFO] 21:42:15:386 Broker/(8453:8453): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:48:49:400 Broker/(10796:10796): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:49:08:994 Broker/(10796:10796): socketero: 5
+[INFO] 22:50:40:115 Broker/(10796:10796): socketero: 6
+[INFO] 22:50:50:454 Broker/(10796:10796): socketero: 7
+[INFO] 22:52:40:963 Broker/(10796:10796): socketero: 8
+[INFO] 22:54:29:915 Broker/(10999:10999): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:54:29:915 Broker/(10999:10999): socketero: -1
+[INFO] 22:54:42:221 Broker/(11029:11029): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:54:42:222 Broker/(11029:11029): socketero: -1
+[INFO] 22:55:06:64 Broker/(11059:11059): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:55:11:154 Broker/(11059:11059): socketero: -1
+[INFO] 22:55:46:392 Broker/(11110:11110): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:57:21:579 Broker/(10796:10796): socketero: 9

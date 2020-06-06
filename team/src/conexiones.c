@@ -13,6 +13,25 @@ void conexion_gameboy(){
 
 }
 
+void conexion_appeared(Config_Team config_team){
+	char *ip = config_team->ip_broker;
+	char *puerto = config_team->puerto_broker;
+
+	int conexionAppeared = crear_conexion(ip,puerto);
+
+	if(conexionAppeared ==-1){
+		log_info(logger,"Reintenando reconectar cada 10 segundos");
+		conexionAppeared= reintentar_conexion(ip,puerto,10);
+	}
+
+	log_info(logger,"Me conecte al broker!");
+
+	enviar_mensaje("Suscribime",conexionAppeared, SUS_APP);
+
+	log_info(logger,"Me suscribi a la cola Appeared!");
+
+}
+
 void process_request(int socket_cliente){
 	int cod_op;
 
@@ -58,9 +77,14 @@ void conexion_localized(Config_Team *config_team){
 
 	int conexionLocalized =	crear_conexion(ip,puerto);
 
+	if(conexionLocalized ==-1){
+		log_info(logger,"Reintenando reconectar cada 10 segundos");
+        conexionLocalized= reintentar_conexion(ip,puerto,10);
+	}
+
 	log_info(logger,"Me conecte al broker!");
 
-	enviar_mensaje("Suscribime",conexionLocalized, SUS_LOC);
+	enviar_mensaje("Suscribime",conexionLocalized, GET_POKEMON);
 
 	log_info(logger,"Me suscribi a la cola LOCALIZED!");
 
@@ -70,13 +94,19 @@ void conexion_localized(Config_Team *config_team){
 
 }
 
-/*
-void solicitar_pokemones(t_list *objetivoGlobal){
+void solicitar_pokemones(t_list *objetivoGlobal, Config_Team *config_team){
+	char *ip = config_team->ip_broker;
+	char *puerto = config_team->puerto_broker;
+
 	for(int i=0; i< list_size(objetivoGlobal); i++){
-		//int conexionGet = crearConexion()
+		int conexionGet = crear_conexion(ip,puerto);
+		if(conexionGet == -1){
+			log_info(logger,"No se pudo solicitar pokemon");
+		}else{
 		char *pokemon = list_get(objetivoGlobal,i);
 		enviar_mensaje(pokemon,conexionGet,GET_POKEMON);
 		close(conexionGet);
+		}
 	}
 }
-*/
+

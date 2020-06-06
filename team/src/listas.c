@@ -156,7 +156,7 @@ void menorDistancia (t_list *entrenadores, Posicion posicion){
 
 	entrenadorMasCerca = list_get(entrenadores,indiceEntrenadorMasCerca);
 	list_remove(entrenadores,indiceEntrenadorMasCerca);
-	//queue_push(ready,entrenadorMasCerca);
+	queue_push(ready,entrenadorMasCerca);
 
 }
 
