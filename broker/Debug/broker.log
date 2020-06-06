@@ -328,3 +328,11 @@
 [INFO] 22:32:22:510 Broker/(10336:10336): socketero: 5
 [INFO] 22:35:34:580 Broker/(10511:10511): Servidor con IP 127.0.0.1 y puerto 5003
 [INFO] 22:35:40:385 Broker/(10511:10511): socketero: 5
+[INFO] 16:48:35:345 Broker/(6254:6254): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 16:48:39:822 Broker/(6254:6254): socketero: 5
+[INFO] 16:48:39:823 Broker/(6254:6254): Se envio mensaje a todos los suscriptos!
+[INFO] 16:51:40:339 Broker/(6254:6254): socketero: 7
+[INFO] 16:51:40:345 Broker/(6254:6254): Se envio mensaje a todos los suscriptos!
+[INFO] 18:34:26:78 Broker/(9895:9895): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:34:41:286 Broker/(9895:9895): socketero: 5
+[INFO] 18:34:41:289 Broker/(9895:9895): Se envio mensaje a todos los suscriptos!

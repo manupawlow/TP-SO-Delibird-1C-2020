@@ -7,7 +7,7 @@
 const t_log* logger;
 t_list *entrenadores;
 t_list *objetivoGlobal;
-t_queue *ready;
+t_list *ready;
 t_queue *exce;
 
 #endif /* TEAM_H_ */

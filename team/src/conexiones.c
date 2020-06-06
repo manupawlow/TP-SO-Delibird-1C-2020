@@ -12,7 +12,7 @@ void conexion_gameboy(){
     }
 
 }
-
+/*
 void conexion_appeared(Config_Team config_team){
 	char *ip = config_team->ip_broker;
 	char *puerto = config_team->puerto_broker;
@@ -31,7 +31,7 @@ void conexion_appeared(Config_Team config_team){
 	log_info(logger,"Me suscribi a la cola Appeared!");
 
 }
-
+*/
 void process_request(int socket_cliente){
 	int cod_op;
 

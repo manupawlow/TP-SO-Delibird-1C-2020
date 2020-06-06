@@ -23157,3 +23157,92 @@
 [INFO] 23:11:14:278 Team/(11785:11785): Charmander
 [INFO] 23:11:56:400 Team/(11785:11794): Reintenando reconectar cada 10 segundos
 [INFO] 23:12:21:487 Team/(11785:11795): Llego pokemon a la cola APPEARED!
+[INFO] 16:48:01:783 Team/(6226:6226): Cantidad de entrenadores 3
+[INFO] 16:48:01:865 Team/(6226:6226): Objetivo Global:
+[INFO] 16:48:01:865 Team/(6226:6226): Pikachu
+[INFO] 16:48:01:865 Team/(6226:6226): Pikachu
+[INFO] 16:48:01:865 Team/(6226:6226): Charmander
+[INFO] 16:48:01:869 Team/(6226:6228): Reintenando reconectar cada 10 segundos
+[INFO] 16:48:39:822 Team/(6226:6228): Me conecte al broker!
+[INFO] 16:48:39:823 Team/(6226:6228): Me suscribi a la cola LOCALIZED!
+[INFO] 16:48:57:11 Team/(6226:6229): Llego pokemon a la cola APPEARED!
+[INFO] 16:48:57:11 Team/(6226:6229): wowo!
+[INFO] 16:49:03:721 Team/(6226:6229): Llego pokemon a la cola APPEARED!
+[INFO] 16:49:03:721 Team/(6226:6229): wowo!
+[INFO] 16:49:05:643 Team/(6226:6229): Llego pokemon a la cola APPEARED!
+[INFO] 16:49:05:643 Team/(6226:6229): No se necesita!
+[INFO] 16:51:40:324 Team/(6399:6399): Cantidad de entrenadores 3
+[INFO] 16:51:40:326 Team/(6399:6399): Objetivo Global:
+[INFO] 16:51:40:326 Team/(6399:6399): Pikachu
+[INFO] 16:51:40:326 Team/(6399:6399): Pikachu
+[INFO] 16:51:40:327 Team/(6399:6399): Charmander
+[INFO] 16:51:40:339 Team/(6399:6414): Me conecte al broker!
+[INFO] 16:51:40:346 Team/(6399:6414): Me suscribi a la cola LOCALIZED!
+[INFO] 16:51:55:336 Team/(6399:6415): Llego pokemon a la cola APPEARED!
+[INFO] 17:05:16:325 Team/(6833:6833): Cantidad de entrenadores 3
+[INFO] 17:05:16:342 Team/(6833:6833): Objetivo Global:
+[INFO] 17:05:16:342 Team/(6833:6833): Pikachu
+[INFO] 17:05:16:345 Team/(6833:6833): Pikachu
+[INFO] 17:05:16:347 Team/(6833:6833): Charmander
+[INFO] 17:05:16:353 Team/(6833:6843): Reintenando reconectar cada 10 segundos
+[INFO] 17:05:24:169 Team/(6833:6844): Llego pokemon a la cola APPEARED!
+[INFO] 17:06:38:434 Team/(6912:6912): Cantidad de entrenadores 3
+[INFO] 17:06:38:434 Team/(6912:6912): Objetivo Global:
+[INFO] 17:06:38:434 Team/(6912:6912): Pikachu
+[INFO] 17:06:38:434 Team/(6912:6912): Pikachu
+[INFO] 17:06:38:434 Team/(6912:6912): Charmander
+[INFO] 17:06:38:461 Team/(6912:6944): Reintenando reconectar cada 10 segundos
+[INFO] 17:06:46:701 Team/(6912:6945): Llego pokemon a la cola APPEARED!
+[INFO] 17:08:30:38 Team/(7007:7007): Cantidad de entrenadores 3
+[INFO] 17:08:30:39 Team/(7007:7007): Objetivo Global:
+[INFO] 17:08:30:39 Team/(7007:7007): Pikachu
+[INFO] 17:08:30:39 Team/(7007:7007): Pikachu
+[INFO] 17:08:30:39 Team/(7007:7007): Charmander
+[INFO] 17:08:30:58 Team/(7007:7029): Reintenando reconectar cada 10 segundos
+[INFO] 17:08:38:426 Team/(7007:7030): Llego pokemon a la cola APPEARED!
+[INFO] 17:09:51:432 Team/(7108:7108): Cantidad de entrenadores 3
+[INFO] 17:09:51:435 Team/(7108:7108): Objetivo Global:
+[INFO] 17:09:51:435 Team/(7108:7108): Pikachu
+[INFO] 17:09:51:435 Team/(7108:7108): Pikachu
+[INFO] 17:09:51:441 Team/(7108:7108): Charmander
+[INFO] 17:09:51:465 Team/(7108:7124): Reintenando reconectar cada 10 segundos
+[INFO] 17:09:55:727 Team/(7108:7125): Llego pokemon a la cola APPEARED!
+[INFO] 17:16:31:102 Team/(7343:7343): Cantidad de entrenadores 3
+[INFO] 17:16:31:103 Team/(7343:7343): Objetivo Global:
+[INFO] 17:16:31:103 Team/(7343:7343): Pikachu
+[INFO] 17:16:31:103 Team/(7343:7343): Pikachu
+[INFO] 17:16:31:103 Team/(7343:7343): Charmander
+[INFO] 17:16:31:126 Team/(7343:7353): Reintenando reconectar cada 10 segundos
+[INFO] 17:16:43:136 Team/(7343:7354): Llego pokemon a la cola APPEARED!
+[INFO] 17:32:50:853 Team/(7949:7949): Cantidad de entrenadores 3
+[INFO] 17:32:50:856 Team/(7949:7949): Objetivo Global:
+[INFO] 17:32:50:856 Team/(7949:7949): Pikachu
+[INFO] 17:32:50:856 Team/(7949:7949): Pikachu
+[INFO] 17:32:50:856 Team/(7949:7949): Charmander
+[INFO] 17:32:50:861 Team/(7949:7956): Reintenando reconectar cada 10 segundos
+[INFO] 17:33:00:966 Team/(7949:7957): Llego pokemon a la cola APPEARED!
+[INFO] 17:33:00:967 Team/(7949:7957): wowo!
+[INFO] 17:33:04:37 Team/(7949:7957): Llego pokemon a la cola APPEARED!
+[INFO] 17:33:04:38 Team/(7949:7957): wowo!
+[INFO] 17:33:06:736 Team/(7949:7957): Llego pokemon a la cola APPEARED!
+[INFO] 17:33:06:738 Team/(7949:7957): No se necesita!
+[INFO] 18:20:35:796 Team/(9483:9483): Cantidad de entrenadores 3
+[INFO] 18:20:35:811 Team/(9483:9483): Objetivo Global:
+[INFO] 18:20:35:811 Team/(9483:9483): Pikachu
+[INFO] 18:20:35:811 Team/(9483:9483): Pikachu
+[INFO] 18:20:35:811 Team/(9483:9483): Charmander
+[INFO] 18:20:35:820 Team/(9483:9488): Reintenando reconectar cada 10 segundos
+[INFO] 18:30:25:807 Team/(9812:9812): Cantidad de entrenadores 3
+[INFO] 18:30:25:809 Team/(9812:9812): Objetivo Global:
+[INFO] 18:30:25:809 Team/(9812:9812): Pikachu
+[INFO] 18:30:25:809 Team/(9812:9812): Pikachu
+[INFO] 18:30:25:809 Team/(9812:9812): Charmander
+[INFO] 18:30:25:818 Team/(9812:9817): Reintenando reconectar cada 10 segundos
+[INFO] 18:34:41:286 Team/(9812:9817): Me conecte al broker!
+[INFO] 18:34:41:289 Team/(9812:9817): Me suscribi a la cola LOCALIZED!
+[INFO] 18:34:59:221 Team/(9812:9818): Llego pokemon a la cola APPEARED!
+[INFO] 18:34:59:235 Team/(9812:9818): wowo!
+[INFO] 18:35:01:796 Team/(9812:9818): Llego pokemon a la cola APPEARED!
+[INFO] 18:35:01:796 Team/(9812:9818): wowo!
+[INFO] 18:35:03:932 Team/(9812:9818): Llego pokemon a la cola APPEARED!
+[INFO] 18:35:03:932 Team/(9812:9818): No se necesita!

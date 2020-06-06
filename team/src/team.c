@@ -11,6 +11,7 @@ int main(void){
 	//Obtener entrenadores y definir objetivo global
 
 	log_info(logger,"Cantidad de entrenadores %d", list_size(config_team->objetivos_entrenadores));
+
 	entrenadores = crearEntrenadores(config_team);
 
 	log_info(logger,"Objetivo Global:");
@@ -22,8 +23,8 @@ int main(void){
 	pthread_t *conexionLocalized;
     pthread_create(&conexionLocalized, NULL, conexion_localized, config_team);
 
-    pthread_t *conexionAppeared;
-    pthread_create(&conexionAppeared, NULL,conexion_appeared ,config_team);
+    //pthread_t *conexionAppeared;
+    //pthread_create(&conexionAppeared, NULL,conexion_appeared ,config_team);
 
     //Escuchar gameboy
 
@@ -34,7 +35,7 @@ int main(void){
 
     //solicitar_pokemones(objetivoGlobal,config_team);
 
-    queue_create(ready);
+    ready= list_create();
 
     pthread_join(conexionLocalized,NULL);
     pthread_join(conexionGameboy,NULL);
