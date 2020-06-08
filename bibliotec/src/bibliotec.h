@@ -14,6 +14,7 @@
 #include<readline/readline.h>
 #include<math.h>
 #include<time.h>
+#include<semaphore.h>
 
 //CODIGO DE TIPOS DE MENSAJE
 typedef enum

@@ -1,18 +1,19 @@
 #include "team.h"
 #include "conexiones.h"
+#include "listas.h"
 
 int main(void){
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
-	t_config *config = config_create(conf);
-	Config_Team *config_team = construirConfigTeam(config);
+	t_config *config_team = config_create(conf);
+	config = construirConfigTeam(config_team);
 	logger = log_create("team.log", "Team", 1, LOG_LEVEL_INFO);
+	setearVariablesGlobales();
 
-	//Obtener entrenadores y definir objetivo global
+	//Crear hilo por cada entrenadores y definir objetivo global
 
-	log_info(logger,"Cantidad de entrenadores %d", list_size(config_team->objetivos_entrenadores));
-
-	entrenadores = crearEntrenadores(config_team);
+	log_info(logger,"Cantidad de entrenadores %d", list_size(config->objetivos_entrenadores));
+	new = crearEntrenadores(config_team);
 
 	log_info(logger,"Objetivo Global:");
 	objetivoGlobal = obtenerObjetivoGlobal(config_team);
@@ -34,6 +35,9 @@ int main(void){
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
     //solicitar_pokemones(objetivoGlobal,config_team);
+
+    pthread_t ponerEnEjecuccion;
+    pthread_create(&ponerEnEjecuccion, NULL, (void*) poner_en_exce, NULL);
 
     ready= list_create();
 

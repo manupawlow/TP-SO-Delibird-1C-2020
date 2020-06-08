@@ -1,9 +1,9 @@
 #include "listas.h"
 
-t_list *obtenerObjetivoGlobal(Config_Team *config_team){
+t_list *obtenerObjetivoGlobal(){
 
-	 t_list *pokemonesEntrenadores = config_team->pokemon_entrenadores;
-	 t_list *objetivosEntrenadores = config_team->objetivos_entrenadores;
+	 t_list *pokemonesEntrenadores = config->pokemon_entrenadores;
+	 t_list *objetivosEntrenadores = config->objetivos_entrenadores;
 
 	 t_list *objetivoUnificado = listaUnica(objetivosEntrenadores);
      t_list *pokemonesUnificado = listaUnica(pokemonesEntrenadores);
@@ -64,8 +64,10 @@ Config_Team* construirConfigTeam(t_config* config){
 
 	config_team -> objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
 	config_team -> pokemon_entrenadores = listaDeListas(config, "POKEMON_ENTRENADORES");
-	config_team -> posiciones_entrenadores = listaDeListasPosiciones(config, "POSICIONES_ENTRENADORES");
+	config_team -> posiciones_entrenadores = listaPosiciones(config, "POSICIONES_ENTRENADORES");
 
+	config_team -> retardo_cpu = config_get_int_value(config, "RETARDO_CICLO_CPU");
+	config_team -> reconexion = config_get_int_value(config, "TIEMPO_RECONEXION");
 
 	return config_team;
 }
@@ -100,7 +102,7 @@ t_list* listaDeListas(t_config* config, char* cadena) {
   return lista;
 }
 
-t_list* listaDeListasPosiciones(t_config* config, char* cadena) {
+t_list* listaPosiciones(t_config* config, char* cadena) {
   char** array = config_get_array_value(config, cadena);
 
   t_list* posiciones = list_create();
@@ -126,39 +128,27 @@ t_list* listaDeListasPosiciones(t_config* config, char* cadena) {
   return posiciones;
 }
 
-t_list *crearEntrenadores(Config_Team *config ){
-	t_list *posiciones = config ->posiciones_entrenadores;
-	t_list *pokemones = config ->pokemon_entrenadores;
-	t_list *entrenadores = list_create();
+void menorDistancia (Posicion posicion){
 
-	for(int i=0; i< list_size(posiciones); i++){
-		Entrenador *entrenador = malloc(sizeof(Entrenador));
-		entrenador->pokemones=list_get(pokemones,i);
-		entrenador->posicion=list_get(posiciones,i);
-		list_add(entrenadores,entrenador);
-	}
-
-	return entrenadores;
-}
-
-void menorDistancia (t_list *entrenadores, Posicion posicion){
-
-	Entrenador *entrenadorMasCerca = list_get(entrenadores,0);
+	Entrenador *entrenadorMasCerca = list_get(new,0);
 	int indiceEntrenadorMasCerca = 0;
 
-	for(int i=1; i<list_size(entrenadores);i++){
-		Entrenador *entrenador= list_get(entrenadores,i);
+	for(int i=1; i<list_size(new);i++){
+		Entrenador *entrenador= list_get(new,i);
 		if( distancia(entrenador,posicion) < distancia(entrenadorMasCerca,posicion) ){
 			entrenadorMasCerca=entrenador;
 		    indiceEntrenadorMasCerca=i;
 		}
 	}
 
-	entrenadorMasCerca = list_get(entrenadores,indiceEntrenadorMasCerca);
-	list_remove(entrenadores,indiceEntrenadorMasCerca);
-
+	entrenadorMasCerca = list_get(new,indiceEntrenadorMasCerca);
+	entrenadorMasCerca->posicion_a_capturar->x=posicion.x;
+	entrenadorMasCerca->posicion_a_capturar->y=posicion.y;
+	list_remove(new,indiceEntrenadorMasCerca);
 	list_add(ready,entrenadorMasCerca);
 
+	sem_post(&semaforoExce);
+	
 }
 
 float distancia(Entrenador *entrenador, Posicion posicion){
