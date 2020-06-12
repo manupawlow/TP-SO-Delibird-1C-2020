@@ -19,22 +19,23 @@
 //CODIGO DE TIPOS DE MENSAJE
 typedef enum
 {
-	//hacer 6 tipos o uno solo?
 	SUSCRIBIR=1,
+
 	SUS_NEW,
 	SUS_GET,
 	SUS_LOC,
 	SUS_APP,
-	SUS_CAUGTH,
+	SUS_CAUGHT,
 	SUS_CATCH,
-	//acknowledgment es para avisar que le llego un mensaje al broker + boludeces
-	ACK,
+
 	NEW_POKEMON,
 	GET_POKEMON,
 	CAUGHT_POKEMON,
 	CATCH_POKEMON,
 	LOCALIZED_POKEMON,
-	APPEARED_POKEMON
+	APPEARED_POKEMON,
+
+	ACK
 }op_code;
 //----------------------------
 
