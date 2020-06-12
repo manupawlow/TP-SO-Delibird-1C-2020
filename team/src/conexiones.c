@@ -5,14 +5,18 @@ t_list *crearEntrenadores(){
 	t_list *pokemones = config ->pokemon_entrenadores;
 	t_list *entrenadores = list_create();
 
+	Posicion *base = malloc(sizeof(Posicion));
+	base->x=0;
+	base->y=0;
+
 	for(int i=0; i< list_size(posiciones); i++){
 		Entrenador *entrenador = malloc(sizeof(Entrenador));
-		pthread_t hiloEntrenador;
-		pthread_create(&hiloEntrenador,NULL,(void *) realizar_tareas,entrenador);
 		entrenador->pokemones=list_get(pokemones,i);
 		entrenador->posicion=list_get(posiciones,i);
-		entrenador->posicion_a_capturar=list_get(posiciones,i);
+		entrenador->posicion_a_capturar= base;
 		sem_init(&entrenador->mx_entrenador,0,0);
+		pthread_t hiloEntrenador;
+		pthread_create(&hiloEntrenador,NULL,(void *) realizar_tareas,entrenador);
 		list_add(entrenadores,entrenador);
 	}
 
@@ -23,6 +27,9 @@ void setearVariablesGlobales(){
 	ip= config->ip_broker;
 	puerto= config->puerto_broker;
 
+	ready= list_create();
+
+
 	sem_init(&semaforoExce,0,0);
 	pthread_mutex_init(&mxExce,NULL);
 }
@@ -32,7 +39,7 @@ void realizar_tareas(Entrenador *entrenador){
 
 	int dis_x= abs(entrenador->posicion_a_capturar->x - entrenador->posicion->x);
 	int dis_y= abs(entrenador->posicion_a_capturar->y - entrenador->posicion->y);
-	int moverse = (dis_x + dis_y) * config->retardo_cpu + 7;
+	int moverse = (dis_x + dis_y) ;//* config->retardo_cpu;
 
 	log_info(logger,"Tiempo %d segundos:", moverse);
 
@@ -40,9 +47,14 @@ void realizar_tareas(Entrenador *entrenador){
 	entrenador->posicion->x = entrenador->posicion_a_capturar->x;
 	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
 
+	list_add(block,entrenador);
+	pthread_mutex_unlock(&mxExce);
+
+	sem_wait(&entrenador->mx_entrenador);
+
 	log_info(logger,"Agarre pokemon!");
 
-	pthread_mutex_unlock(&mxExce);
+
 
 }
 
@@ -73,28 +85,10 @@ void conexion_gameboy(){
     	process_request(socket_cliente);
     }
 }
-/*
-void conexion_appeared(Config_Team config_team){
-
-	int conexionAppeared = crear_conexion(ip,puerto);
-
-	if(conexionAppeared ==-1){
-		log_info(logger,"Reintenando reconectar cada 10 segundos");
-		conexionAppeared= reintentar_conexion(ip,puerto,10);
-	}
-
-	log_info(logger,"Me conecte al broker!");
-
-	enviar_mensaje("Suscribime",conexionAppeared, SUS_APP);
-
-	log_info(logger,"Me suscribi a la cola Appeared!");
-
-}
-*/
 
 void process_request(int socket_cliente){
 	int cod_op;
-
+	Entrenador *ent;
 	if(recv(socket_cliente, &cod_op, sizeof(int), MSG_WAITALL) == -1)
 				cod_op = -1;
 
@@ -104,8 +98,8 @@ void process_request(int socket_cliente){
 
 		char* pokemon = "Pikachu";
 		Posicion pos;
-		pos.x=2;
-		pos.y=3;
+		pos.x=15;
+		pos.y=15;
 		if(necesitaPokemon(pokemon, objetivoGlobal)){
 			menorDistancia(pos);
 
@@ -113,21 +107,33 @@ void process_request(int socket_cliente){
 			log_info(logger,"No se necesita!");
 
 		break;
+	case CAUGHT_POKEMON:
+		//if esSuPokemon
+        ent= list_get(block,0);
+		list_remove(block,0);
+		list_add(ent,ready);
+		sem_post(&semaforoExce);
+
 
 	}
 }
 
-bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal){
+void conexion_appeared(Config_Team config_team){
 
-	for(int i=0; i< list_size(objetivoGlobal); i++){
-		char *objetivo = list_get(objetivoGlobal,i);
-		if(!strcmp(pokemon,objetivo)){
-			list_remove(objetivoGlobal,i);
-			return true;
-		}
+	int conexionAppeared = crear_conexion(ip,puerto);
+
+	if(conexionAppeared ==-1){
+		log_info(logger,"Reintenando reconectar cada %d segundos", config->reconexion);
+		conexionAppeared= reintentar_conexion(ip,puerto,config->reconexion);
 	}
 
-	return false;
+	enviar_mensaje("Suscribime",conexionAppeared, SUS_APP);
+	log_info(logger,"Me suscribi a la cola Appeared!");
+
+	while(1){
+		process_request(conexionAppeared);
+	}
+
 }
 
 void conexion_localized(){
@@ -139,13 +145,28 @@ void conexion_localized(){
         conexionLocalized= reintentar_conexion(ip,puerto,config->reconexion);
 	}
 
-	log_info(logger,"Me conecte al broker!");
-
-	enviar_mensaje("Suscribime",conexionLocalized, GET_POKEMON);
-
-	log_info(logger,"Me suscribi a la cola LOCALIZED!");
+	enviar_mensaje("Suscribime",conexionLocalized, SUS_LOC);
+	log_info(logger,"Me suscribi a la cola Localized!");
 
 	while(1){
+
+	}
+}
+
+void conexion_caugth(){
+
+	int conexionCaugth = crear_conexion(ip,puerto);
+
+	if(conexionCaugth ==-1){
+		log_info(logger,"Reintenando reconectar cada %d segundos", config->reconexion);
+        conexionCaugth= reintentar_conexion(ip,puerto,config->reconexion);
+	}
+
+	enviar_mensaje("Suscribime",conexionCaugth, SUS_GET);
+	log_info(logger,"Me suscribi a la cola Caugth!");
+
+	while(1){
+		//char *mensaje = recibir_mensaje_cliente(conexionCaugth);
 
 	}
 }
@@ -164,3 +185,15 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 	}
 }
 
+bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal){
+
+	for(int i=0; i< list_size(objetivoGlobal); i++){
+		char *objetivo = list_get(objetivoGlobal,i);
+		if(!strcmp(pokemon,objetivo)){
+			list_remove(objetivoGlobal,i);
+			return true;
+		}
+	}
+
+	return false;
+}

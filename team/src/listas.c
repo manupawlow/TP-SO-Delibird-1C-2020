@@ -142,8 +142,8 @@ void menorDistancia (Posicion posicion){
 	}
 
 	entrenadorMasCerca = list_get(new,indiceEntrenadorMasCerca);
-	entrenadorMasCerca->posicion_a_capturar->x=posicion.x;
-	entrenadorMasCerca->posicion_a_capturar->y=posicion.y;
+	entrenadorMasCerca->posicion_a_capturar->x = posicion.x;
+	entrenadorMasCerca->posicion_a_capturar->y = posicion.y;
 	list_remove(new,indiceEntrenadorMasCerca);
 	list_add(ready,entrenadorMasCerca);
 

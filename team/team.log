@@ -292,3 +292,560 @@
 [INFO] 03:47:07:632 Team/(12839:12844): Agarre pokemon!
 [INFO] 03:47:36:142 Team/(12839:12847): Me conecte al broker!
 [INFO] 03:47:36:143 Team/(12839:12847): Me suscribi a la cola LOCALIZED!
+[INFO] 19:03:59:690 Team/(13655:13655): Cantidad de entrenadores 3
+[INFO] 19:03:59:691 Team/(13655:13655): Objetivo Global:
+[INFO] 19:03:59:691 Team/(13655:13655): Pikachu
+[INFO] 19:03:59:691 Team/(13655:13655): Pikachu
+[INFO] 19:03:59:691 Team/(13655:13655): Pikachu
+[INFO] 19:03:59:691 Team/(13655:13655): Charmander
+[INFO] 19:03:59:704 Team/(13655:13663): Reintenando reconectar cada 30 segundos
+[INFO] 19:04:38:246 Team/(13655:13664): Llego pokemon a la cola APPEARED!
+[INFO] 19:04:38:247 Team/(13655:13665): LLego entrenador!
+[INFO] 19:04:38:247 Team/(13655:13665): Entrenador ejecutando
+[INFO] 19:04:38:247 Team/(13655:13660): Tiempo 7 segundos:
+[INFO] 19:04:40:645 Team/(13655:13664): Llego pokemon a la cola APPEARED!
+[INFO] 19:04:40:646 Team/(13655:13665): LLego entrenador!
+[INFO] 19:04:45:247 Team/(13655:13660): Agarre pokemon!
+[INFO] 19:04:45:248 Team/(13655:13665): Entrenador ejecutando
+[INFO] 19:04:45:248 Team/(13655:13662): Tiempo 7 segundos:
+[INFO] 19:04:52:248 Team/(13655:13662): Agarre pokemon!
+[INFO] 19:05:25:292 Team/(13655:13664): Llego pokemon a la cola APPEARED!
+[INFO] 19:05:25:293 Team/(13655:13665): LLego entrenador!
+[INFO] 19:05:25:293 Team/(13655:13665): Entrenador ejecutando
+[INFO] 19:05:25:293 Team/(13655:13661): Tiempo 7 segundos:
+[INFO] 19:05:32:293 Team/(13655:13661): Agarre pokemon!
+[INFO] 19:07:11:781 Team/(13759:13759): Cantidad de entrenadores 3
+[INFO] 19:07:11:820 Team/(13759:13759): Objetivo Global:
+[INFO] 19:07:11:821 Team/(13759:13759): Pikachu
+[INFO] 19:07:11:821 Team/(13759:13759): Pikachu
+[INFO] 19:07:11:821 Team/(13759:13759): Pikachu
+[INFO] 19:07:11:821 Team/(13759:13759): Charmander
+[INFO] 19:07:11:831 Team/(13759:13768): Reintenando reconectar cada 30 segundos
+[INFO] 19:07:20:650 Team/(13759:13769): Llego pokemon a la cola APPEARED!
+[INFO] 19:07:20:650 Team/(13759:13770): LLego entrenador!
+[INFO] 19:07:20:650 Team/(13759:13770): Entrenador ejecutando
+[INFO] 19:10:35:396 Team/(13864:13864): Cantidad de entrenadores 3
+[INFO] 19:10:35:457 Team/(13864:13864): Objetivo Global:
+[INFO] 19:10:35:457 Team/(13864:13864): Pikachu
+[INFO] 19:10:35:457 Team/(13864:13864): Pikachu
+[INFO] 19:10:35:457 Team/(13864:13864): Pikachu
+[INFO] 19:10:35:457 Team/(13864:13864): Charmander
+[INFO] 19:10:35:468 Team/(13864:13874): Reintenando reconectar cada 30 segundos
+[INFO] 19:10:39:982 Team/(13864:13875): Llego pokemon a la cola APPEARED!
+[INFO] 19:12:06:374 Team/(13864:13876): LLego entrenador!
+[INFO] 19:12:06:374 Team/(13864:13876): Entrenador ejecutando
+[INFO] 19:13:52:336 Team/(13967:13967): Cantidad de entrenadores 3
+[INFO] 19:13:52:343 Team/(13967:13967): Objetivo Global:
+[INFO] 19:13:52:343 Team/(13967:13967): Pikachu
+[INFO] 19:13:52:343 Team/(13967:13967): Pikachu
+[INFO] 19:13:52:345 Team/(13967:13967): Pikachu
+[INFO] 19:13:52:346 Team/(13967:13967): Charmander
+[INFO] 19:13:52:348 Team/(13967:13975): Reintenando reconectar cada 30 segundos
+[INFO] 19:13:57:868 Team/(13967:13976): Llego pokemon a la cola APPEARED!
+[INFO] 19:13:57:868 Team/(13967:13977): LLego entrenador!
+[INFO] 19:13:57:868 Team/(13967:13977): Entrenador ejecutando
+[INFO] 19:13:57:868 Team/(13967:13974): Tiempo 0 segundos:
+[INFO] 19:13:57:868 Team/(13967:13974): Agarre pokemon!
+[INFO] 19:14:29:92 Team/(14009:14009): Cantidad de entrenadores 3
+[INFO] 19:14:29:118 Team/(14009:14009): Objetivo Global:
+[INFO] 19:14:29:121 Team/(14009:14009): Pikachu
+[INFO] 19:14:29:121 Team/(14009:14009): Pikachu
+[INFO] 19:14:29:121 Team/(14009:14009): Pikachu
+[INFO] 19:14:29:121 Team/(14009:14009): Charmander
+[INFO] 19:14:29:136 Team/(14009:14020): Reintenando reconectar cada 30 segundos
+[INFO] 19:14:38:600 Team/(14009:14021): Llego pokemon a la cola APPEARED!
+[INFO] 19:16:28:760 Team/(14009:14022): LLego entrenador!
+[INFO] 19:16:28:760 Team/(14009:14022): Entrenador ejecutando
+[INFO] 19:16:38:568 Team/(14009:14019): Tiempo 0 segundos:
+[INFO] 19:16:38:569 Team/(14009:14019): Agarre pokemon!
+[INFO] 19:16:51:60 Team/(14009:14021): Llego pokemon a la cola APPEARED!
+[INFO] 19:17:04:739 Team/(14009:14022): LLego entrenador!
+[INFO] 19:17:04:739 Team/(14009:14022): Entrenador ejecutando
+[INFO] 19:18:26:733 Team/(14158:14158): Cantidad de entrenadores 3
+[INFO] 19:19:02:503 Team/(14158:14170): Tiempo 0 segundos:
+[INFO] 19:19:02:504 Team/(14158:14170): Agarre pokemon!
+[INFO] 19:20:11:682 Team/(14158:14158): Objetivo Global:
+[INFO] 19:20:11:682 Team/(14158:14177): Tiempo 0 segundos:
+[INFO] 19:20:11:682 Team/(14158:14158): Pikachu
+[INFO] 19:20:11:682 Team/(14158:14158): Pikachu
+[INFO] 19:20:11:682 Team/(14158:14158): Pikachu
+[INFO] 19:20:11:683 Team/(14158:14158): Charmander
+[INFO] 19:20:11:684 Team/(14158:14177): Agarre pokemon!
+[INFO] 19:20:11:691 Team/(14158:14202): Reintenando reconectar cada 30 segundos
+[INFO] 19:20:11:740 Team/(14158:14181): Tiempo 0 segundos:
+[INFO] 19:20:11:741 Team/(14158:14181): Agarre pokemon!
+[INFO] 19:20:39:437 Team/(14235:14235): Cantidad de entrenadores 3
+[INFO] 19:23:17:294 Team/(14333:14333): Cantidad de entrenadores 3
+[INFO] 19:23:17:294 Team/(14333:14333): Posicion x 0
+[INFO] 19:23:17:296 Team/(14333:14333): Posicion x 0
+[INFO] 19:23:17:296 Team/(14333:14333): Posicion x 0
+[INFO] 19:23:17:296 Team/(14333:14333): Objetivo Global:
+[INFO] 19:23:17:296 Team/(14333:14333): Pikachu
+[INFO] 19:23:17:296 Team/(14333:14333): Pikachu
+[INFO] 19:23:17:296 Team/(14333:14333): Pikachu
+[INFO] 19:23:17:296 Team/(14333:14333): Charmander
+[INFO] 19:23:17:304 Team/(14333:14341): Reintenando reconectar cada 30 segundos
+[INFO] 19:23:23:715 Team/(14351:14351): Cantidad de entrenadores 3
+[INFO] 19:23:23:716 Team/(14351:14351): Posicion x 0
+[INFO] 19:23:23:718 Team/(14351:14351): Posicion x 0
+[INFO] 19:23:23:718 Team/(14351:14351): Posicion x 0
+[INFO] 19:23:23:718 Team/(14351:14351): Objetivo Global:
+[INFO] 19:23:23:720 Team/(14351:14351): Pikachu
+[INFO] 19:23:23:723 Team/(14351:14351): Pikachu
+[INFO] 19:23:23:723 Team/(14351:14351): Pikachu
+[INFO] 19:23:23:723 Team/(14351:14351): Charmander
+[INFO] 19:23:23:735 Team/(14351:14361): Reintenando reconectar cada 30 segundos
+[INFO] 19:30:26:325 Team/(14516:14516): Cantidad de entrenadores 3
+[INFO] 19:30:26:327 Team/(14516:14516): Posicion x 0
+[INFO] 19:30:26:327 Team/(14516:14516): Posicion x 0
+[INFO] 19:30:26:327 Team/(14516:14516): Posicion x 0
+[INFO] 19:30:26:328 Team/(14516:14516): Objetivo Global:
+[INFO] 19:30:26:328 Team/(14516:14516): Pikachu
+[INFO] 19:30:26:328 Team/(14516:14516): Pikachu
+[INFO] 19:30:26:328 Team/(14516:14516): Pikachu
+[INFO] 19:30:26:329 Team/(14516:14516): Charmander
+[INFO] 19:30:26:340 Team/(14516:14524): Reintenando reconectar cada 30 segundos
+[INFO] 19:33:34:109 Team/(14670:14670): Posicion x 0
+[INFO] 19:33:34:111 Team/(14670:14670): Cantidad de entrenadores 3
+[INFO] 19:33:34:111 Team/(14670:14670): Posicion x 0
+[INFO] 19:33:34:111 Team/(14670:14670): Posicion x 0
+[INFO] 19:33:34:111 Team/(14670:14670): Posicion x 0
+[INFO] 19:33:34:111 Team/(14670:14670): Objetivo Global:
+[INFO] 19:33:34:111 Team/(14670:14670): Pikachu
+[INFO] 19:33:34:112 Team/(14670:14670): Pikachu
+[INFO] 19:33:34:112 Team/(14670:14670): Pikachu
+[INFO] 19:33:34:112 Team/(14670:14670): Charmander
+[INFO] 19:33:34:130 Team/(14670:14678): Reintenando reconectar cada 30 segundos
+[INFO] 19:51:27:578 Team/(15067:15067): Posicion x 0
+[INFO] 19:51:42:737 Team/(15067:15067): Cantidad de entrenadores 3
+[INFO] 19:52:01:37 Team/(15067:15067): Posicion x 0
+[INFO] 19:52:07:244 Team/(15067:15067): Posicion x 0
+[INFO] 19:52:09:326 Team/(15067:15067): Posicion x 0
+[INFO] 19:52:09:338 Team/(15067:15067): Objetivo Global:
+[INFO] 19:52:09:339 Team/(15067:15067): Pikachu
+[INFO] 19:52:09:339 Team/(15067:15067): Pikachu
+[INFO] 19:52:09:339 Team/(15067:15067): Pikachu
+[INFO] 19:52:09:339 Team/(15067:15067): Charmander
+[INFO] 19:52:09:346 Team/(15067:15154): Reintenando reconectar cada 30 segundos
+[INFO] 19:55:09:761 Team/(15201:15201): Posicion x 0
+[INFO] 19:55:09:761 Team/(15201:15201): Cantidad de entrenadores 3
+[INFO] 19:55:09:762 Team/(15201:15201): Posicion x 0
+[INFO] 19:55:09:778 Team/(15201:15201): Posicion x 0
+[INFO] 19:55:09:786 Team/(15201:15201): Posicion x 0
+[INFO] 19:55:09:792 Team/(15201:15201): Objetivo Global:
+[INFO] 19:55:09:793 Team/(15201:15201): Pikachu
+[INFO] 19:55:09:793 Team/(15201:15201): Pikachu
+[INFO] 19:55:09:793 Team/(15201:15201): Pikachu
+[INFO] 19:55:09:793 Team/(15201:15201): Charmander
+[INFO] 19:55:09:802 Team/(15201:15264): Reintenando reconectar cada 30 segundos
+[INFO] 20:07:48:652 Team/(15607:15607): Posicion x 0 y 1072693248
+[INFO] 20:07:48:661 Team/(15607:15607): Posicion x 0 y 1074266112
+[INFO] 20:07:48:661 Team/(15607:15607): Posicion x 0 y 1075052544
+[INFO] 20:07:48:661 Team/(15607:15607): Cantidad de entrenadores 3
+[INFO] 20:07:48:662 Team/(15607:15607): Posicion x 0
+[INFO] 20:07:48:662 Team/(15607:15607): Posicion x 0
+[INFO] 20:07:48:662 Team/(15607:15607): Posicion x 0
+[INFO] 20:07:48:662 Team/(15607:15607): Objetivo Global:
+[INFO] 20:07:48:663 Team/(15607:15607): Pikachu
+[INFO] 20:07:48:663 Team/(15607:15607): Pikachu
+[INFO] 20:07:48:672 Team/(15607:15607): Pikachu
+[INFO] 20:07:48:672 Team/(15607:15607): Charmander
+[INFO] 20:07:48:676 Team/(15607:15615): Reintenando reconectar cada 30 segundos
+[INFO] 20:10:11:556 Team/(15695:15695): Posicion x 0 y 1072693248
+[INFO] 20:10:11:557 Team/(15695:15695): Posicion x 0 y 1074266112
+[INFO] 20:10:11:558 Team/(15695:15695): Posicion x 0 y 1075052544
+[INFO] 20:10:11:558 Team/(15695:15695): Cantidad de entrenadores 3
+[INFO] 20:10:11:558 Team/(15695:15695): Posicion x 0
+[INFO] 20:10:11:559 Team/(15695:15695): Posicion x 0
+[INFO] 20:10:11:559 Team/(15695:15695): Posicion x 0
+[INFO] 20:10:11:559 Team/(15695:15695): Objetivo Global:
+[INFO] 20:10:11:562 Team/(15695:15695): Pikachu
+[INFO] 20:10:11:563 Team/(15695:15695): Pikachu
+[INFO] 20:10:11:563 Team/(15695:15695): Pikachu
+[INFO] 20:10:11:563 Team/(15695:15695): Charmander
+[INFO] 20:10:11:576 Team/(15695:15704): Reintenando reconectar cada 30 segundos
+[INFO] 20:10:32:43 Team/(15736:15736): Posicion x 0 y 1072693248
+[INFO] 20:10:32:58 Team/(15736:15736): Posicion x 0 y 1074266112
+[INFO] 20:10:32:59 Team/(15736:15736): Posicion x 0 y 1075052544
+[INFO] 20:10:32:59 Team/(15736:15736): Cantidad de entrenadores 3
+[INFO] 20:10:32:59 Team/(15736:15736): Posicion x 0
+[INFO] 20:10:32:59 Team/(15736:15736): Posicion x 0
+[INFO] 20:10:32:59 Team/(15736:15736): Posicion x 0
+[INFO] 20:10:32:59 Team/(15736:15736): Objetivo Global:
+[INFO] 20:10:32:60 Team/(15736:15736): Pikachu
+[INFO] 20:10:32:61 Team/(15736:15736): Pikachu
+[INFO] 20:10:32:61 Team/(15736:15736): Pikachu
+[INFO] 20:10:32:61 Team/(15736:15736): Charmander
+[INFO] 20:10:32:73 Team/(15736:15744): Reintenando reconectar cada 30 segundos
+[INFO] 20:10:39:109 Team/(15695:15705): Llego pokemon a la cola APPEARED!
+[INFO] 20:10:39:109 Team/(15695:15706): LLego entrenador!
+[INFO] 20:10:39:109 Team/(15695:15706): Entrenador ejecutando
+[INFO] 20:10:39:109 Team/(15695:15703): Tiempo 0 segundos:
+[INFO] 20:10:39:109 Team/(15695:15703): Agarre pokemon!
+[INFO] 20:10:44:62 Team/(15695:15705): Llego pokemon a la cola APPEARED!
+[INFO] 20:10:44:62 Team/(15695:15706): LLego entrenador!
+[INFO] 20:10:44:62 Team/(15695:15706): Entrenador ejecutando
+[INFO] 20:10:44:62 Team/(15695:15702): Tiempo 0 segundos:
+[INFO] 20:10:44:63 Team/(15695:15702): Agarre pokemon!
+[INFO] 20:16:54:14 Team/(15844:15844): Posicion x 0 y 1072693248
+[INFO] 20:18:16:400 Team/(15999:15999): Posicion x 1.000000 y 2.000000
+[INFO] 20:18:16:402 Team/(15999:15999): Posicion x 3.000000 y 7.000000
+[INFO] 20:18:16:402 Team/(15999:15999): Posicion x 5.000000 y 5.000000
+[INFO] 20:18:16:402 Team/(15999:15999): Cantidad de entrenadores 3
+[INFO] 20:18:16:402 Team/(15999:15999): Posicion x 0
+[INFO] 20:18:16:402 Team/(15999:15999): Posicion x 0
+[INFO] 20:18:16:402 Team/(15999:15999): Posicion x 0
+[INFO] 20:18:16:402 Team/(15999:15999): Objetivo Global:
+[INFO] 20:18:16:402 Team/(15999:15999): Pikachu
+[INFO] 20:18:16:402 Team/(15999:15999): Pikachu
+[INFO] 20:18:16:402 Team/(15999:15999): Pikachu
+[INFO] 20:18:16:402 Team/(15999:15999): Charmander
+[INFO] 20:18:16:420 Team/(15999:16008): Reintenando reconectar cada 30 segundos
+[INFO] 20:21:55:707 Team/(16176:16176): Cantidad de entrenadores 3
+[INFO] 20:21:55:708 Team/(16176:16176): Objetivo Global:
+[INFO] 20:21:55:708 Team/(16176:16176): Pikachu
+[INFO] 20:21:55:708 Team/(16176:16176): Pikachu
+[INFO] 20:21:55:708 Team/(16176:16176): Pikachu
+[INFO] 20:21:55:708 Team/(16176:16176): Charmander
+[INFO] 20:21:55:723 Team/(16176:16184): Reintenando reconectar cada 30 segundos
+[INFO] 20:22:02:205 Team/(16176:16185): Llego pokemon a la cola APPEARED!
+[INFO] 20:22:02:206 Team/(16176:16186): LLego entrenador!
+[INFO] 20:22:02:206 Team/(16176:16186): Entrenador ejecutando
+[INFO] 20:22:02:206 Team/(16176:16183): Pos x 15.000000
+[INFO] 20:22:02:206 Team/(16176:16183): Pos y 15.000000
+[INFO] 20:22:02:206 Team/(16176:16183): Pos x 15.000000
+[INFO] 20:22:02:206 Team/(16176:16183): Pos y 15.000000
+[INFO] 20:22:02:206 Team/(16176:16183): Tiempo 0 segundos:
+[INFO] 20:22:02:207 Team/(16176:16183): Agarre pokemon!
+[INFO] 22:51:38:41 Team/(4302:4302): Cantidad de entrenadores 3
+[INFO] 22:51:38:41 Team/(4302:4302): Objetivo Global:
+[INFO] 22:51:38:41 Team/(4302:4302): Pikachu
+[INFO] 22:51:38:41 Team/(4302:4302): Pikachu
+[INFO] 22:51:38:42 Team/(4302:4302): Pikachu
+[INFO] 22:51:38:42 Team/(4302:4302): Charmander
+[INFO] 22:51:38:44 Team/(4302:4306): Reintenando reconectar cada 30 segundos
+[INFO] 23:05:38:629 Team/(5133:5133): Cantidad de entrenadores 3
+[INFO] 23:05:38:664 Team/(5133:5133): Objetivo Global:
+[INFO] 23:05:38:664 Team/(5133:5133): Pikachu
+[INFO] 23:05:38:664 Team/(5133:5133): Pikachu
+[INFO] 23:05:38:664 Team/(5133:5133): Pikachu
+[INFO] 23:05:38:664 Team/(5133:5133): Charmander
+[INFO] 23:05:38:683 Team/(5133:5147): Reintenando reconectar cada 30 segundos
+[INFO] 23:05:47:463 Team/(5133:5148): Llego pokemon a la cola APPEARED!
+[INFO] 23:06:07:986 Team/(5133:5149): LLego entrenador!
+[INFO] 23:06:07:986 Team/(5133:5149): Entrenador ejecutando
+[INFO] 23:06:07:986 Team/(5133:5146): Pos x 15.000000
+[INFO] 23:06:07:986 Team/(5133:5146): Pos y 15.000000
+[INFO] 23:06:07:986 Team/(5133:5146): Pos x 15.000000
+[INFO] 23:06:07:986 Team/(5133:5146): Pos y 15.000000
+[INFO] 23:06:07:986 Team/(5133:5146): Tiempo 0 segundos:
+[INFO] 23:06:07:987 Team/(5133:5146): Agarre pokemon!
+[INFO] 23:09:07:417 Team/(5315:5315): Cantidad de entrenadores 3
+[INFO] 23:09:07:418 Team/(5315:5315): Objetivo Global:
+[INFO] 23:09:07:419 Team/(5315:5315): Pikachu
+[INFO] 23:09:07:419 Team/(5315:5315): Pikachu
+[INFO] 23:09:07:419 Team/(5315:5315): Pikachu
+[INFO] 23:09:07:419 Team/(5315:5315): Charmander
+[INFO] 23:09:07:426 Team/(5315:5323): Reintenando reconectar cada 30 segundos
+[INFO] 23:09:57:310 Team/(5386:5386): Cantidad de entrenadores 3
+[INFO] 23:09:57:330 Team/(5386:5386): Objetivo Global:
+[INFO] 23:09:57:334 Team/(5386:5386): Pikachu
+[INFO] 23:09:57:335 Team/(5386:5386): Pikachu
+[INFO] 23:09:57:335 Team/(5386:5386): Pikachu
+[INFO] 23:09:57:335 Team/(5386:5386): Charmander
+[INFO] 23:09:57:351 Team/(5386:5396): Reintenando reconectar cada 30 segundos
+[INFO] 23:10:11:350 Team/(5406:5406): Cantidad de entrenadores 3
+[INFO] 23:10:11:351 Team/(5406:5406): Objetivo Global:
+[INFO] 23:10:11:353 Team/(5406:5406): Pikachu
+[INFO] 23:10:11:353 Team/(5406:5406): Pikachu
+[INFO] 23:10:11:353 Team/(5406:5406): Pikachu
+[INFO] 23:10:11:353 Team/(5406:5406): Charmander
+[INFO] 23:10:11:366 Team/(5406:5414): Reintenando reconectar cada 30 segundos
+[INFO] 23:30:33:797 Team/(6054:6054): Cantidad de entrenadores 3
+[INFO] 23:30:33:805 Team/(6054:6054): Objetivo Global:
+[INFO] 23:30:33:805 Team/(6054:6054): Pikachu
+[INFO] 23:30:33:805 Team/(6054:6054): Pikachu
+[INFO] 23:30:33:805 Team/(6054:6054): Pikachu
+[INFO] 23:30:33:806 Team/(6054:6054): Charmander
+[INFO] 23:30:33:813 Team/(6054:6062): Reintenando reconectar cada 30 segundos
+[INFO] 23:33:22:703 Team/(6148:6148): Cantidad de entrenadores 3
+[INFO] 23:33:22:743 Team/(6148:6148): Objetivo Global:
+[INFO] 23:33:22:744 Team/(6148:6148): Pikachu
+[INFO] 23:33:22:744 Team/(6148:6148): Pikachu
+[INFO] 23:33:22:744 Team/(6148:6148): Pikachu
+[INFO] 23:33:22:744 Team/(6148:6148): Charmander
+[INFO] 23:33:22:770 Team/(6148:6162): Reintenando reconectar cada 30 segundos
+[INFO] 23:41:00:260 Team/(6299:6299): Cantidad de entrenadores 3
+[INFO] 23:41:00:309 Team/(6299:6299): Objetivo Global:
+[INFO] 23:41:00:309 Team/(6299:6299): Pikachu
+[INFO] 23:41:00:309 Team/(6299:6299): Pikachu
+[INFO] 23:41:00:309 Team/(6299:6299): Pikachu
+[INFO] 23:41:00:309 Team/(6299:6299): Charmander
+[INFO] 23:41:00:320 Team/(6299:6316): Reintenando reconectar cada 30 segundos
+[INFO] 23:53:41:147 Team/(6692:6692): Cantidad de entrenadores 3
+[INFO] 23:53:41:155 Team/(6692:6692): Objetivo Global:
+[INFO] 23:53:41:155 Team/(6692:6692): Pikachu
+[INFO] 23:53:41:155 Team/(6692:6692): Pikachu
+[INFO] 23:53:41:155 Team/(6692:6692): Pikachu
+[INFO] 23:53:41:155 Team/(6692:6692): Charmander
+[INFO] 23:53:41:165 Team/(6692:6700): Reintenando reconectar cada 30 segundos
+[INFO] 23:54:32:591 Team/(6739:6739): Cantidad de entrenadores 3
+[INFO] 23:54:32:633 Team/(6739:6739): Objetivo Global:
+[INFO] 23:54:32:633 Team/(6739:6739): Pikachu
+[INFO] 23:54:32:634 Team/(6739:6739): Pikachu
+[INFO] 23:54:32:634 Team/(6739:6739): Pikachu
+[INFO] 23:54:32:634 Team/(6739:6739): Charmander
+[INFO] 23:54:32:650 Team/(6739:6751): Reintenando reconectar cada 30 segundos
+[INFO] 00:10:21:21 Team/(7350:7350): Cantidad de entrenadores 3
+[INFO] 00:10:21:21 Team/(7350:7350): Objetivo Global:
+[INFO] 00:10:21:21 Team/(7350:7350): Pikachu
+[INFO] 00:10:21:21 Team/(7350:7350): Pikachu
+[INFO] 00:10:21:21 Team/(7350:7350): Pikachu
+[INFO] 00:10:21:21 Team/(7350:7350): Charmander
+[INFO] 00:10:21:59 Team/(7350:7358): Reintenando reconectar cada 30 segundos
+[INFO] 00:11:33:942 Team/(7402:7402): Cantidad de entrenadores 3
+[INFO] 00:11:33:1 Team/(7402:7402): Objetivo Global:
+[INFO] 00:11:34:2 Team/(7402:7402): Pikachu
+[INFO] 00:11:34:2 Team/(7402:7402): Pikachu
+[INFO] 00:11:34:2 Team/(7402:7402): Pikachu
+[INFO] 00:11:34:2 Team/(7402:7402): Charmander
+[INFO] 00:11:34:14 Team/(7402:7414): Reintenando reconectar cada 30 segundos
+[INFO] 00:28:46:144 Team/(7802:7802): Cantidad de entrenadores 3
+[INFO] 00:28:46:144 Team/(7803:7803): Cantidad de entrenadores 3
+[INFO] 00:28:46:169 Team/(7803:7803): Objetivo Global:
+[INFO] 00:28:46:169 Team/(7802:7802): Objetivo Global:
+[INFO] 00:28:46:169 Team/(7802:7802): Pikachu
+[INFO] 00:28:46:169 Team/(7802:7802): Pikachu
+[INFO] 00:28:46:169 Team/(7802:7802): Pikachu
+[INFO] 00:28:46:169 Team/(7803:7803): Pikachu
+[INFO] 00:28:46:169 Team/(7802:7802): Charmander
+[INFO] 00:28:46:169 Team/(7803:7803): Pikachu
+[INFO] 00:28:46:169 Team/(7803:7803): Pikachu
+[INFO] 00:28:46:169 Team/(7803:7803): Charmander
+[INFO] 00:28:46:183 Team/(7803:7820): Reintenando reconectar cada 30 segundos
+[INFO] 00:28:46:183 Team/(7802:7819): Reintenando reconectar cada 30 segundos
+[INFO] 00:29:09:850 Team/(7802:7823): Llego pokemon a la cola APPEARED!
+[INFO] 00:29:09:850 Team/(7802:7824): LLego entrenador!
+[INFO] 00:29:09:851 Team/(7802:7824): Entrenador ejecutando
+[INFO] 00:29:09:851 Team/(7802:7818): Pos x 15.000000
+[INFO] 00:29:09:852 Team/(7802:7818): Pos y 15.000000
+[INFO] 00:29:09:852 Team/(7802:7818): Pos x 15.000000
+[INFO] 00:29:09:852 Team/(7802:7818): Pos y 15.000000
+[INFO] 00:29:09:852 Team/(7802:7818): Tiempo 0 segundos:
+[INFO] 00:29:09:853 Team/(7802:7818): Agarre pokemon!
+[INFO] 00:29:12:272 Team/(7802:7823): Llego pokemon a la cola APPEARED!
+[INFO] 00:29:12:273 Team/(7802:7824): LLego entrenador!
+[INFO] 00:29:12:273 Team/(7802:7824): Entrenador ejecutando
+[INFO] 00:29:12:273 Team/(7802:7817): Pos x 15.000000
+[INFO] 00:29:12:273 Team/(7802:7817): Pos y 15.000000
+[INFO] 00:29:12:273 Team/(7802:7817): Pos x 15.000000
+[INFO] 00:29:12:273 Team/(7802:7817): Pos y 15.000000
+[INFO] 00:29:12:273 Team/(7802:7817): Tiempo 0 segundos:
+[INFO] 00:29:12:273 Team/(7802:7817): Agarre pokemon!
+[INFO] 00:34:02:564 Team/(8016:8016): Cantidad de entrenadores 3
+[INFO] 00:34:02:565 Team/(8016:8016): Objetivo Global:
+[INFO] 00:34:02:566 Team/(8016:8016): Pikachu
+[INFO] 00:34:02:566 Team/(8016:8016): Pikachu
+[INFO] 00:34:02:566 Team/(8016:8016): Pikachu
+[INFO] 00:34:02:566 Team/(8016:8016): Charmander
+[INFO] 00:34:02:570 Team/(8016:8024): Reintenando reconectar cada 30 segundos
+[INFO] 00:34:10:628 Team/(8016:8025): Llego pokemon a la cola APPEARED!
+[INFO] 00:34:10:628 Team/(8016:8026): LLego entrenador!
+[INFO] 00:34:10:628 Team/(8016:8026): Entrenador ejecutando
+[INFO] 00:34:10:629 Team/(8016:8023): Tiempo 7 segundos:
+[INFO] 00:34:11:434 Team/(8016:8025): Llego pokemon a la cola APPEARED!
+[INFO] 00:34:11:436 Team/(8016:8026): LLego entrenador!
+[INFO] 00:34:17:629 Team/(8016:8023): Agarre pokemon!
+[INFO] 00:34:17:630 Team/(8016:8026): Entrenador ejecutando
+[INFO] 00:34:17:630 Team/(8016:8022): Tiempo 7 segundos:
+[INFO] 00:34:24:630 Team/(8016:8022): Agarre pokemon!
+[INFO] 00:35:59:739 Team/(8082:8082): Cantidad de entrenadores 3
+[INFO] 00:35:59:752 Team/(8082:8082): Objetivo Global:
+[INFO] 00:35:59:763 Team/(8082:8082): Pikachu
+[INFO] 00:35:59:765 Team/(8082:8082): Pikachu
+[INFO] 00:35:59:767 Team/(8082:8082): Pikachu
+[INFO] 00:35:59:769 Team/(8082:8082): Charmander
+[INFO] 00:35:59:777 Team/(8082:8090): Reintenando reconectar cada 30 segundos
+[INFO] 00:36:04:470 Team/(8016:8025): Llego pokemon a la cola APPEARED!
+[INFO] 00:36:04:470 Team/(8016:8026): LLego entrenador!
+[INFO] 00:36:04:470 Team/(8016:8026): Entrenador ejecutando
+[INFO] 00:36:04:470 Team/(8016:8021): Tiempo 7 segundos:
+[INFO] 00:36:37:922 Team/(8108:8108): Cantidad de entrenadores 3
+[INFO] 00:36:37:923 Team/(8108:8108): Objetivo Global:
+[INFO] 00:36:37:924 Team/(8108:8108): Pikachu
+[INFO] 00:36:37:925 Team/(8108:8108): Pikachu
+[INFO] 00:36:37:925 Team/(8108:8108): Pikachu
+[INFO] 00:36:37:927 Team/(8108:8108): Charmander
+[INFO] 00:36:37:943 Team/(8108:8118): Reintenando reconectar cada 30 segundos
+[INFO] 00:36:44:175 Team/(8108:8119): Llego pokemon a la cola APPEARED!
+[INFO] 00:36:44:176 Team/(8108:8120): LLego entrenador!
+[INFO] 00:36:44:176 Team/(8108:8120): Entrenador ejecutando
+[INFO] 00:36:44:176 Team/(8108:8116): Pos x 13.000000
+[INFO] 00:36:44:176 Team/(8108:8116): Pos y 15.000000
+[INFO] 00:36:44:176 Team/(8108:8116): Pos x 13.000000
+[INFO] 00:36:44:176 Team/(8108:8116): Pos y 15.000000
+[INFO] 00:36:44:176 Team/(8108:8116): Tiempo 7 segundos:
+[INFO] 00:36:51:176 Team/(8108:8116): Agarre pokemon!
+[INFO] 00:39:37:775 Team/(8233:8233): Cantidad de entrenadores 3
+[INFO] 00:40:53:628 Team/(8281:8281): Cantidad de entrenadores 3
+[INFO] 00:44:49:428 Team/(8459:8459): Cantidad de entrenadores 3
+[INFO] 00:47:02:783 Team/(8551:8551): Cantidad de entrenadores 3
+[INFO] 00:47:02:786 Team/(8551:8551): Objetivo Global:
+[INFO] 00:47:02:788 Team/(8551:8551): Pikachu
+[INFO] 00:47:02:789 Team/(8551:8551): Pikachu
+[INFO] 00:47:02:789 Team/(8551:8551): Pikachu
+[INFO] 00:47:02:789 Team/(8551:8551): Charmander
+[INFO] 00:47:02:794 Team/(8551:8559): Reintenando reconectar cada 30 segundos
+[INFO] 00:47:21:759 Team/(8551:8560): Llego pokemon a la cola APPEARED!
+[INFO] 00:47:21:759 Team/(8551:8561): LLego entrenador!
+[INFO] 00:47:21:759 Team/(8551:8561): Entrenador ejecutando
+[INFO] 00:47:21:760 Team/(8551:8557): Pos x 0.000000
+[INFO] 00:47:21:760 Team/(8551:8557): Pos y 0.000000
+[INFO] 00:47:21:760 Team/(8551:8557): Pos x 3.000000
+[INFO] 00:47:21:760 Team/(8551:8557): Pos y 7.000000
+[INFO] 00:47:21:760 Team/(8551:8557): Tiempo 27 segundos:
+[INFO] 00:47:48:762 Team/(8551:8557): Agarre pokemon!
+[INFO] 00:49:03:373 Team/(8630:8630): Cantidad de entrenadores 3
+[INFO] 00:49:03:376 Team/(8630:8630): Objetivo Global:
+[INFO] 00:49:03:379 Team/(8630:8630): Pikachu
+[INFO] 00:49:03:380 Team/(8630:8630): Pikachu
+[INFO] 00:49:03:380 Team/(8630:8630): Pikachu
+[INFO] 00:49:03:381 Team/(8630:8630): Charmander
+[INFO] 00:49:03:385 Team/(8630:8638): Reintenando reconectar cada 30 segundos
+[INFO] 00:49:14:863 Team/(8551:8560): Llego pokemon a la cola APPEARED!
+[INFO] 00:49:14:864 Team/(8551:8561): LLego entrenador!
+[INFO] 00:49:14:864 Team/(8551:8561): Entrenador ejecutando
+[INFO] 00:49:14:864 Team/(8551:8558): Pos x 0.000000
+[INFO] 00:49:14:864 Team/(8551:8558): Pos y 0.000000
+[INFO] 00:49:14:864 Team/(8551:8558): Pos x 5.000000
+[INFO] 00:49:14:864 Team/(8551:8558): Pos y 5.000000
+[INFO] 00:49:14:864 Team/(8551:8558): Tiempo 27 segundos:
+[INFO] 00:49:16:937 Team/(8551:8560): Llego pokemon a la cola APPEARED!
+[INFO] 00:49:16:938 Team/(8551:8561): LLego entrenador!
+                                                                                                                                                                                                                                                                                                                                                                                                [INFO] 01:09:59:59 Team/(4677:4677): Cantidad de entrenadores 3
+[INFO] 01:09:59:61 Team/(4677:4677): Objetivo Global:
+[INFO] 01:09:59:61 Team/(4677:4677): Pikachu
+[INFO] 01:09:59:61 Team/(4677:4677): Pikachu
+[INFO] 01:09:59:61 Team/(4677:4677): Pikachu
+[INFO] 01:09:59:61 Team/(4677:4677): Charmander
+[INFO] 01:09:59:61 Team/(4677:4685): Reintenando reconectar cada 30 segundos
+[INFO] 01:10:49:956 Team/(4677:4686): Llego pokemon a la cola APPEARED!
+[INFO] 01:10:49:957 Team/(4677:4687): LLego entrenador!
+[INFO] 01:10:49:957 Team/(4677:4687): Entrenador ejecutando
+[INFO] 01:10:49:957 Team/(4677:4683): Pos x 13.000000
+[INFO] 01:10:49:957 Team/(4677:4683): Pos y 15.000000
+[INFO] 01:10:49:957 Team/(4677:4683): Pos x 3.000000
+[INFO] 01:10:49:958 Team/(4677:4683): Pos y 7.000000
+[INFO] 01:10:49:958 Team/(4677:4683): Tiempo 43 segundos:
+[INFO] 01:15:53:844 Team/(5473:5473): Cantidad de entrenadores 3
+[INFO] 01:15:53:858 Team/(5473:5473): Objetivo Global:
+[INFO] 01:15:53:859 Team/(5473:5473): Pikachu
+[INFO] 01:15:53:859 Team/(5473:5473): Pikachu
+[INFO] 01:15:53:859 Team/(5473:5473): Pikachu
+[INFO] 01:15:53:859 Team/(5473:5473): Charmander
+[INFO] 01:15:53:865 Team/(5473:5481): Reintenando reconectar cada 30 segundos
+[INFO] 01:15:59:719 Team/(5473:5482): Llego pokemon a la cola APPEARED!
+[INFO] 01:15:59:719 Team/(5473:5483): LLego entrenador!
+[INFO] 01:15:59:719 Team/(5473:5483): Entrenador ejecutando
+[INFO] 01:15:59:719 Team/(5473:5480): Pos x 15.000000
+[INFO] 01:15:59:719 Team/(5473:5480): Pos y 15.000000
+[INFO] 01:15:59:719 Team/(5473:5480): Pos x 5.000000
+[INFO] 01:15:59:719 Team/(5473:5480): Pos y 5.000000
+[INFO] 01:15:59:719 Team/(5473:5480): Tiempo 40 segundos:
+[INFO] 01:16:01:524 Team/(5473:5482): Llego pokemon a la cola APPEARED!
+[INFO] 01:16:01:525 Team/(5473:5483): LLego entrenador!
+[INFO] 01:16:39:719 Team/(5473:5480): Pos x 15.000000
+[INFO] 01:16:39:720 Team/(5473:5480): Pos y 15.000000
+[INFO] 01:16:39:720 Team/(5473:5480): Agarre pokemon!
+[INFO] 01:16:39:720 Team/(5473:5483): Entrenador ejecutando
+[INFO] 01:16:39:720 Team/(5473:5479): Pos x 15.000000
+[INFO] 01:16:39:720 Team/(5473:5479): Pos y 15.000000
+[INFO] 01:16:39:720 Team/(5473:5479): Pos x 3.000000
+[INFO] 01:16:39:720 Team/(5473:5479): Pos y 7.000000
+[INFO] 01:16:39:720 Team/(5473:5479): Tiempo 40 segundos:
+[INFO] 01:17:35:290 Team/(5581:5581): Cantidad de entrenadores 3
+[INFO] 01:17:35:291 Team/(5581:5581): Objetivo Global:
+[INFO] 01:17:35:291 Team/(5581:5581): Pikachu
+[INFO] 01:17:35:292 Team/(5581:5581): Pikachu
+[INFO] 01:17:35:292 Team/(5581:5581): Pikachu
+[INFO] 01:17:35:292 Team/(5581:5581): Charmander
+[INFO] 01:17:35:300 Team/(5581:5589): Reintenando reconectar cada 30 segundos
+[INFO] 01:17:39:729 Team/(5581:5590): Llego pokemon a la cola APPEARED!
+[INFO] 01:17:39:729 Team/(5581:5591): LLego entrenador!
+[INFO] 01:17:39:729 Team/(5581:5591): Entrenador ejecutando
+[INFO] 01:17:39:729 Team/(5581:5588): Pos x 15.000000
+[INFO] 01:17:39:729 Team/(5581:5588): Pos y 15.000000
+[INFO] 01:17:39:729 Team/(5581:5588): Pos x 5.000000
+[INFO] 01:17:39:729 Team/(5581:5588): Pos y 5.000000
+[INFO] 01:17:39:729 Team/(5581:5588): Tiempo 20 segundos:
+[INFO] 01:17:59:729 Team/(5581:5588): Pos x 15.000000
+[INFO] 01:17:59:731 Team/(5581:5588): Pos y 15.000000
+[INFO] 01:17:59:731 Team/(5581:5588): Agarre pokemon!
+[INFO] 02:01:13:786 Team/(7730:7730): Cantidad de entrenadores 3
+[INFO] 02:01:13:802 Team/(7730:7730): Objetivo Global:
+[INFO] 02:01:13:802 Team/(7730:7730): Pikachu
+[INFO] 02:01:13:803 Team/(7730:7730): Pikachu
+[INFO] 02:01:13:803 Team/(7730:7730): Pikachu
+[INFO] 02:01:13:803 Team/(7730:7730): Charmander
+[INFO] 02:01:13:805 Team/(7730:7739): Reintenando reconectar cada 30 segundos
+[INFO] 02:01:20:391 Team/(7730:7740): Llego pokemon a la cola APPEARED!
+[INFO] 02:01:20:403 Team/(7730:7741): LLego entrenador!
+[INFO] 02:01:20:404 Team/(7730:7741): Entrenador ejecutando
+[INFO] 02:01:20:404 Team/(7730:7738): Tiempo 20 segundos:
+[INFO] 16:39:50:875 Team/(5689:5689): Cantidad de entrenadores 3
+[INFO] 16:39:50:901 Team/(5689:5689): Objetivo Global:
+[INFO] 16:39:50:901 Team/(5689:5689): Pikachu
+[INFO] 16:39:50:901 Team/(5689:5689): Pikachu
+[INFO] 16:39:50:901 Team/(5689:5689): Pikachu
+[INFO] 16:39:50:901 Team/(5689:5689): Charmander
+[INFO] 16:39:50:904 Team/(5689:5698): Reintenando reconectar cada 30 segundos
+[INFO] 16:39:50:904 Team/(5689:5699): Reintenando reconectar cada 10 segundos
+[INFO] 16:39:50:911 Team/(5689:5697): Reintenando reconectar cada 30 segundos
+[INFO] 16:41:40:259 Team/(5771:5771): Cantidad de entrenadores 3
+[INFO] 16:41:40:272 Team/(5771:5771): Objetivo Global:
+[INFO] 16:41:40:275 Team/(5771:5771): Pikachu
+[INFO] 16:41:40:276 Team/(5771:5771): Pikachu
+[INFO] 16:41:40:276 Team/(5771:5771): Pikachu
+[INFO] 16:41:40:276 Team/(5771:5771): Charmander
+[INFO] 16:41:40:277 Team/(5771:5781): Me suscribi a la cola Appeared!
+[INFO] 16:41:40:278 Team/(5771:5780): Me suscribi a la cola LOCALIZED!
+[INFO] 16:41:40:283 Team/(5771:5779): Me suscribi a la cola LOCALIZED!
+[INFO] 16:43:05:271 Team/(5827:5827): Cantidad de entrenadores 3
+[INFO] 16:43:05:286 Team/(5827:5827): Objetivo Global:
+[INFO] 16:43:05:286 Team/(5827:5827): Pikachu
+[INFO] 16:43:05:290 Team/(5827:5827): Pikachu
+[INFO] 16:43:05:290 Team/(5827:5827): Pikachu
+[INFO] 16:43:05:290 Team/(5827:5827): Charmander
+[INFO] 16:43:05:291 Team/(5827:5837): Reintenando reconectar cada 30 segundos
+[INFO] 16:43:05:291 Team/(5827:5836): Reintenando reconectar cada 30 segundos
+[INFO] 16:43:05:292 Team/(5827:5835): Reintenando reconectar cada 30 segundos
+[INFO] 16:44:10:278 Team/(5910:5910): Cantidad de entrenadores 3
+[INFO] 16:44:10:286 Team/(5910:5910): Objetivo Global:
+[INFO] 16:44:10:286 Team/(5910:5910): Pikachu
+[INFO] 16:44:10:286 Team/(5910:5910): Pikachu
+[INFO] 16:44:10:287 Team/(5910:5910): Pikachu
+[INFO] 16:44:10:287 Team/(5910:5910): Charmander
+[INFO] 16:44:10:288 Team/(5910:5920): Reintenando reconectar cada 30 segundos
+[INFO] 16:44:10:292 Team/(5910:5919): Reintenando reconectar cada 30 segundos
+[INFO] 16:44:10:296 Team/(5910:5918): Reintenando reconectar cada 30 segundos
+[INFO] 16:44:55:36 Team/(5910:5920): Me suscribi a la cola Appeared!
+[INFO] 16:44:55:40 Team/(5910:5919): Me suscribi a la cola LOCALIZED!
+[INFO] 16:44:55:55 Team/(5910:5918): Me suscribi a la cola LOCALIZED!
+[INFO] 16:46:11:656 Team/(6002:6002): Cantidad de entrenadores 3
+[INFO] 16:46:11:682 Team/(6002:6002): Objetivo Global:
+[INFO] 16:46:11:682 Team/(6002:6002): Pikachu
+[INFO] 16:46:11:682 Team/(6002:6002): Pikachu
+[INFO] 16:46:11:682 Team/(6002:6002): Pikachu
+[INFO] 16:46:11:682 Team/(6002:6002): Charmander
+[INFO] 16:46:11:684 Team/(6002:6011): Me suscribi a la cola Caugth!
+[INFO] 16:46:11:687 Team/(6002:6012): Me suscribi a la cola Appeared!
+[INFO] 16:46:11:687 Team/(6002:6010): Me suscribi a la cola Localized!
+[INFO] 16:46:29:501 Team/(6023:6023): Cantidad de entrenadores 3
+[INFO] 16:46:29:508 Team/(6023:6023): Objetivo Global:
+[INFO] 16:46:29:515 Team/(6023:6023): Pikachu
+[INFO] 16:46:29:515 Team/(6023:6023): Pikachu
+[INFO] 16:46:29:515 Team/(6023:6023): Pikachu
+[INFO] 16:46:29:515 Team/(6023:6023): Charmander
+[INFO] 16:46:29:520 Team/(6023:6031): Me suscribi a la cola Localized!
+[INFO] 16:46:29:520 Team/(6023:6032): Me suscribi a la cola Caugth!
+[INFO] 16:46:29:520 Team/(6023:6033): Me suscribi a la cola Appeared!

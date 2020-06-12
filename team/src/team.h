@@ -36,6 +36,7 @@ t_list *objetivoGlobal;
 t_list *new;
 t_list *ready;
 t_queue *exce;
+t_list *block;
 pthread_mutex_t mxExce;
 sem_t semaforoExce;
 

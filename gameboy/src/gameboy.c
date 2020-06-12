@@ -79,6 +79,11 @@ int main(int argc, char *argv[]) {
 		}
 	}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
 		if(strcmp(argv[1],"TEAM") == 0){
+			//t_pokemon pokemon;
+			//pokemon.posx= 1;
+			//pokemon.posy= 2;
+			//pokemon.nombre= "Pikachu";
+			//enviar_pokemon(pokemon,conexion);
 			enviar_mensaje(concatena(5,argv),conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
