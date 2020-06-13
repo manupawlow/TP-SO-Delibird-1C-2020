@@ -6,7 +6,6 @@ int main() {
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
 	config=config_create(conf);
 
-
 	fs(config);
 
 
@@ -18,14 +17,16 @@ int main() {
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
 
-
+	pthread_mutex_init(&mxArchivo, NULL);
 	//ip = config_get_string_value(config,"IP_GAMECARD");
 	//puerto = config_get_string_value(config,"PUERTO_GAMECARD");
 
 	//iniciar_servidor(ip,puerto);
 
 
-//HILOS DE CONEXIONES cambiar por mati
+//HILOS DE CONEXIONES
+/*
+
 	pthread_t conexionGet;
 	pthread_create(&conexionGet, NULL,(void*)funcionGet,NULL);
 
@@ -39,6 +40,13 @@ int main() {
 	pthread_join(conexionGet,NULL);
 	pthread_join(conexionGet,NULL);
 	pthread_join(conexionCatch,NULL);
+
+*/
+	pthread_t conexionGameboy;
+	pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
+	pthread_join(conexionGameboy,NULL);
+
+
 
 return EXIT_SUCCESS;
 }
@@ -59,11 +67,54 @@ int conexionGet =	crear_conexion(ip,puerto);
 	while(1){
 		mensaje=funcionACK(conexionGet);
 		pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *)buscarPokemon,(gamecard*) mensaje);
+		pthread_create(&solicitud, NULL,(void *)buscarPokemon, mensaje);
 		pthread_detach(solicitud);
 	}
 
 }
+//PARA EL GET
+void buscarPokemon(char* mensaje){
+
+FILE * f;
+
+char* pokeNombre=malloc(sizeof(char*));
+char* datoArchivo=string_new();
+
+		pokeNombre=strtok(mensaje," ");
+//TODO
+	// NO ANDA UN STRING APPEND ANDA A SABER POR K
+		//string_append_with_format(&mntPokemon,"%s",pokeNombre);
+		//string_append(&mntPokemon,pokeNombre);
+		pthread_mutex_lock(&mxArchivo);
+		f = fopen(mntPokemon,"r");
+		t_poke* pokemon=	obtenerDatosPokemon(f);
+		fclose(f);
+		pthread_mutex_unlock(&mxArchivo);
+
+
+		datoArchivo= obtenerPokemonString(pokemon);
+
+
+int socketLoc = crear_conexion(ip, puerto);
+
+	if(socketLoc ==-1){
+			log_info(logger,"No se pudo conectar con el broker.");
+			log_info(logger,"%s",datoArchivo);
+
+	}else{
+//TODO
+//Agregar el id del mensaje original a datoArchivo
+		enviar_mensaje(datoArchivo, socketLoc,LOCALIZED_POKEMON);
+	}
+
+}
+
+
+
+
+
+
+
 
 
 void funcionCatch(int socket){
@@ -73,7 +124,7 @@ int conexionCatch =	crear_conexion(ip,puerto);
 
 	if(conexionCatch ==-1){
 		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionCatch= reintentar_conexion(ip,puerto,10);
+        conexionCatch= reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
 
@@ -91,84 +142,10 @@ int conexionCatch =	crear_conexion(ip,puerto);
 }
 
 //TODO
-void funcionNew(int socket){
-char* mensaje;
-
-int conexionNew =	crear_conexion(ip,puerto);
-
-	if(conexionNew ==-1){
-		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-	    conexionNew= reintentar_conexion(ip,puerto,10);
-	}
-
-	enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
-	log_info(logger,"Me suscribi a la cola NEW!");
-
-
-	while(1){
-		mensaje=funcionACK(conexionNew);
-		pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *)nuevoPokemon, (gamecard*)mensaje);
-		pthread_detach(solicitud);
-	}
-
-}
-
-
-
-
-
-//PARA EL GET
-void buscarPokemon(gamecard* mensaje){
-
-FILE * f;
-char* mntPokemon;
-char* pokemon;
-
-//------------tdv no se donde ponerlo
-pthread_mutex_init(&mxArchivo, NULL);
-
-//--------------------------------------
-
-
-int socketLoc = crear_conexion(ip, puerto);
-
-if(socketLoc ==-1){
-		log_info(logger,"No se pudo conectar con el broker");
-//TODO
-		//MANDAR DIRECTO
-	}else{
-
-		mntPokemon="/home/utnso/Escritorio/TALL_GRASS/Files/";
-		pokemon=strtok(mensaje->msg," ");
-		strcat(mntPokemon,pokemon);
-			f = fopen(mntPokemon,"r");
-
-				if(f==NULL){
-					enviar_mensaje("0 0 0",socketLoc,LOCALIZED_POKEMON);
-//TODO
-				/*}else{
-				if(mxArchivo==0){
-						esperarReintentar(tiempoConfig)
-					*/}else{
-					t_pokemon pokemon=	obtenerDatosPokemon(f);
-			char* datoArchivo = obtenerPokemonString(f, pokemon);
-//TODO
-			//Agregar el id del mensaje original a datoArchivo
-				enviar_mensaje(datoArchivo, socketLoc,LOCALIZED_POKEMON);
-					}
-
-
-	}
-
-}
-
-//TODO
 //PARA EL CATCH
-void agarrarPokemon(gamecard* mensaje){
+void agarrarPokemon(char* mensaje){
 
 FILE * f;
-char* mntPokemon;
 char* pokemon;
 int socketCaugth = crear_conexion(ip, puerto);
 
@@ -178,8 +155,7 @@ if(socketCaugth ==-1){
 		//TODO
 		//MANDAR DIRECTO
 	}else{
-		mntPokemon="/home/utnso/Escritorio/TALL_GRASS/Files/";
-		pokemon=strtok(mensaje->msg," ");
+		pokemon=strtok(mensaje," ");
 		strcat(mntPokemon,pokemon);
 
 		f = fopen(mntPokemon,"r");
@@ -187,12 +163,22 @@ if(socketCaugth ==-1){
 		if(f==NULL){
 			log_info(logger,"ERROR: no hay pokemon.");
 		}else{
-t_pokemon pokemon= obtenerDatosPokemon(f);
+t_poke* pokemon= obtenerDatosPokemon(f);
+
+	fclose(f);
 			if(igualPosicion(f, mensaje,pokemon)!=1){
 				log_info(logger,"ERROR: no hay pokemon.");
 			}else{
-				if(pokemon.y==1){
+				if(pokemon->y==1){
+					f=fopen(mntPokemon,"r+");
 					eliminarLinea();
+					fclose(f);
+				}else if(pokemon->y<1){
+					log_info(logger,"ERROR: no hay pokemon.");
+				}else{
+					f=fopen(mntPokemon,"r+");
+					eliminarLinea();
+					fclose(f);
 				}
 			}
 		}
@@ -233,7 +219,53 @@ t_pokemon pokemon= obtenerDatosPokemon(f);
 }
 
 
-void nuevoPokemon(gamecard* mensaje){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//TODO
+void funcionNew(int socket){
+char* mensaje;
+
+int conexionNew =	crear_conexion(ip,puerto);
+
+	if(conexionNew ==-1){
+		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
+	    conexionNew= reintentar_conexion(ip,puerto,tiempoReconexion);
+	}
+
+	enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
+	log_info(logger,"Me suscribi a la cola NEW!");
+
+
+	while(1){
+		mensaje=funcionACK(conexionNew);
+		pthread_t solicitud;
+		pthread_create(&solicitud, NULL,(void *)nuevoPokemon, (gamecard*)mensaje);
+		pthread_detach(solicitud);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+void nuevoPokemon(char* mensaje){
 
 }
 
@@ -250,40 +282,45 @@ char* funcionACK(int socket ){
 
 
 
-char* obtenerPokemonString(FILE* fp, t_pokemon pokemon){
+char* obtenerPokemonString(t_poke* pokemon){
+	char* poke;
 	char* x=string_new();
 	char* y=string_new();
 	char* cantPoke=string_new();
 
-		x= pokemon.x;
-		y= pokemon.y;
-		cantPoke= pokemon.cant;
+		poke= pokemon->nombre;
+		x= pokemon->x;
+		y= pokemon->y;
+		cantPoke= pokemon->cant;
 
 
-		strcat(x, " ");
-		strcat(x, y);
-		strcat(x, " ");
-		strcat(x, cantPoke);
+		strcat(poke, " ");
+		strcat(poke, x);
+		strcat(poke, " ");
+		strcat(poke, y);
+		strcat(poke, " ");
+		strcat(poke, cantPoke);
 
-	return x;
+	return poke;
 
 
 }
 
-int igualPosicion(FILE *fp, gamecard* mensaje, t_pokemon pokemon){
+int igualPosicion(FILE *fp, char* mensaje, t_poke* pokemon){
 
 char* poke;
 int posCant[3];
-	poke=strtok(mensaje->msg," ");
+
+	poke=strtok(mensaje," ");
 int i= 0;
 
 	while(poke!= NULL){
-		posCant[i]=poke;
+		posCant[i]=atoi(poke);
 		poke= strtok(NULL, " ");
 		i++;
 	}
 
-	if(pokemon.x== posCant[0] && pokemon.y== posCant[1] && pokemon.cant== posCant[2]){
+	if(pokemon->x== posCant[0] && pokemon->y== posCant[1] && pokemon->cant== posCant[2]){
 		return 1;
 	}else{
 		return 0;
@@ -291,22 +328,30 @@ int i= 0;
 
 }
 
-t_pokemon obtenerDatosPokemon(FILE* fp){
+t_poke* obtenerDatosPokemon(FILE* fp){
 
-t_pokemon pokemon;
+t_poke* pokemon = malloc(sizeof(t_poke));
 int posx;
 int posy;
 int cant;
 char* poki=string_new();
 
+
+	if(fp==NULL){
+		pokemon->x= 0;
+		pokemon->y=0;
+		pokemon->cant=0;
+		pokemon->nombre="";
+	}else{
+
 		fscanf(fp,"%s %d %d %d",poki, posx,posy,cant );
 
-		pokemon.x= posx;
-		pokemon.y=posy;
-		pokemon.cant=cant;
-		pokemon.nombre=poki;
+		pokemon->x= posx;
+		pokemon->y=posy;
+		pokemon->cant=cant;
+		pokemon->nombre=poki;
 
-
+	}
 	return pokemon;
 }
 
@@ -318,7 +363,49 @@ void eliminarLinea(FILE* fp){
 
 }
 
+void conexion_gameboy(){
+	char *ip = "127.0.0.3";
+	char *puerto = "5001";
+	int socket_gamecard = iniciar_servidor(ip,puerto);
 
+    while(1){
+    	int socket_cliente = esperar_cliente(socket_gamecard);
+
+    	process_request(socket_cliente);
+    }
+}
+
+void process_request(int socket_cliente){
+char* mensaje;
+
+	//-----------------------------------------
+		op_code operacion;
+				recv(socket_cliente,&operacion,sizeof(operacion),0);
+				int buffer_size;
+				recv(socket_cliente,&buffer_size,sizeof(buffer_size),0);
+				char *buffer = malloc(buffer_size);
+				recv(socket_cliente,buffer,buffer_size,0);
+				if (buffer[buffer_size - 1] != '\0'){
+
+					//ACA ES CON LOG
+					printf("WARN: El buffer no es un string\n");
+				}
+	mensaje= buffer;
+
+	switch (operacion){
+	case GET_POKEMON:
+		buscarPokemon(mensaje);
+		free(mensaje);
+		break;
+	case NEW_POKEMON:
+		break;
+	case CATCH_POKEMON:
+		break;
+	default:
+		exit(1);
+		break;
+	}
+}
 
 
 
