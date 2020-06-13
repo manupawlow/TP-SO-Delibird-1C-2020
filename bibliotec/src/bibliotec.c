@@ -169,6 +169,71 @@ void* serializar_paquete_cliente(t_paquete* paquete, int *bytes)
 
 }
 
+t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
+{
+		t_buffer* buffer = malloc(sizeof(t_buffer));
+
+		buffer->size = sizeof(uint8_t)*5 + sizeof(uint32_t)*2 + strlen(mensaje->pokemon)+1 + strlen(mensaje->resultado)+1;
+
+		void* stream = malloc(buffer->size);
+		int offset = 0;
+
+		memcpy(stream + offset, &(mensaje->pokemon_length), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		memcpy(stream + offset, mensaje->pokemon, strlen(mensaje->pokemon)+1);
+		offset += strlen(mensaje->pokemon) + 1;
+		memcpy(stream + offset, &(mensaje->posx), sizeof(uint8_t));
+		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->posy), sizeof(uint8_t));
+		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->cantidad), sizeof(uint8_t));
+		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->id_mensaje), sizeof(uint8_t));
+		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->id_mensaje_correlativo), sizeof(uint8_t));
+		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->resultado_length), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		memcpy(stream + offset, mensaje->resultado, strlen(mensaje->resultado)+1);
+
+		buffer->stream = stream;
+		free(mensaje);
+		return buffer;
+
+}
+
+t_mensaje* deserializar_mensaje_struct(t_buffer* buffer)
+{
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+
+	//void* stream = malloc(buffer->size);
+	//stream = buffer->stream;
+
+	void* stream = buffer->stream;
+
+	memcpy(&(mensaje->pokemon_length), stream, sizeof(uint32_t));
+	stream += sizeof(uint32_t);
+	mensaje->pokemon = malloc(mensaje->pokemon_length);
+	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length);
+	stream += mensaje->pokemon_length;
+	memcpy(&(mensaje->posx), stream, sizeof(uint8_t));
+	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->posy), stream, sizeof(uint8_t));
+	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->cantidad), stream, sizeof(uint8_t));
+	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->id_mensaje), stream, sizeof(uint8_t));
+	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->id_mensaje_correlativo), stream, sizeof(uint8_t));
+	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->resultado_length), stream, sizeof(uint32_t));
+	stream += sizeof(uint32_t);
+	mensaje->resultado = malloc(mensaje->resultado_length);
+	memcpy(mensaje->resultado, stream, mensaje->resultado_length);
+
+	return mensaje;
+}
+
 void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 {
 
@@ -188,6 +253,31 @@ void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 
 }
 
+void enviar_mensaje_struct(t_buffer* buffer, int socket_cliente, op_code codigo)
+{
+	//----------------EMPAQUETAMIENTO----------------
+			t_paquete *paquete = malloc(sizeof(t_paquete));
+			paquete->codigo_operacion = codigo;
+			paquete->buffer = buffer;
+
+			void* a_enviar = malloc(buffer->size + sizeof(op_code) + sizeof(uint32_t));
+			int offset = 0;
+
+			memcpy(a_enviar + offset, &(paquete->codigo_operacion), sizeof(op_code));
+			offset += sizeof(op_code);
+			memcpy(a_enviar + offset, &(paquete->buffer->size), sizeof(uint32_t));
+			offset += sizeof(uint32_t);
+			memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
+
+			send(socket_cliente, a_enviar, paquete->buffer->size + sizeof(op_code) + sizeof(uint32_t), 0);
+
+	//----------------libero la memoria del paquete mandado----------------
+			free(a_enviar);
+			free(paquete->buffer->stream);
+			free(paquete->buffer);
+			free(paquete);
+}
+
 
 char* recibir_mensaje_cliente(int socket_cliente)
 {
@@ -204,6 +294,26 @@ char* recibir_mensaje_cliente(int socket_cliente)
 		}
 		return buffer;
 }
+
+t_mensaje* recibir_mensaje_struct(int socket_cliente)
+{
+	t_paquete* paquete = malloc(sizeof(t_paquete));
+	paquete->buffer = malloc(sizeof(t_buffer));
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+
+	recv(socket_cliente, &(paquete->buffer->size), sizeof(uint32_t), MSG_WAITALL);
+	paquete->buffer->stream = malloc(paquete->buffer->size);
+	recv(socket_cliente, paquete->buffer->stream, paquete->buffer->size, MSG_WAITALL);
+
+	mensaje = deserializar_mensaje_struct(paquete->buffer);
+
+	free(paquete->buffer->stream);
+	free(paquete->buffer);
+	free(paquete);
+	return mensaje;
+
+}
+
 //------------------------------LOCURAS---------------------------------------------------------
 void* recibir_mensaje_ACK(int socket_cliente)
 {

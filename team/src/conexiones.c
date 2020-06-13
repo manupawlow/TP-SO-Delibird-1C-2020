@@ -88,23 +88,23 @@ void conexion_gameboy(){
 void process_request(int socket_cliente){
 	int cod_op;
 	Entrenador *ent;
-	if(recv(socket_cliente, &cod_op, sizeof(int), MSG_WAITALL) == -1)
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 				cod_op = -1;
 
 	switch (cod_op){
 	case APPEARED_POKEMON:
 		log_info(logger,"Llego pokemon a la cola APPEARED!");
-
-		char* pokemon = "Pikachu";
+		mensaje = recibir_mensaje_struct(socket_cliente);
 		Posicion pos;
-		pos.x=15;
-		pos.y=15;
-		if(necesitaPokemon(pokemon, objetivoGlobal)){
+		pos.x = mensaje->posx;
+		pos.y = mensaje->posy;
+		if(necesitaPokemon(mensaje->pokemon, objetivoGlobal)){
 			menorDistancia(pos);
 
 		}else
 			log_info(logger,"No se necesita!");
-
+		free(mensaje);
 		break;
 	/*
 	case CAUGHT_POKEMON:

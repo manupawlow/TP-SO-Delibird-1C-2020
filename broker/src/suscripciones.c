@@ -34,8 +34,9 @@ void process_request(Colas *loquito) {
 	char* msg;
 	int cod_op;
 	char* id;
+	t_mensaje* mensaje;
 
-	if(recv(loquito->socket_cliente, &cod_op, sizeof(int), MSG_WAITALL) == -1)
+	if(recv(loquito->socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
 
 
@@ -235,7 +236,14 @@ void process_request(Colas *loquito) {
 			//guardar_ACK(msg);
 			break;
 //-----------------------------------------------------------------
-
+		case SUSCRIBIR:
+			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			log_info(loquito->logger,"%d",mensaje->posx);
+			log_info(loquito->logger,"%d",mensaje->posy);
+			log_info(loquito->logger,"%s",mensaje->pokemon);
+			log_info(loquito->logger,"%s",mensaje->resultado);
+			free(mensaje);
+			break;
 		case 0:
 			break;
 		case -1:

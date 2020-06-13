@@ -53,20 +53,33 @@ typedef struct
 
 pthread_t thread;
 
-//t_queue *GET_POKEMON,*LOCALIZED;
+typedef struct
+{
+    uint32_t pokemon_length;
+    char* pokemon;
+    uint8_t posx;
+    uint8_t posy;
+	uint8_t cantidad;
+	uint8_t id_mensaje;
+	uint8_t id_mensaje_correlativo;
+	uint32_t resultado_length;
+	char* resultado;
+} t_mensaje;
 
 void* recibir_buffer(int*, int);
 int iniciar_servidor(char*, char*);
 int esperar_cliente(int);
 void* recibir_mensaje(int , int* );
 int recibir_operacion(int);
-//void process_request(int cod_op, int cliente_fd);
-//void serve_client(int *socket);
+t_buffer* serializar_mensaje_struct(t_mensaje* );
+t_mensaje* deserializar_mensaje_struct(t_buffer* );
+void enviar_mensaje_struct(t_buffer* , int , op_code );
+t_mensaje* recibir_mensaje_struct(int );
 void* serializar_paquete(t_paquete* , int );
 void devolver_mensaje(void* , int , int , op_code );
 
 int crear_conexion(char*, char*);
-int reintentar_conexion(char* ip, char* puerto , int tiempo);
+int reintentar_conexion(char* , char*  , int );
 void enviar_mensaje(char* , int , op_code );
 char* recibir_mensaje_cliente(int );
 void eliminar_paquete(t_paquete* );

@@ -16,8 +16,8 @@ typedef struct{
 }Config_Team;
 
 typedef struct{
-	double x;
-	double y;
+	uint8_t x;
+	uint8_t y;
 }Posicion;
 
 typedef struct{

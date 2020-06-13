@@ -566,3 +566,69 @@
 [INFO] 23:57:50:572 Gameboy/(7379:7379): Envie un mensaje a la cola APPEARED_POKEMON
 [INFO] 23:57:53:61 Gameboy/(7380:7380): Me conecte a la IP 127.0.0.2 y puerto 5002
 [INFO] 23:57:53:61 Gameboy/(7380:7380): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:39:11:824 Gameboy/(17702:17702): socket: 4
+[INFO] 00:39:11:824 Gameboy/(17702:17702): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:39:26:136 Gameboy/(17709:17709): socket: 4
+[INFO] 00:39:26:137 Gameboy/(17709:17709): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:39:54:181 Gameboy/(17712:17712): socket: 4
+[INFO] 00:39:54:181 Gameboy/(17712:17712): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:39:58:13 Gameboy/(17713:17713): socket: 4
+[INFO] 00:39:58:13 Gameboy/(17713:17713): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:40:32:424 Gameboy/(17714:17714): socket: 4
+[INFO] 00:40:32:425 Gameboy/(17714:17714): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:40:58:700 Gameboy/(17717:17717): socket: 4
+[INFO] 00:40:58:700 Gameboy/(17717:17717): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:42:15:156 Gameboy/(17729:17729): socket: 4
+[INFO] 00:42:15:157 Gameboy/(17729:17729): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:42:42:208 Gameboy/(17744:17744): socket: 4
+[INFO] 00:42:42:209 Gameboy/(17744:17744): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:42:42:864 Gameboy/(17745:17745): socket: 4
+[INFO] 00:42:42:864 Gameboy/(17745:17745): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:42:48:56 Gameboy/(17746:17746): socket: 4
+[INFO] 00:42:48:56 Gameboy/(17746:17746): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:05:669 Gameboy/(17755:17755): socket: 4
+[INFO] 00:43:05:669 Gameboy/(17755:17755): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:06:83 Gameboy/(17756:17756): socket: 4
+[INFO] 00:43:06:83 Gameboy/(17756:17756): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:11:19 Gameboy/(17757:17757): socket: 4
+[INFO] 00:43:11:19 Gameboy/(17757:17757): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:11:818 Gameboy/(17758:17758): socket: 4
+[INFO] 00:43:11:820 Gameboy/(17758:17758): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:12:677 Gameboy/(17759:17759): socket: 4
+[INFO] 00:43:12:677 Gameboy/(17759:17759): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:13:277 Gameboy/(17760:17760): socket: 4
+[INFO] 00:43:13:277 Gameboy/(17760:17760): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:14:165 Gameboy/(17761:17761): socket: 4
+[INFO] 00:43:14:165 Gameboy/(17761:17761): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:14:748 Gameboy/(17762:17762): socket: 4
+[INFO] 00:43:14:748 Gameboy/(17762:17762): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:15:221 Gameboy/(17763:17763): socket: 4
+[INFO] 00:43:15:221 Gameboy/(17763:17763): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:15:725 Gameboy/(17764:17764): socket: 4
+[INFO] 00:43:15:725 Gameboy/(17764:17764): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:16:453 Gameboy/(17765:17765): socket: 4
+[INFO] 00:43:16:453 Gameboy/(17765:17765): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:17:85 Gameboy/(17766:17766): socket: 4
+[INFO] 00:43:17:85 Gameboy/(17766:17766): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:17:932 Gameboy/(17767:17767): socket: 4
+[INFO] 00:43:17:933 Gameboy/(17767:17767): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:18:421 Gameboy/(17768:17768): socket: 4
+[INFO] 00:43:18:421 Gameboy/(17768:17768): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:18:896 Gameboy/(17769:17769): socket: 4
+[INFO] 00:43:18:896 Gameboy/(17769:17769): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:19:277 Gameboy/(17770:17770): socket: 4
+[INFO] 00:43:19:277 Gameboy/(17770:17770): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:19:620 Gameboy/(17771:17771): socket: 4
+[INFO] 00:43:19:620 Gameboy/(17771:17771): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:20:5 Gameboy/(17772:17772): socket: 4
+[INFO] 00:43:20:5 Gameboy/(17772:17772): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:20:326 Gameboy/(17773:17773): socket: 4
+[INFO] 00:43:20:326 Gameboy/(17773:17773): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:20:973 Gameboy/(17774:17774): socket: 4
+[INFO] 00:43:20:973 Gameboy/(17774:17774): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:21:324 Gameboy/(17775:17775): socket: 4
+[INFO] 00:43:21:325 Gameboy/(17775:17775): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:21:653 Gameboy/(17776:17776): socket: 4
+[INFO] 00:43:21:653 Gameboy/(17776:17776): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 00:43:23:304 Gameboy/(17777:17777): socket: 4
+[INFO] 00:43:23:305 Gameboy/(17777:17777): Envie un mensaje a la cola APPEARED_POKEMON
