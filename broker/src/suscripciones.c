@@ -30,15 +30,15 @@ char* asignar_id(){
 }
 
 void process_request(Colas *loquito) {
-	int size;
-	char* msg;
-	int cod_op;
-	char* id;
-	t_mensaje* mensaje;
+    int cod_op;
+    char *msg;
+    int size;
+    char *id;
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+	t_buffer *buffer;
 
 	if(recv(loquito->socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
-
 
 		switch (cod_op) {
 
@@ -137,33 +137,39 @@ void process_request(Colas *loquito) {
 
 //----------------------------------------------------------------
 //--------------------CAUGHT--------------------------------------
-	/*	case SUS_CAUGHT:
+		case SUS_CAUGHT:
 			//Suscribir a la cola caught
 			loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista CAUGHT %d", loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught]);
 			loquito->cant_suscritos_caught++;
 			break;
-*/
+
 		case CAUGHT_POKEMON:
 			//Agrega el mensaje a la cola caugth
-			msg = recibir_mensaje(loquito->socket_cliente, &size);
 
+			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			buffer = serializar_mensaje_struct(mensaje);
+
+			for(int i=0; i< loquito->cant_suscritos_appeared; i++){
+				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_CAUGHT[i],CAUGHT_POKEMON);
+
+			}
 			// W mutex de los id;
 			//asignar_id(msg); //////////
 			// S mutex de los id;
 
-			enviar_a_todos(loquito->SUSCRITOS_CAUGHT, loquito->cant_suscritos_caught, msg, size, cod_op );
+			//enviar_a_todos(loquito->SUSCRITOS_CAUGHT, loquito->cant_suscritos_caught, msg, size, cod_op );
 			log_info(loquito->logger,"Se envio mensaje a todos los suscriptos!");
 
 			//le digo el id del mensaje al que mando el msg
 
-			id = asignar_id();
+			//id = asignar_id();
 
-			devolver_mensaje(id, size, loquito->socket_cliente, cod_op);
+			//devolver_mensaje(id, size, loquito->socket_cliente, cod_op);
 
-			log_info(loquito->logger, "Se notifico el id del mensaje!");
+			//log_info(loquito->logger, "Se notifico el id del mensaje!");
 
-			free(msg);
+			//free(msg);
 			break;
 
 //----------------------------------------------------------------
@@ -207,14 +213,19 @@ void process_request(Colas *loquito) {
 			break;
 
 		case APPEARED_POKEMON:
-			//Agrega el mensaje a la cola appeared
-			msg = recibir_mensaje(loquito->socket_cliente, &size);
 
 			// W mutex de los id;
 			//asignar_id(msg); //////////
 			// S mutex de los id;
+			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			buffer = serializar_mensaje_struct(mensaje);
 
-			enviar_a_todos(loquito->SUSCRITOS_APPEARED, loquito->cant_suscritos_appeared, msg, size, cod_op );
+			for(int i=0; i< loquito->cant_suscritos_appeared; i++){
+				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_APPEARED[i],APPEARED_POKEMON);
+
+			}
+
+			//enviar_a_todos(loquito->SUSCRITOS_APPEARED, loquito->cant_suscritos_appeared, msg, size, cod_op );
 			log_info(loquito->logger,"Se envio mensaje a todos los suscriptos!");
 
 			//le digo el id del mensaje al que mando el msg
@@ -225,7 +236,7 @@ void process_request(Colas *loquito) {
 
 			log_info(loquito->logger, "Se notifico el id del mensaje!");
 */
-			free(msg);
+			//free(msg);
 
 			break;
 

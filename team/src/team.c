@@ -25,8 +25,8 @@ int main(void){
 	//pthread_t conexionLocalized;
     //pthread_create(&conexionLocalized, NULL,(void*) conexion_localized, NULL);
 
-    //pthread_t conexionCaugth;
-    //pthread_create(&conexionCaugth, NULL, (void*) conexion_caugth, NULL);
+    pthread_t conexionCaugth;
+    pthread_create(&conexionCaugth, NULL, (void*) conexion_caugth, NULL);
 
     pthread_t conexionAppeared;
     pthread_create(&conexionAppeared, NULL,(void*) conexion_appeared ,NULL);

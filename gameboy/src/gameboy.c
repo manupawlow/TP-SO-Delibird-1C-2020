@@ -98,7 +98,7 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
-			enviar_mensaje(concatena(6,argv),conexion,APPEARED_POKEMON);
+			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
-		enviar_mensaje(concatena(4,argv),conexion,CAUGHT_POKEMON);
+		enviar_mensaje_struct(buffer,conexion,CAUGHT_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 	}
 	else if(strcmp(argv[2],"GET_POKEMON") == 0){

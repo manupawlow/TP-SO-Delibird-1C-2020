@@ -31,6 +31,7 @@ int main(void) {
 	colas->cant_suscritos_get = 0;
 	colas->cant_suscritos_appeared = 0;
 	colas->cant_suscritos_localized = 0;
+	colas->cant_suscritos_caught =0;
 
 
     while(1){

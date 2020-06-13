@@ -122,28 +122,13 @@ int crear_conexion(char *ip, char* puerto)
 
 int reintentar_conexion(char* ip, char* puerto , int tiempo)
 {
-	clock_t start, diff;
-	int elapsedsec;
-	int sec = tiempo;
-	int iterations = 0;
-	int conexion = -1;
+	int conexion = crear_conexion(ip,puerto);
 
-	while (iterations < 500 && (conexion== -1)) {
-		start = clock();
-
-		while (1) {
-			diff = clock() - start;
-	        elapsedsec = diff / CLOCKS_PER_SEC;
-
-	        if (elapsedsec >= sec) {
-	        	conexion =crear_conexion(ip,puerto);
-	        	iterations++;
-	            break;
-	            }
-	        }
-	    }
+	while(conexion == -1){
+		sleep(tiempo);
+		conexion = crear_conexion(ip,puerto);
+	}
 	return conexion;
-
 }
 
 void* serializar_paquete_cliente(t_paquete* paquete, int *bytes)

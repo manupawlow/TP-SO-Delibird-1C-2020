@@ -39,7 +39,7 @@ void realizar_tareas(Entrenador *entrenador){
 
 	int dis_x= abs(entrenador->posicion_a_capturar->x - entrenador->posicion->x);
 	int dis_y= abs(entrenador->posicion_a_capturar->y - entrenador->posicion->y);
-	int moverse = (dis_x + dis_y) ;//* config->retardo_cpu;
+	int moverse = (dis_x + dis_y)*config->retardo_cpu;
 
 	log_info(logger,"Tiempo %d segundos:", moverse);
 
@@ -48,12 +48,14 @@ void realizar_tareas(Entrenador *entrenador){
 	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
 
 	//list_add(block,entrenador);
-	log_info(logger,"LLegue a la posicion del pokemon!");
 
 	pthread_mutex_unlock(&mxExce);
 
 	sem_wait(&entrenador->mx_entrenador);
 
+	log_info(logger,"LLegue a la posicion del pokemon!");
+	int socket_catch= crear_conexion(ip,puerto);
+	//enviar_mensaje_struct(a,socket_catch,CATCH_POKEMON);
 
 }
 
@@ -87,7 +89,6 @@ void conexion_gameboy(){
 
 void process_request(int socket_cliente){
 	int cod_op;
-	Entrenador *ent;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 				cod_op = -1;
@@ -106,18 +107,23 @@ void process_request(int socket_cliente){
 			log_info(logger,"No se necesita!");
 		free(mensaje);
 		break;
-	/*
+
 	case CAUGHT_POKEMON:
 		//if esSuPokemon
-        ent= list_get(block,0);
+		mensaje = recibir_mensaje_struct(socket_cliente);
+		log_info(logger,"Agarralo!");
+		   /*
+		ent= list_get(block,0);
 		list_remove(block,0);
 		list_add(ent,ready);
 		sem_post(&semaforoExce);
 
 		break;
 	*/
+		break;
 	case -1:
-		log_info(logger,"Error");
+		socket_cliente = crear_conexion(ip,puerto);
+		break;
 
 	}
 }
@@ -134,8 +140,7 @@ void conexion_appeared(Config_Team config_team){
 	enviar_mensaje("Suscribime",conexionAppeared, SUS_APP);
 	log_info(logger,"Me suscribi a la cola Appeared!");
 
-	while(1){
-		char *mensaje = recibir_mensaje_cliente(conexionAppeared);
+	while(conexionAppeared != -1){
 		process_request(conexionAppeared);
 	}
 
@@ -167,11 +172,11 @@ void conexion_caugth(){
         conexionCaugth= reintentar_conexion(ip,puerto,config->reconexion);
 	}
 
-	enviar_mensaje("Suscribime",conexionCaugth, SUS_GET);
+	enviar_mensaje("Suscribime",conexionCaugth, SUS_CAUGHT);
 	log_info(logger,"Me suscribi a la cola Caugth!");
 
-	while(1){
-		//char *mensaje = recibir_mensaje_cliente(conexionCaugth);
+	while(conexionCaugth != -1){
+		process_request(conexionCaugth);
 
 	}
 }
