@@ -9553,3 +9553,20 @@
 [INFO] 20:08:38:176 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
 [INFO] 20:09:03:664 Broker/(8398:8398): socketero: 15
 [INFO] 20:09:03:664 Broker/(8398:8398): Se envio mensaje a todos los suscriptos!
+[INFO] 18:04:35:422 Broker/(8979:8979): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:04:55:800 Broker/(8979:8979): socketero: 5
+[INFO] 18:08:41:161 Broker/(9257:9257): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:08:59:412 Broker/(9257:9257): socketero: 5
+[INFO] 18:31:18:650 Broker/(9861:9861): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:31:34:703 Broker/(9861:9861): socketero: 5
+[INFO] 18:34:17:310 Broker/(10038:10038): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 18:34:21:12 Broker/(10038:10038): socketero: 5
+[INFO] 18:34:21:13 Broker/(10038:10038): Se Suscribio a la lista LOCALIZED 5
+[INFO] 18:34:21:13 Broker/(10038:10038): socketero: 6
+[INFO] 18:34:21:13 Broker/(10038:10038): Se Suscribio a la lista APPEARED 6
+[INFO] 18:34:33:677 Broker/(10038:10038): socketero: 7
+[INFO] 18:34:33:686 Broker/(10038:10038): Se envio mensaje a todos los suscriptos!
+[INFO] 18:34:33:686 Broker/(10038:10038): Se notifico el id del mensaje!
+[INFO] 18:34:51:69 Broker/(10038:10038): socketero: 8
+[INFO] 18:34:51:70 Broker/(10038:10038): Se envio mensaje a todos los suscriptos!
+[INFO] 18:34:51:71 Broker/(10038:10038): Se notifico el id del mensaje!

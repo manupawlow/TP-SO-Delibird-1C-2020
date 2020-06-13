@@ -136,13 +136,13 @@ void process_request(Colas *loquito) {
 
 //----------------------------------------------------------------
 //--------------------CAUGHT--------------------------------------
-		case SUS_CAUGHT:
+	/*	case SUS_CAUGHT:
 			//Suscribir a la cola caught
 			loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista CAUGHT %d", loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught]);
 			loquito->cant_suscritos_caught++;
 			break;
-
+*/
 		case CAUGHT_POKEMON:
 			//Agrega el mensaje a la cola caugth
 			msg = recibir_mensaje(loquito->socket_cliente, &size);
@@ -201,7 +201,7 @@ void process_request(Colas *loquito) {
 		case SUS_APP:
 			//Suscribir a la cola appeared
 			loquito->SUSCRITOS_APPEARED[loquito->cant_suscritos_appeared] = loquito->socket_cliente;
-			log_info(loquito->logger,"Se Suscribio a la lista APPEARED %d", loquito->SUSCRITOS_CATCH[loquito->cant_suscritos_appeared]);
+			log_info(loquito->logger,"Se Suscribio a la lista APPEARED %d", loquito->SUSCRITOS_APPEARED[loquito->cant_suscritos_appeared]);
 			loquito->cant_suscritos_appeared++;
 			break;
 
@@ -217,14 +217,15 @@ void process_request(Colas *loquito) {
 			log_info(loquito->logger,"Se envio mensaje a todos los suscriptos!");
 
 			//le digo el id del mensaje al que mando el msg
-
+/*
 			id = asignar_id();
 
 			devolver_mensaje(id, size, loquito->socket_cliente, cod_op);
 
 			log_info(loquito->logger, "Se notifico el id del mensaje!");
-
+*/
 			free(msg);
+
 			break;
 
 //----------------------------------------------------------------

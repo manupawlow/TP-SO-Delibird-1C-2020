@@ -48,63 +48,6 @@ int esperar_cliente(int socket_servidor)
     return socket_cliente;
 }
 
-void enviar_pokemon(t_pokemon pokemon, int socket){
-
-	t_buffer* buffer = malloc(sizeof(t_buffer));
-
-	buffer->size = sizeof(int) * 2;
-	             //+ strlen(pokemon.nombre) + 1;
-
-	void* stream = malloc(buffer->size);
-	int offset = 0;
-
-	memcpy(stream + offset, &pokemon.posx, sizeof(int));
-	offset += sizeof(int);
-	memcpy(stream + offset, &pokemon.posy, sizeof(int));
-//	offset += sizeof(int);
-	//memcpy(stream + offset, &pokemon.nombre, strlen(pokemon.nombre)+1);
-
-	buffer->stream = stream;
-
-	t_paquete* paquete = malloc(sizeof(t_paquete));
-
-	paquete->codigo_operacion = APPEARED_POKEMON;
-	paquete->buffer = buffer;
-
-	void* a_enviar = malloc(buffer->size + sizeof(int) + sizeof(int));
-	offset = 0;
-
-	memcpy(a_enviar + offset, &(paquete->codigo_operacion), sizeof(int));
-	offset += sizeof(int);
-	memcpy(a_enviar + offset, &(paquete->buffer->size), sizeof(int));
-	offset += sizeof(int);
-	memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
-
-	send(socket, a_enviar, buffer->size + sizeof(int) + sizeof(int), 0);
-
-	free(a_enviar);
-	free(paquete->buffer->stream);
-	free(paquete->buffer);
-	free(paquete);
-}
-
-t_pokemon* deserializar_pokemon(t_buffer* buffer) {
-    t_pokemon* pokemon = malloc(sizeof(t_pokemon));
-
-    void* stream = buffer->stream;
-    // Deserializamos los campos que tenemos en el buffer
-    memcpy(&(pokemon->posx), stream, sizeof(int));
-    stream += sizeof(int);
-    memcpy(&(pokemon->posy), stream, sizeof(int));
-   // stream += sizeof(int);
-
-    // Por último, para obtener el nombre, primero recibimos el tamaño y luego el texto en sí
-    //pokemon->nombre = malloc(sizeof(pokemon->nombre));
-    //memcpy(pokemon->nombre, stream, pokemon->nombre);
-
-    return pokemon;
-}
-
 void* recibir_mensaje(int socket_cliente, int* size)
 {
 	void * buffer;

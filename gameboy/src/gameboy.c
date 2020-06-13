@@ -65,6 +65,8 @@ int main(int argc, char *argv[]) {
 		puerto= config_get_string_value(config,puertos);
 
 		conexion = crear_conexion(ip,puerto);
+		if(conexion==-1)
+			exit(1);
 
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 	}

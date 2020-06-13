@@ -29,6 +29,8 @@ int main(void) {
 	Colas *colas = malloc(sizeof(Colas));
 	colas->logger = logger;
 	colas->cant_suscritos_get = 0;
+	colas->cant_suscritos_appeared = 0;
+	colas->cant_suscritos_localized = 0;
 
 
     while(1){

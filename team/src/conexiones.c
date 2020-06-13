@@ -47,13 +47,12 @@ void realizar_tareas(Entrenador *entrenador){
 	entrenador->posicion->x = entrenador->posicion_a_capturar->x;
 	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
 
-	list_add(block,entrenador);
+	//list_add(block,entrenador);
+	log_info(logger,"LLegue a la posicion del pokemon!");
+
 	pthread_mutex_unlock(&mxExce);
 
 	sem_wait(&entrenador->mx_entrenador);
-
-	log_info(logger,"Agarre pokemon!");
-
 
 
 }
@@ -62,7 +61,7 @@ void poner_en_exce(){
 
 	while(1){
 		sem_wait(&semaforoExce);
-		log_info(logger,"LLego entrenador!");
+		log_info(logger,"Nuevo entrenador en ready!");
 		pthread_mutex_lock(&mxExce);
 
 		Entrenador *entrenador= list_get(ready,0);
@@ -107,6 +106,7 @@ void process_request(int socket_cliente){
 			log_info(logger,"No se necesita!");
 
 		break;
+	/*
 	case CAUGHT_POKEMON:
 		//if esSuPokemon
         ent= list_get(block,0);
@@ -114,6 +114,10 @@ void process_request(int socket_cliente){
 		list_add(ent,ready);
 		sem_post(&semaforoExce);
 
+		break;
+	*/
+	case -1:
+		log_info(logger,"Error");
 
 	}
 }
@@ -131,6 +135,7 @@ void conexion_appeared(Config_Team config_team){
 	log_info(logger,"Me suscribi a la cola Appeared!");
 
 	while(1){
+		char *mensaje = recibir_mensaje_cliente(conexionAppeared);
 		process_request(conexionAppeared);
 	}
 

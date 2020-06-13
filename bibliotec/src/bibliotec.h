@@ -51,13 +51,6 @@ typedef struct
 	t_buffer* buffer;
 } t_paquete;
 
-typedef struct
-{
-	int posx;
-	int posy;
-	//char *nombre;
-} t_pokemon;
-
 pthread_t thread;
 
 //t_queue *GET_POKEMON,*LOCALIZED;
@@ -82,11 +75,8 @@ void* serializar_paquete_cliente(t_paquete* , int*);
 
 char* concatena(int , char** );
 
-
 void* enviarACK(op_code* );
 void* recibir_mensaje_ACK(int);
 
-void enviar_pokemon(t_pokemon pokemon, int socket);
-t_pokemon* deserializar_pokemon(t_buffer* buffer);
 
 void terminar_programa(int , t_log* , t_config* );
