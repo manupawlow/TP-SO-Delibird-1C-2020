@@ -759,3 +759,10 @@
 [INFO] 19:49:03:833 Broker/(9104:9104): Se Suscribio a la lista APPEARED 5
 [INFO] 19:49:03:833 Broker/(9104:9104): socketero: 7
 [INFO] 19:49:03:833 Broker/(9104:9104): Se Suscribio a la lista CAUGHT 7
+[INFO] 21:05:34:871 Broker/(19273:19273): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:05:55:960 Broker/(19273:19273): socketero: 5
+[INFO] 21:05:55:960 Broker/(19273:19273): Se Suscribio a la lista APPEARED 5
+[INFO] 21:05:55:960 Broker/(19273:19273): socketero: 7
+[INFO] 21:05:55:960 Broker/(19273:19273): Se Suscribio a la lista CAUGHT 7
+[INFO] 21:08:59:133 Broker/(19273:19273): socketero: 8
+[INFO] 21:08:59:133 Broker/(19273:19273): Se envio mensaje a todos los suscriptos!

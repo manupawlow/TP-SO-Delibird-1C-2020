@@ -11,8 +11,6 @@ int main(int argc, char *argv[]) {
 	t_mensaje* mensaje_struct = malloc(sizeof(t_mensaje));
 	t_buffer* buffer;
 
-	fflush(stdout);
-
 	t_log* logger;
 	t_config* config;
 
@@ -34,7 +32,20 @@ int main(int argc, char *argv[]) {
 
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
-		enviar_mensaje(concatena(6,argv),conexion,SUSCRIBIR);
+		if(strcmp(argv[2],"NEW_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_NEW);
+		}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_APP);
+		}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CATCH);
+		}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CAUGHT);
+		}else if(strcmp(argv[2],"GET_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_GET);
+		}else if(strcmp(argv[2],"LOCALIZED_POKEMON") == 0){
+			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_LOC);
+		}
+
 		log_info(logger,"Suscripcion a cola %s por %d segundos",argv[2],argv[3]);
 
 		//temporal_get_string_time() devuelve el tiempo en hh:mm:ss:mmmm (es un char*)
@@ -48,8 +59,7 @@ int main(int argc, char *argv[]) {
 
 		while(segundos < segundosFinal){
 
-			recibir_mensaje_struct(conexion);
-			//log_info(logger,"El mensaje recibido es %s\n",mensaje_struct);
+			mensaje_struct = recibir_mensaje_struct(conexion);
 
 			tiempo = string_split(temporal_get_string_time(),":");
 			horas = atoi(tiempo[0]);
@@ -71,54 +81,99 @@ int main(int argc, char *argv[]) {
 		if(conexion == -1)
 			log_info(logger,"No me pude conectar :(");
 		log_info(logger,"socket: %d",conexion);
-		//log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
+		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
-		mensaje_struct->pokemon = argv[3];
+		mensaje_struct->pokemon = "default";
 		mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
-		mensaje_struct->resultado = "?";
+		mensaje_struct->resultado = "default";
 		mensaje_struct->resultado_length = strlen(mensaje_struct->resultado)+1;
-		mensaje_struct->posx = atoi(argv[4]);
-		mensaje_struct->posy = atoi(argv[5]);
+		mensaje_struct->posx = 0;
+		mensaje_struct->posy = 0;
 		mensaje_struct->cantidad = 0;
 		mensaje_struct->id_mensaje = 0;
 		mensaje_struct->id_mensaje_correlativo = 0;
-		buffer = serializar_mensaje_struct(mensaje_struct);
 	}
 
 	if(strcmp(argv[2],"NEW_POKEMON") == 0){
 		if(strcmp(argv[1],"BROKER") == 0){
-			enviar_mensaje(concatena(5,argv),conexion,NEW_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			mensaje_struct->cantidad = atoi(argv[6]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"GAMECARD") == 0){
-			enviar_mensaje(concatena(6,argv),conexion,NEW_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			mensaje_struct->cantidad = atoi(argv[6]);
+			mensaje_struct->id_mensaje = atoi(argv[7]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
 		if(strcmp(argv[1],"TEAM") == 0){
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
-			enviar_mensaje(concatena(6,argv),conexion,CATCH_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			mensaje_struct->id_mensaje = atoi(argv[6]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,CATCH_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
-			enviar_mensaje(concatena(5,argv),conexion,CATCH_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->posx = atoi(argv[4]);
+			mensaje_struct->posy = atoi(argv[5]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,CATCH_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
+		mensaje_struct->id_mensaje_correlativo = atoi(argv[3]);
+		mensaje_struct->resultado = argv[4];
+		mensaje_struct->resultado_length = strlen(mensaje_struct->resultado)+1;
+		buffer = serializar_mensaje_struct(mensaje_struct);
 		enviar_mensaje_struct(buffer,conexion,CAUGHT_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 	}
 	else if(strcmp(argv[2],"GET_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
-		enviar_mensaje(concatena(4,argv),conexion,GET_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			mensaje_struct->id_mensaje = atoi(argv[4]);
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,GET_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
-		enviar_mensaje(concatena(3,argv),conexion,GET_POKEMON);
+			mensaje_struct->pokemon = argv[3];
+			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
+			buffer = serializar_mensaje_struct(mensaje_struct);
+			enviar_mensaje_struct(buffer,conexion,GET_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}
