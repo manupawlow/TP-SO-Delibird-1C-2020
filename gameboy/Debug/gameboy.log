@@ -777,3 +777,191 @@
 [INFO] 21:08:59:133 Gameboy/(19591:19591): socket: 4
 [INFO] 21:08:59:133 Gameboy/(19591:19591): Me conecte a la IP 127.0.0.1 y puerto 5003
 [INFO] 21:08:59:134 Gameboy/(19591:19591): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 20:10:23:953 Gameboy/(13283:13283): socket: 4
+[INFO] 20:10:23:953 Gameboy/(13283:13283): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:10:23:954 Gameboy/(13283:13283): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:12:26:617 Gameboy/(13472:13472): socket: 4
+[INFO] 20:12:26:617 Gameboy/(13472:13472): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:12:26:617 Gameboy/(13472:13472): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:14:33:274 Gameboy/(13630:13630): socket: 4
+[INFO] 20:14:33:274 Gameboy/(13630:13630): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:14:33:275 Gameboy/(13630:13630): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:15:09:972 Gameboy/(13767:13767): socket: 4
+[INFO] 20:15:09:972 Gameboy/(13767:13767): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:15:09:973 Gameboy/(13767:13767): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:48:36:539 Gameboy/(15068:15068): socket: 4
+[INFO] 20:48:36:539 Gameboy/(15068:15068): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:48:36:540 Gameboy/(15068:15068): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:49:24:424 Gameboy/(15203:15203): socket: 4
+[INFO] 20:49:24:424 Gameboy/(15203:15203): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:24:424 Gameboy/(15203:15203): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:49:27:128 Gameboy/(15204:15204): socket: 4
+[INFO] 20:49:27:128 Gameboy/(15204:15204): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:27:128 Gameboy/(15204:15204): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:49:28:48 Gameboy/(15205:15205): socket: 4
+[INFO] 20:49:28:48 Gameboy/(15205:15205): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:28:48 Gameboy/(15205:15205): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:49:28:872 Gameboy/(15206:15206): socket: 4
+[INFO] 20:49:28:872 Gameboy/(15206:15206): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:28:872 Gameboy/(15206:15206): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:49:29:600 Gameboy/(15207:15207): socket: 4
+[INFO] 20:49:29:600 Gameboy/(15207:15207): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:29:600 Gameboy/(15207:15207): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:56:27:161 Gameboy/(15481:15481): socket: 4
+[INFO] 20:56:27:161 Gameboy/(15481:15481): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:56:27:161 Gameboy/(15481:15481): Envie un mensaje a la cola GET_POKEMON
+[INFO] 20:58:04:240 Gameboy/(15561:15561): socket: 4
+[INFO] 20:58:04:240 Gameboy/(15561:15561): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 20:58:04:240 Gameboy/(15561:15561): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:01:05:672 Gameboy/(15787:15787): socket: 4
+[INFO] 21:01:05:672 Gameboy/(15787:15787): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:01:05:672 Gameboy/(15787:15787): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:01:14:216 Gameboy/(15788:15788): socket: 4
+[INFO] 21:01:14:216 Gameboy/(15788:15788): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:01:14:216 Gameboy/(15788:15788): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:06:38:820 Gameboy/(15880:15880): socket: 4
+[INFO] 21:06:38:820 Gameboy/(15880:15880): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:06:38:820 Gameboy/(15880:15880): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:08:03:559 Gameboy/(15928:15928): socket: 4
+[INFO] 21:08:03:560 Gameboy/(15928:15928): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:08:03:560 Gameboy/(15928:15928): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:10:13:313 Gameboy/(16136:16136): socket: 4
+[INFO] 21:10:13:313 Gameboy/(16136:16136): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:10:13:313 Gameboy/(16136:16136): Envie un mensaje a la cola CAUGHT_POKEMON
+[INFO] 21:11:56:744 Gameboy/(16160:16160): socket: 4
+[INFO] 21:11:56:744 Gameboy/(16160:16160): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:12:26:662 Gameboy/(16165:16165): socket: 4
+[INFO] 21:12:26:662 Gameboy/(16165:16165): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:12:26:662 Gameboy/(16165:16165): Envie un mensaje a la cola APPEARED_POKEMON
+[INFO] 21:16:28:282 Gameboy/(16438:16438): socket: 4
+[INFO] 21:16:28:283 Gameboy/(16438:16438): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:16:28:283 Gameboy/(16438:16438): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:18:04:133 Gameboy/(16481:16481): socket: 4
+[INFO] 21:18:04:133 Gameboy/(16481:16481): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:18:04:133 Gameboy/(16481:16481): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:18:42:206 Gameboy/(16519:16519): socket: 4
+[INFO] 21:18:42:206 Gameboy/(16519:16519): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:18:42:206 Gameboy/(16519:16519): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:18:46:57 Gameboy/(16522:16522): socket: 4
+[INFO] 21:18:46:57 Gameboy/(16522:16522): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:18:46:58 Gameboy/(16522:16522): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:24:28:411 Gameboy/(16659:16659): socket: 4
+[INFO] 21:24:28:411 Gameboy/(16659:16659): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:24:28:411 Gameboy/(16659:16659): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:24:36:19 Gameboy/(16661:16661): socket: 4
+[INFO] 21:24:36:20 Gameboy/(16661:16661): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:24:36:20 Gameboy/(16661:16661): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:24:40:571 Gameboy/(16664:16664): socket: 4
+[INFO] 21:24:40:571 Gameboy/(16664:16664): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:24:40:572 Gameboy/(16664:16664): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:26:00:20 Gameboy/(16890:16890): socket: 4
+[INFO] 21:26:00:21 Gameboy/(16890:16890): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:26:00:21 Gameboy/(16890:16890): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:26:47:881 Gameboy/(16934:16934): socket: 4
+[INFO] 21:26:47:881 Gameboy/(16934:16934): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:26:47:882 Gameboy/(16934:16934): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:31:10:994 Gameboy/(17241:17241): socket: 4
+[INFO] 21:31:10:994 Gameboy/(17241:17241): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:31:10:994 Gameboy/(17241:17241): Envie un mensaje a la cola GET_POKEMON
+[INFO] 21:31:13:843 Gameboy/(17242:17242): socket: 4
+[INFO] 21:31:13:843 Gameboy/(17242:17242): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 21:31:13:843 Gameboy/(17242:17242): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:02:42:302 Gameboy/(18090:18090): socket: 4
+[INFO] 22:02:42:302 Gameboy/(18090:18090): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:02:42:302 Gameboy/(18090:18090): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:02:49:68 Gameboy/(18093:18093): socket: 4
+[INFO] 22:02:49:68 Gameboy/(18093:18093): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:02:49:69 Gameboy/(18093:18093): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:08:58:937 Gameboy/(18440:18440): socket: 4
+[INFO] 22:08:58:937 Gameboy/(18440:18440): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:08:58:937 Gameboy/(18440:18440): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:09:50:944 Gameboy/(18483:18483): socket: 4
+[INFO] 22:09:50:944 Gameboy/(18483:18483): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:50:945 Gameboy/(18483:18483): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:09:55:808 Gameboy/(18484:18484): socket: 4
+[INFO] 22:09:55:808 Gameboy/(18484:18484): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:55:809 Gameboy/(18484:18484): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:09:57:80 Gameboy/(18485:18485): socket: 4
+[INFO] 22:09:57:80 Gameboy/(18485:18485): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:57:81 Gameboy/(18485:18485): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:09:57:728 Gameboy/(18486:18486): socket: 4
+[INFO] 22:09:57:728 Gameboy/(18486:18486): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:57:729 Gameboy/(18486:18486): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:09:58:601 Gameboy/(18488:18488): socket: 4
+[INFO] 22:09:58:601 Gameboy/(18488:18488): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:58:601 Gameboy/(18488:18488): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:12:40:445 Gameboy/(18597:18597): socket: 4
+[INFO] 22:12:40:445 Gameboy/(18597:18597): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:12:40:446 Gameboy/(18597:18597): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:13:10:150 Gameboy/(18610:18610): socket: 4
+[INFO] 22:13:10:150 Gameboy/(18610:18610): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:13:10:150 Gameboy/(18610:18610): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:13:11:155 Gameboy/(18611:18611): socket: 4
+[INFO] 22:13:11:155 Gameboy/(18611:18611): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:13:11:155 Gameboy/(18611:18611): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:13:11:798 Gameboy/(18612:18612): socket: 4
+[INFO] 22:13:11:798 Gameboy/(18612:18612): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:13:11:799 Gameboy/(18612:18612): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:13:12:390 Gameboy/(18613:18613): socket: 4
+[INFO] 22:13:12:390 Gameboy/(18613:18613): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:13:12:390 Gameboy/(18613:18613): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:13:15:854 Gameboy/(18614:18614): socket: 4
+[INFO] 22:13:15:854 Gameboy/(18614:18614): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:13:15:855 Gameboy/(18614:18614): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:20:31:450 Gameboy/(19097:19097): socket: 4
+[INFO] 22:20:31:450 Gameboy/(19097:19097): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:20:31:450 Gameboy/(19097:19097): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:20:41:132 Gameboy/(19098:19098): socket: 4
+[INFO] 22:20:41:133 Gameboy/(19098:19098): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:20:41:133 Gameboy/(19098:19098): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:20:48:93 Gameboy/(19104:19104): socket: 4
+[INFO] 22:20:48:93 Gameboy/(19104:19104): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:20:48:94 Gameboy/(19104:19104): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:39:21:697 Gameboy/(20141:20141): socket: 4
+[INFO] 22:39:21:697 Gameboy/(20141:20141): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:39:21:705 Gameboy/(20141:20141): Envie un mensaje a la cola GET_POKEMON
+[INFO] 22:40:00:752 Gameboy/(20148:20148): socket: 4
+[INFO] 22:40:00:752 Gameboy/(20148:20148): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:40:00:755 Gameboy/(20148:20148): Envie un mensaje a la cola NEW_POKEMON
+[INFO] 22:40:42:488 Gameboy/(20155:20155): socket: 4
+[INFO] 22:40:42:488 Gameboy/(20155:20155): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:40:42:492 Gameboy/(20155:20155): Envie un mensaje a la cola CATCH_POKEMON
+[INFO] 22:40:51:512 Gameboy/(20163:20163): socket: 4
+[INFO] 22:40:51:512 Gameboy/(20163:20163): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:40:51:513 Gameboy/(20163:20163): Envie un mensaje a la cola CATCH_POKEMON
+[INFO] 22:54:54:348 Gameboy/(20954:20954): socket: 4
+[INFO] 22:54:54:348 Gameboy/(20954:20954): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:54:54:348 Gameboy/(20954:20954): Envie un mensaje a la cola CATCH_POKEMON
+[INFO] 22:55:13:727 Gameboy/(20955:20955): socket: 4
+[INFO] 22:55:13:727 Gameboy/(20955:20955): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:55:13:728 Gameboy/(20955:20955): Envie un mensaje a la cola NEW_POKEMON
+[INFO] 22:55:19:696 Gameboy/(20957:20957): socket: 4
+[INFO] 22:55:19:696 Gameboy/(20957:20957): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 22:55:19:696 Gameboy/(20957:20957): Envie un mensaje a la cola GET_POKEMON
+[INFO] 23:11:52:918 Gameboy/(21918:21918): socket: 4
+[INFO] 23:11:52:919 Gameboy/(21918:21918): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:11:52:922 Gameboy/(21918:21918): Envie un mensaje a la cola GET_POKEMON
+[INFO] 23:11:56:159 Gameboy/(21919:21919): socket: 4
+[INFO] 23:11:56:159 Gameboy/(21919:21919): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:11:56:161 Gameboy/(21919:21919): Envie un mensaje a la cola NEW_POKEMON
+[INFO] 23:12:04:48 Gameboy/(21926:21926): socket: 4
+[INFO] 23:12:04:48 Gameboy/(21926:21926): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:12:04:50 Gameboy/(21926:21926): Envie un mensaje a la cola CATCH_POKEMON
+[INFO] 23:12:17:281 Gameboy/(21927:21927): socket: 4
+[INFO] 23:12:17:281 Gameboy/(21927:21927): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:12:17:283 Gameboy/(21927:21927): Envie un mensaje a la cola CATCH_POKEMON
+[INFO] 23:12:41:868 Gameboy/(21930:21930): socket: 4
+[INFO] 23:12:41:868 Gameboy/(21930:21930): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:12:41:869 Gameboy/(21930:21930): Envie un mensaje a la cola GET_POKEMON
+[INFO] 23:12:49:333 Gameboy/(21931:21931): socket: 4
+[INFO] 23:12:49:333 Gameboy/(21931:21931): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:12:49:334 Gameboy/(21931:21931): Envie un mensaje a la cola NEW_POKEMON
+[INFO] 23:13:23:929 Gameboy/(21969:21969): socket: 4
+[INFO] 23:13:23:929 Gameboy/(21969:21969): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:13:23:934 Gameboy/(21969:21969): Envie un mensaje a la cola NEW_POKEMON
+[INFO] 23:13:26:201 Gameboy/(21970:21970): socket: 4
+[INFO] 23:13:26:201 Gameboy/(21970:21970): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:13:26:203 Gameboy/(21970:21970): Envie un mensaje a la cola GET_POKEMON
+[INFO] 23:13:28:314 Gameboy/(21971:21971): socket: 4
+[INFO] 23:13:28:314 Gameboy/(21971:21971): Me conecte a la IP 127.0.0.1 y puerto 5003
+[INFO] 23:13:28:315 Gameboy/(21971:21971): Envie un mensaje a la cola GET_POKEMON

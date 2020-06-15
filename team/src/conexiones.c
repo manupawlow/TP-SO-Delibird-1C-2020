@@ -123,6 +123,7 @@ void process_request(int socket_cliente){
 		break;
 	case -1:
 		socket_cliente = crear_conexion(ip,puerto);
+		//log_info(logger,"puto");
 		break;
 
 	}

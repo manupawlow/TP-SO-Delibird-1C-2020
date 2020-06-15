@@ -2,3 +2,34 @@
 [INFO] 03:28:18:259 Gamecard/(17446:17446): Lei la IP 127.0.0.1 y puerto 5003
 [INFO] 18:22:44:729 Gamecard/(9546:9546): Lei la IP 127.0.0.1 y puerto 5003
 [INFO] 19:04:27:916 Gamecard/(8332:8332): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:04:01:772 Gamecard/(12777:12777): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:04:06:429 Gamecard/(12777:12799): Reintenando reconectar cada 10 segundos
+[INFO] 20:04:06:940 Gamecard/(12777:12801): Reintenando reconectar cada 10 segundos
+[INFO] 20:04:24:368 Gamecard/(12777:12803): Reintenando reconectar cada 10 segundos
+[INFO] 20:04:50:873 Gamecard/(12833:12833): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:04:51:507 Gamecard/(12833:12852): Reintenando reconectar cada 10 segundos
+[INFO] 20:04:51:776 Gamecard/(12833:12854): Reintenando reconectar cada 10 segundos
+[INFO] 20:04:53:963 Gamecard/(12833:12856): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:13:963 Gamecard/(12833:12856): Me suscribi a la cola CATCH!
+[INFO] 20:05:55:792 Gamecard/(12929:12929): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:05:55:794 Gamecard/(12929:12943): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:55:794 Gamecard/(12929:12942): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:55:795 Gamecard/(12929:12941): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:56:426 Gamecard/(12946:12946): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:05:56:432 Gamecard/(12946:12958): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:56:432 Gamecard/(12946:12957): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:56:432 Gamecard/(12946:12956): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:184 Gamecard/(12964:12964): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:05:57:190 Gamecard/(12964:12972): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:191 Gamecard/(12964:12971): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:191 Gamecard/(12964:12970): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:543 Gamecard/(12974:12974): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:05:57:544 Gamecard/(12974:12982): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:544 Gamecard/(12974:12981): Reintenando reconectar cada 10 segundos
+[INFO] 20:05:57:544 Gamecard/(12974:12980): Reintenando reconectar cada 10 segundos
+[INFO] 20:06:25:129 Gamecard/(13001:13001): Lei la IP 127.0.0.1 y puerto 5003
+[INFO] 20:06:27:300 Gamecard/(13001:13020): Reintenando reconectar cada 10 segundos
+[INFO] 20:06:28:528 Gamecard/(13001:13022): Reintenando reconectar cada 10 segundos
+[INFO] 20:06:29:46 Gamecard/(13001:13024): Reintenando reconectar cada 10 segundos
+[INFO] 20:07:07:301 Gamecard/(13001:13020): Me suscribi a la cola GET!
+[INFO] 20:07:08:529 Gamecard/(13001:13022): Me suscribi a la cola NEW!

@@ -766,3 +766,516 @@
 [INFO] 21:05:55:960 Broker/(19273:19273): Se Suscribio a la lista CAUGHT 7
 [INFO] 21:08:59:133 Broker/(19273:19273): socketero: 8
 [INFO] 21:08:59:133 Broker/(19273:19273): Se envio mensaje a todos los suscriptos!
+[INFO] 20:03:08:803 Broker/(12731:12731): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:03:14:689 Broker/(12731:12731): socketero: 5
+[INFO] 20:05:12:106 Broker/(12863:12863): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:05:13:963 Broker/(12863:12863): socketero: 5
+[INFO] 20:07:06:957 Broker/(13035:13035): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:07:07:301 Broker/(13035:13035): socketero: 5
+[INFO] 20:07:07:301 Broker/(13035:13035): Se Suscribio a la lista GET 5
+[INFO] 20:07:08:529 Broker/(13035:13035): socketero: 7
+[INFO] 20:08:38:739 Broker/(13260:13260): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:08:40:59 Broker/(13260:13260): socketero: 5
+[INFO] 20:08:40:60 Broker/(13260:13260): Se Suscribio a la lista GET 5
+[INFO] 20:10:23:953 Broker/(13260:13260): socketero: 7
+[INFO] 20:10:23:953 Broker/(13260:13260): Se envio mensaje a todos los suscriptos!
+[INFO] 20:12:15:865 Broker/(13469:13469): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:12:17:129 Broker/(13469:13469): socketero: 5
+[INFO] 20:12:17:129 Broker/(13469:13469): Se Suscribio a la lista GET 5
+[INFO] 20:12:26:617 Broker/(13469:13469): socketero: 7
+[INFO] 20:12:26:617 Broker/(13469:13469): el pokemon es Pikachu
+[INFO] 20:12:26:617 Broker/(13469:13469): Se envio mensaje a todos los suscriptos!
+[INFO] 20:14:30:609 Broker/(13627:13627): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:14:31:448 Broker/(13627:13627): socketero: 5
+[INFO] 20:14:31:448 Broker/(13627:13627): Se Suscribio a la lista GET 5
+[INFO] 20:14:33:274 Broker/(13627:13627): socketero: 7
+[INFO] 20:14:33:275 Broker/(13627:13627): el pokemon es Pikachu
+[INFO] 20:14:33:275 Broker/(13627:13627): Se envio mensaje a todos los suscriptos!
+[INFO] 20:15:07:210 Broker/(13759:13759): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:15:08:115 Broker/(13759:13759): socketero: 5
+[INFO] 20:15:08:115 Broker/(13759:13759): Se Suscribio a la lista GET 5
+[INFO] 20:15:09:972 Broker/(13759:13759): socketero: 7
+[INFO] 20:15:09:972 Broker/(13759:13759): el pokemon es Pikachu
+[INFO] 20:15:09:972 Broker/(13759:13759): Se envio mensaje a todos los suscriptos!
+[INFO] 20:48:33:403 Broker/(15065:15065): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:48:34:651 Broker/(15065:15065): socketero: 5
+[INFO] 20:48:34:651 Broker/(15065:15065): Se Suscribio a la lista GET 5
+[INFO] 20:48:36:539 Broker/(15065:15065): socketero: 7
+[INFO] 20:48:36:539 Broker/(15065:15065): el pokemon es Pikachu
+[INFO] 20:48:36:539 Broker/(15065:15065): Se envio mensaje a todos los suscriptos!
+[INFO] 20:49:22:880 Broker/(15200:15200): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:49:23:672 Broker/(15200:15200): socketero: 5
+[INFO] 20:49:23:672 Broker/(15200:15200): Se Suscribio a la lista GET 5
+[INFO] 20:49:24:424 Broker/(15200:15200): socketero: 7
+[INFO] 20:49:24:424 Broker/(15200:15200): el pokemon es Pikachu
+[INFO] 20:49:24:424 Broker/(15200:15200): Se envio mensaje a todos los suscriptos!
+[INFO] 20:49:27:128 Broker/(15200:15200): socketero: 8
+[INFO] 20:49:27:128 Broker/(15200:15200): el pokemon es Pikachu
+[INFO] 20:49:27:128 Broker/(15200:15200): Se envio mensaje a todos los suscriptos!
+[INFO] 20:49:28:48 Broker/(15200:15200): socketero: 9
+[INFO] 20:49:28:48 Broker/(15200:15200): el pokemon es Pikachu
+[INFO] 20:49:28:48 Broker/(15200:15200): Se envio mensaje a todos los suscriptos!
+[INFO] 20:49:28:872 Broker/(15200:15200): socketero: 10
+[INFO] 20:49:28:872 Broker/(15200:15200): el pokemon es Pikachu
+[INFO] 20:49:28:872 Broker/(15200:15200): Se envio mensaje a todos los suscriptos!
+[INFO] 20:49:29:600 Broker/(15200:15200): socketero: 11
+[INFO] 20:49:29:600 Broker/(15200:15200): el pokemon es Pikachu
+[INFO] 20:49:29:600 Broker/(15200:15200): Se envio mensaje a todos los suscriptos!
+[INFO] 20:56:25:337 Broker/(15478:15478): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:56:26:225 Broker/(15478:15478): socketero: 5
+[INFO] 20:56:26:225 Broker/(15478:15478): Se Suscribio a la lista GET 5
+[INFO] 20:56:27:161 Broker/(15478:15478): socketero: 7
+[INFO] 20:56:27:161 Broker/(15478:15478): el pokemon es Pikachu
+[INFO] 20:56:27:161 Broker/(15478:15478): Se envio mensaje a todos los suscriptos!
+[INFO] 20:58:02:160 Broker/(15558:15558): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 20:58:03:160 Broker/(15558:15558): socketero: 5
+[INFO] 20:58:03:160 Broker/(15558:15558): Se Suscribio a la lista GET 5
+[INFO] 20:58:04:240 Broker/(15558:15558): socketero: 7
+[INFO] 20:58:04:240 Broker/(15558:15558): el pokemon es Pikachu
+[INFO] 20:58:04:240 Broker/(15558:15558): Se envio mensaje a todos los suscriptos!
+[INFO] 21:01:03:63 Broker/(15784:15784): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:01:03:904 Broker/(15784:15784): socketero: 5
+[INFO] 21:01:03:904 Broker/(15784:15784): Se Suscribio a la lista GET 5
+[INFO] 21:01:05:672 Broker/(15784:15784): socketero: 7
+[INFO] 21:01:05:672 Broker/(15784:15784): el pokemon es Pikachu
+[INFO] 21:01:05:672 Broker/(15784:15784): Se envio mensaje a todos los suscriptos!
+[INFO] 21:01:14:216 Broker/(15784:15784): socketero: 8
+[INFO] 21:01:14:216 Broker/(15784:15784): el pokemon es Pikachu
+[INFO] 21:01:14:216 Broker/(15784:15784): Se envio mensaje a todos los suscriptos!
+[INFO] 21:06:36:971 Broker/(15876:15876): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:06:37:732 Broker/(15876:15876): socketero: 5
+[INFO] 21:06:37:732 Broker/(15876:15876): Se Suscribio a la lista GET 5
+[INFO] 21:06:38:820 Broker/(15876:15876): socketero: 7
+[INFO] 21:06:38:820 Broker/(15876:15876): el pokemon es Pikachu
+[INFO] 21:06:38:820 Broker/(15876:15876): Se envio mensaje a todos los suscriptos!
+[INFO] 21:07:59:885 Broker/(15925:15925): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:08:01:135 Broker/(15925:15925): socketero: 5
+[INFO] 21:08:01:135 Broker/(15925:15925): Se Suscribio a la lista GET 5
+[INFO] 21:08:03:559 Broker/(15925:15925): socketero: 7
+[INFO] 21:08:03:560 Broker/(15925:15925): el pokemon es Pikachu
+[INFO] 21:08:03:560 Broker/(15925:15925): Se envio mensaje a todos los suscriptos!
+[INFO] 21:08:26:375 Broker/(15960:15960): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:08:27:271 Broker/(15960:15960): socketero: 5
+[INFO] 21:08:27:271 Broker/(15960:15960): Se Suscribio a la lista GET 5
+[INFO] 21:09:18:757 Broker/(16082:16082): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:09:33:101 Broker/(16082:16082): socketero: 5
+[INFO] 21:09:33:101 Broker/(16082:16082): Se Suscribio a la lista APPEARED 5
+[INFO] 21:09:33:101 Broker/(16082:16082): socketero: 7
+[INFO] 21:09:33:101 Broker/(16082:16082): Se Suscribio a la lista CAUGHT 7
+[INFO] 21:10:13:313 Broker/(16082:16082): socketero: 8
+[INFO] 21:10:13:313 Broker/(16082:16082): Se envio mensaje a todos los suscriptos!
+[INFO] 21:11:56:744 Broker/(16082:16082): socketero: 9
+[INFO] 21:12:26:661 Broker/(16082:16082): socketero: 10
+[INFO] 21:12:26:662 Broker/(16082:16082): Se envio mensaje a todos los suscriptos!
+[INFO] 21:16:23:609 Broker/(16435:16435): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:16:24:817 Broker/(16435:16435): socketero: 5
+[INFO] 21:16:24:817 Broker/(16435:16435): Se Suscribio a la lista GET 5
+[INFO] 21:16:28:282 Broker/(16435:16435): socketero: 7
+[INFO] 21:16:28:283 Broker/(16435:16435): el pokemon es Pikachu
+[INFO] 21:16:28:283 Broker/(16435:16435): 5
+[INFO] 21:16:28:283 Broker/(16435:16435): Se envio mensaje a todos los suscriptos!
+[INFO] 21:18:04:133 Broker/(16435:16435): socketero: 8
+[INFO] 21:18:04:133 Broker/(16435:16435): el pokemon es Pikachu
+[INFO] 21:18:04:133 Broker/(16435:16435): 5
+[INFO] 21:18:04:133 Broker/(16435:16435): Se envio mensaje a todos los suscriptos!
+[INFO] 21:18:39:762 Broker/(16516:16516): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:18:40:754 Broker/(16516:16516): socketero: 5
+[INFO] 21:18:40:754 Broker/(16516:16516): Se Suscribio a la lista GET 5
+[INFO] 21:18:42:206 Broker/(16516:16516): socketero: 7
+[INFO] 21:18:42:206 Broker/(16516:16516): el pokemon es Pikachu
+[INFO] 21:18:42:206 Broker/(16516:16516): 5
+[INFO] 21:18:42:206 Broker/(16516:16516): Se envio mensaje a todos los suscriptos!
+[INFO] 21:18:46:57 Broker/(16516:16516): socketero: 8
+[INFO] 21:18:46:57 Broker/(16516:16516): el pokemon es Pikachu
+[INFO] 21:18:46:57 Broker/(16516:16516): 5
+[INFO] 21:18:46:57 Broker/(16516:16516): Se envio mensaje a todos los suscriptos!
+[INFO] 21:24:28:411 Broker/(16516:16516): socketero: 9
+[INFO] 21:24:28:411 Broker/(16516:16516): el pokemon es Pikachu
+[INFO] 21:24:28:411 Broker/(16516:16516): 5
+[INFO] 21:24:28:411 Broker/(16516:16516): Se envio mensaje a todos los suscriptos!
+[INFO] 21:24:34:707 Broker/(16660:16660): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:24:36:19 Broker/(16660:16660): socketero: 5
+[INFO] 21:24:36:20 Broker/(16660:16660): el pokemon es Pikachu
+[INFO] 21:24:36:20 Broker/(16660:16660): Se envio mensaje a todos los suscriptos!
+[INFO] 21:24:38:926 Broker/(16660:16660): socketero: 7
+[INFO] 21:24:38:926 Broker/(16660:16660): Se Suscribio a la lista GET 7
+[INFO] 21:24:40:571 Broker/(16660:16660): socketero: 8
+[INFO] 21:24:40:571 Broker/(16660:16660): el pokemon es Pikachu
+[INFO] 21:24:40:571 Broker/(16660:16660): 7
+[INFO] 21:24:40:571 Broker/(16660:16660): Se envio mensaje a todos los suscriptos!
+[INFO] 21:25:57:525 Broker/(16887:16887): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:25:58:717 Broker/(16887:16887): socketero: 5
+[INFO] 21:25:58:717 Broker/(16887:16887): Se Suscribio a la lista GET 5
+[INFO] 21:26:00:20 Broker/(16887:16887): socketero: 7
+[INFO] 21:26:00:21 Broker/(16887:16887): el pokemon es Pikachu
+[INFO] 21:26:00:21 Broker/(16887:16887): 5
+[INFO] 21:26:00:21 Broker/(16887:16887): Se envio mensaje a todos los suscriptos!
+[INFO] 21:26:44:873 Broker/(16929:16929): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:26:46:305 Broker/(16929:16929): socketero: 5
+[INFO] 21:26:46:305 Broker/(16929:16929): Se Suscribio a la lista GET 5
+[INFO] 21:26:47:881 Broker/(16929:16929): socketero: 7
+[INFO] 21:26:47:881 Broker/(16929:16929): el pokemon es Pikachu
+[INFO] 21:26:47:881 Broker/(16929:16929): 5
+[INFO] 21:26:47:882 Broker/(16929:16929): Se envio mensaje a todos los suscriptos!
+[INFO] 21:31:07:888 Broker/(17238:17238): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 21:31:08:905 Broker/(17238:17238): socketero: 5
+[INFO] 21:31:08:905 Broker/(17238:17238): Se Suscribio a la lista GET 5
+[INFO] 21:31:10:994 Broker/(17238:17238): socketero: 7
+[INFO] 21:31:10:994 Broker/(17238:17238): el pokemon es Pikachu
+[INFO] 21:31:10:994 Broker/(17238:17238): 5
+[INFO] 21:31:10:994 Broker/(17238:17238): Se envio mensaje a todos los suscriptos!
+[INFO] 21:31:13:843 Broker/(17238:17238): socketero: 8
+[INFO] 21:31:13:843 Broker/(17238:17238): el pokemon es Pikachu
+[INFO] 21:31:13:843 Broker/(17238:17238): 5
+[INFO] 21:31:13:843 Broker/(17238:17238): Se envio mensaje a todos los suscriptos!
+[INFO] 22:02:39:902 Broker/(18087:18087): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:02:40:830 Broker/(18087:18087): socketero: 5
+[INFO] 22:02:40:830 Broker/(18087:18087): Se Suscribio a la lista GET 5
+[INFO] 22:02:42:301 Broker/(18087:18087): socketero: 7
+[INFO] 22:02:42:302 Broker/(18087:18087): el pokemon es Pikachu
+[INFO] 22:02:42:302 Broker/(18087:18087): 5
+[INFO] 22:02:42:302 Broker/(18087:18087): Se envio mensaje a todos los suscriptos!
+[INFO] 22:02:49:68 Broker/(18087:18087): socketero: 8
+[INFO] 22:02:49:68 Broker/(18087:18087): el pokemon es Pikachu
+[INFO] 22:02:49:69 Broker/(18087:18087): 5
+[INFO] 22:02:49:69 Broker/(18087:18087): Se envio mensaje a todos los suscriptos!
+[INFO] 22:05:54:202 Broker/(18368:18368): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:05:56:347 Broker/(18368:18368): socketero: 5
+[INFO] 22:05:56:347 Broker/(18368:18368): Se Suscribio a la lista GET 5
+[INFO] 22:08:58:936 Broker/(18368:18368): socketero: 7
+[INFO] 22:08:58:937 Broker/(18368:18368): el pokemon es Pikachu
+[INFO] 22:08:58:937 Broker/(18368:18368): 5
+[INFO] 22:08:58:937 Broker/(18368:18368): Se envio mensaje a todos los suscriptos!
+[INFO] 22:09:46:744 Broker/(18478:18478): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:09:48:776 Broker/(18478:18478): socketero: 5
+[INFO] 22:09:48:776 Broker/(18478:18478): Se Suscribio a la lista GET 5
+[INFO] 22:09:50:944 Broker/(18478:18478): socketero: 7
+[INFO] 22:09:50:945 Broker/(18478:18478): el pokemon es Pikachu
+[INFO] 22:09:50:945 Broker/(18478:18478): 5
+[INFO] 22:09:50:945 Broker/(18478:18478): Se envio mensaje a todos los suscriptos!
+[INFO] 22:09:55:808 Broker/(18478:18478): socketero: 8
+[INFO] 22:09:55:808 Broker/(18478:18478): el pokemon es Pikachu
+[INFO] 22:09:55:808 Broker/(18478:18478): 5
+[INFO] 22:09:55:808 Broker/(18478:18478): Se envio mensaje a todos los suscriptos!
+[INFO] 22:09:57:80 Broker/(18478:18478): socketero: 9
+[INFO] 22:09:57:80 Broker/(18478:18478): el pokemon es Pikachu
+[INFO] 22:09:57:81 Broker/(18478:18478): 5
+[INFO] 22:09:57:81 Broker/(18478:18478): Se envio mensaje a todos los suscriptos!
+[INFO] 22:09:57:728 Broker/(18478:18478): socketero: 10
+[INFO] 22:09:57:728 Broker/(18478:18478): el pokemon es Pikachu
+[INFO] 22:09:57:729 Broker/(18478:18478): 5
+[INFO] 22:09:57:729 Broker/(18478:18478): Se envio mensaje a todos los suscriptos!
+[INFO] 22:09:58:600 Broker/(18478:18478): socketero: 11
+[INFO] 22:09:58:601 Broker/(18478:18478): el pokemon es Pikachu
+[INFO] 22:09:58:601 Broker/(18478:18478): 5
+[INFO] 22:09:58:601 Broker/(18478:18478): Se envio mensaje a todos los suscriptos!
+[INFO] 22:12:35:997 Broker/(18594:18594): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:12:38:77 Broker/(18594:18594): socketero: 5
+[INFO] 22:12:38:77 Broker/(18594:18594): Se Suscribio a la lista GET 5
+[INFO] 22:12:40:445 Broker/(18594:18594): socketero: 7
+[INFO] 22:12:40:445 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:12:40:445 Broker/(18594:18594): 5
+[INFO] 22:12:40:445 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:12:40:446 Broker/(18594:18594): socketero: 8
+[INFO] 22:12:40:446 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:13:10:150 Broker/(18594:18594): socketero: 9
+[INFO] 22:13:10:150 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:13:10:150 Broker/(18594:18594): 5
+[INFO] 22:13:10:150 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:13:10:150 Broker/(18594:18594): socketero: 10
+[INFO] 22:13:10:150 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:13:11:155 Broker/(18594:18594): socketero: 11
+[INFO] 22:13:11:155 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:13:11:155 Broker/(18594:18594): 5
+[INFO] 22:13:11:155 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:13:11:155 Broker/(18594:18594): socketero: 12
+[INFO] 22:13:11:155 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:13:11:798 Broker/(18594:18594): socketero: 13
+[INFO] 22:13:11:798 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:13:11:798 Broker/(18594:18594): 5
+[INFO] 22:13:11:798 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:13:11:798 Broker/(18594:18594): socketero: 14
+[INFO] 22:13:11:798 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:13:12:390 Broker/(18594:18594): socketero: 15
+[INFO] 22:13:12:390 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:13:12:390 Broker/(18594:18594): 5
+[INFO] 22:13:12:390 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:13:12:390 Broker/(18594:18594): socketero: 16
+[INFO] 22:13:12:390 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:13:15:854 Broker/(18594:18594): socketero: 17
+[INFO] 22:13:15:854 Broker/(18594:18594): el pokemon es Pikachu
+[INFO] 22:13:15:854 Broker/(18594:18594): 5
+[INFO] 22:13:15:855 Broker/(18594:18594): Se envio mensaje a todos los suscriptos!
+[INFO] 22:13:15:855 Broker/(18594:18594): socketero: 18
+[INFO] 22:13:15:855 Broker/(18594:18594): Llego a Destino gamecard
+[INFO] 22:19:01:330 Broker/(18911:18911): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:19:01:330 Broker/(18911:18911): socketero: -1
+[INFO] 22:19:09:884 Broker/(18912:18912): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:19:09:885 Broker/(18912:18912): socketero: -1
+[INFO] 22:20:24:848 Broker/(19094:19094): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:20:28:225 Broker/(19094:19094): socketero: 5
+[INFO] 22:20:28:225 Broker/(19094:19094): Se Suscribio a la lista GET 5
+[INFO] 22:20:31:450 Broker/(19094:19094): socketero: 7
+[INFO] 22:20:31:450 Broker/(19094:19094): el pokemon es Pikachu
+[INFO] 22:20:31:450 Broker/(19094:19094): 5
+[INFO] 22:20:31:450 Broker/(19094:19094): Se envio mensaje a todos los suscriptos!
+[INFO] 22:20:31:450 Broker/(19094:19094): socketero: 8
+[INFO] 22:20:31:450 Broker/(19094:19094): Llego a Destino gamecard
+[INFO] 22:20:41:132 Broker/(19094:19094): socketero: 9
+[INFO] 22:20:41:133 Broker/(19094:19094): el pokemon es Pikachu
+[INFO] 22:20:41:133 Broker/(19094:19094): 5
+[INFO] 22:20:41:133 Broker/(19094:19094): Se envio mensaje a todos los suscriptos!
+[INFO] 22:20:41:133 Broker/(19094:19094): socketero: 10
+[INFO] 22:20:41:133 Broker/(19094:19094): Llego a Destino gamecard
+[INFO] 22:20:48:93 Broker/(19094:19094): socketero: 11
+[INFO] 22:20:48:93 Broker/(19094:19094): el pokemon es Pikachu
+[INFO] 22:20:48:93 Broker/(19094:19094): 5
+[INFO] 22:20:48:94 Broker/(19094:19094): Se envio mensaje a todos los suscriptos!
+[INFO] 22:20:48:94 Broker/(19094:19094): socketero: 12
+[INFO] 22:20:48:94 Broker/(19094:19094): Llego a Destino gamecard
+[INFO] 22:26:37:339 Broker/(19497:19497): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:26:37:339 Broker/(19497:19497): socketero: -1
+[INFO] 22:27:10:642 Broker/(19678:19678): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:27:10:643 Broker/(19678:19678): socketero: -1
+[INFO] 22:27:20:339 Broker/(19684:19684): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:27:20:339 Broker/(19684:19684): socketero: -1
+[INFO] 22:27:21:59 Broker/(19685:19685): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:27:21:59 Broker/(19685:19685): socketero: -1
+[INFO] 22:27:21:675 Broker/(19686:19686): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:27:21:675 Broker/(19686:19686): socketero: -1
+[INFO] 22:27:25:884 Broker/(19687:19687): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:27:25:884 Broker/(19687:19687): socketero: -1
+[INFO] 22:29:03:932 Broker/(19719:19719): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:29:11:172 Broker/(19719:19719): socketero: 5
+[INFO] 22:29:28:723 Broker/(19725:19725): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:29:32:203 Broker/(19725:19725): socketero: 5
+[INFO] 22:29:48:763 Broker/(19736:19736): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:29:50:916 Broker/(19736:19736): socketero: 5
+[INFO] 22:29:50:920 Broker/(19736:19736): Se Suscribio a la lista CATCH 5
+[INFO] 22:29:50:920 Broker/(19736:19736): socketero: 7
+[INFO] 22:29:50:921 Broker/(19736:19736): Se Suscribio a la lista NEW 7
+[INFO] 22:29:50:921 Broker/(19736:19736): socketero: 8
+[INFO] 22:29:50:922 Broker/(19736:19736): Se Suscribio a la lista GET 8
+[INFO] 22:39:11:651 Broker/(20131:20131): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:39:14:114 Broker/(20131:20131): socketero: 5
+[INFO] 22:39:14:117 Broker/(20131:20131): Se Suscribio a la lista CATCH 5
+[INFO] 22:39:14:118 Broker/(20131:20131): socketero: 7
+[INFO] 22:39:14:119 Broker/(20131:20131): Se Suscribio a la lista NEW 7
+[INFO] 22:39:14:119 Broker/(20131:20131): socketero: 8
+[INFO] 22:39:14:120 Broker/(20131:20131): Se Suscribio a la lista GET 8
+[INFO] 22:39:21:697 Broker/(20131:20131): socketero: 9
+[INFO] 22:39:21:705 Broker/(20131:20131): el pokemon es Pikachu
+[INFO] 22:39:21:712 Broker/(20131:20131): 8
+[INFO] 22:39:21:714 Broker/(20131:20131): Se envio mensaje a todos los suscriptos!
+[INFO] 22:39:21:714 Broker/(20131:20131): socketero: 10
+[INFO] 22:39:21:715 Broker/(20131:20131): Llego a Destino
+[INFO] 22:40:00:751 Broker/(20131:20131): socketero: 11
+[INFO] 22:40:00:753 Broker/(20131:20131): el pokemon es Pikachu
+[INFO] 22:40:00:753 Broker/(20131:20131): 7
+[INFO] 22:40:00:754 Broker/(20131:20131): socketero: 12
+[INFO] 22:40:00:754 Broker/(20131:20131): Llego a Destino
+[INFO] 22:40:42:488 Broker/(20131:20131): socketero: 13
+[INFO] 22:40:42:488 Broker/(20131:20131): el pokemon es Pikachu
+[INFO] 22:40:42:490 Broker/(20131:20131): 5
+[INFO] 22:40:42:490 Broker/(20131:20131): Se envio mensaje a todos los suscriptos!
+[INFO] 22:40:42:491 Broker/(20131:20131): socketero: 14
+[INFO] 22:40:42:491 Broker/(20131:20131): Llego a Destino
+[INFO] 22:40:51:512 Broker/(20131:20131): socketero: 15
+[INFO] 22:40:51:512 Broker/(20131:20131): el pokemon es Pikachu
+[INFO] 22:40:51:512 Broker/(20131:20131): 5
+[INFO] 22:40:51:513 Broker/(20131:20131): Se envio mensaje a todos los suscriptos!
+[INFO] 22:40:51:513 Broker/(20131:20131): socketero: 16
+[INFO] 22:40:51:513 Broker/(20131:20131): Llego a Destino
+[INFO] 22:50:17:295 Broker/(20611:20611): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:17:318 Broker/(20611:20611): socketero: -1
+[INFO] 22:50:30:735 Broker/(20618:20618): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:30:757 Broker/(20618:20618): socketero: -1
+[INFO] 22:50:33:421 Broker/(20619:20619): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:33:421 Broker/(20619:20619): socketero: -1
+[INFO] 22:50:34:957 Broker/(20620:20620): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:34:957 Broker/(20620:20620): socketero: -1
+[INFO] 22:50:35:709 Broker/(20621:20621): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:35:710 Broker/(20621:20621): socketero: -1
+[INFO] 22:50:36:334 Broker/(20622:20622): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:36:334 Broker/(20622:20622): socketero: -1
+[INFO] 22:50:36:894 Broker/(20623:20623): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:36:894 Broker/(20623:20623): socketero: -1
+[INFO] 22:50:37:422 Broker/(20624:20624): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:37:422 Broker/(20624:20624): socketero: -1
+[INFO] 22:50:37:934 Broker/(20625:20625): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:37:934 Broker/(20625:20625): socketero: -1
+[INFO] 22:50:38:398 Broker/(20626:20626): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:38:398 Broker/(20626:20626): socketero: -1
+[INFO] 22:50:38:870 Broker/(20627:20627): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:38:870 Broker/(20627:20627): socketero: -1
+[INFO] 22:50:39:342 Broker/(20628:20628): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:39:342 Broker/(20628:20628): socketero: -1
+[INFO] 22:50:39:806 Broker/(20629:20629): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:39:806 Broker/(20629:20629): socketero: -1
+[INFO] 22:50:40:302 Broker/(20630:20630): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:40:302 Broker/(20630:20630): socketero: -1
+[INFO] 22:50:40:814 Broker/(20631:20631): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:40:814 Broker/(20631:20631): socketero: -1
+[INFO] 22:50:41:366 Broker/(20632:20632): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:41:366 Broker/(20632:20632): socketero: -1
+[INFO] 22:50:41:918 Broker/(20633:20633): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:41:918 Broker/(20633:20633): socketero: -1
+[INFO] 22:50:42:486 Broker/(20634:20634): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:42:486 Broker/(20634:20634): socketero: -1
+[INFO] 22:50:43:550 Broker/(20635:20635): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:43:551 Broker/(20635:20635): socketero: -1
+[INFO] 22:50:48:47 Broker/(20636:20636): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:48:47 Broker/(20636:20636): socketero: -1
+[INFO] 22:50:55:176 Broker/(20639:20639): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:50:55:176 Broker/(20639:20639): socketero: -1
+[INFO] 22:51:01:897 Broker/(20640:20640): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:51:08:274 Broker/(20640:20640): socketero: 7
+[INFO] 22:54:44:714 Broker/(20942:20942): socketero: 5
+[INFO] 22:54:44:714 Broker/(20942:20942): Se Suscribio a la lista CATCH 5
+[INFO] 22:54:44:715 Broker/(20942:20942): socketero: 8
+[INFO] 22:54:44:715 Broker/(20942:20942): Se Suscribio a la lista NEW 8
+[INFO] 22:54:44:715 Broker/(20942:20942): socketero: 10
+[INFO] 22:54:44:715 Broker/(20942:20942): Se Suscribio a la lista GET 10
+[INFO] 22:54:54:348 Broker/(20942:20942): socketero: 12
+[INFO] 22:54:54:348 Broker/(20942:20942): el pokemon es Pikachu
+[INFO] 22:54:54:348 Broker/(20942:20942): Se envio mensaje a todos los suscriptos!
+[INFO] 22:54:54:348 Broker/(20942:20942): socketero: 14
+[INFO] 22:54:54:348 Broker/(20942:20942): Llego a Destino
+[INFO] 22:55:13:727 Broker/(20942:20942): socketero: 16
+[INFO] 22:55:13:727 Broker/(20942:20942): el pokemon es Pikachu
+[INFO] 22:55:13:727 Broker/(20942:20942): socketero: 18
+[INFO] 22:55:13:728 Broker/(20942:20942): Llego a Destino
+[INFO] 22:55:19:696 Broker/(20942:20942): socketero: 20
+[INFO] 22:55:19:696 Broker/(20942:20942): el pokemon es Pikachu
+[INFO] 22:55:19:696 Broker/(20942:20942): Se envio mensaje a todos los suscriptos!
+[INFO] 22:55:19:696 Broker/(20942:20942): socketero: 22
+[INFO] 22:55:19:696 Broker/(20942:20942): Llego a Destino
+[INFO] 22:56:23:554 Broker/(21159:21159): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:56:23:554 Broker/(21159:21159): socketero: -1
+[INFO] 22:57:08:425 Broker/(21183:21183): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:57:11:498 Broker/(21183:21183): socketero: 5
+[INFO] 22:59:30:895 Broker/(21435:21435): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 22:59:33:151 Broker/(21435:21435): socketero: 5
+[INFO] 23:00:52:117 Broker/(21499:21499): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:00:54:93 Broker/(21499:21499): socketero: 7
+[INFO] 23:01:28:223 Broker/(21507:21507): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:01:32:314 Broker/(21507:21507): socketero: 7
+[INFO] 23:01:32:317 Broker/(21507:21507): Se Suscribio a la lista CATCH 7
+[INFO] 23:01:32:318 Broker/(21507:21507): socketero: 9
+[INFO] 23:01:32:319 Broker/(21507:21507): Se Suscribio a la lista NEW 9
+[INFO] 23:01:32:320 Broker/(21507:21507): socketero: 11
+[INFO] 23:01:32:320 Broker/(21507:21507): Se Suscribio a la lista GET 11
+[INFO] 23:03:20:753 Broker/(21581:21581): socketero: 5
+[INFO] 23:03:20:768 Broker/(21581:21581): Se Suscribio a la lista CATCH 5
+[INFO] 23:03:20:770 Broker/(21581:21581): socketero: 8
+[INFO] 23:03:20:770 Broker/(21581:21581): Se Suscribio a la lista NEW 8
+[INFO] 23:03:20:771 Broker/(21581:21581): socketero: 10
+[INFO] 23:03:20:771 Broker/(21581:21581): Se Suscribio a la lista GET 10
+[INFO] 23:03:46:336 Broker/(21587:21587): socketero: 5
+[INFO] 23:03:46:336 Broker/(21587:21587): Se Suscribio a la lista CATCH 5
+[INFO] 23:03:46:336 Broker/(21587:21587): socketero: 8
+[INFO] 23:03:46:336 Broker/(21587:21587): Se Suscribio a la lista NEW 8
+[INFO] 23:03:46:337 Broker/(21587:21587): socketero: 10
+[INFO] 23:03:46:337 Broker/(21587:21587): Se Suscribio a la lista GET 10
+[INFO] 23:04:41:455 Broker/(21644:21644): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:04:42:120 Broker/(21644:21644): socketero: 5
+[INFO] 23:04:42:124 Broker/(21644:21644): Se Suscribio a la lista CATCH 5
+[INFO] 23:04:42:124 Broker/(21644:21644): socketero: 7
+[INFO] 23:04:42:125 Broker/(21644:21644): Se Suscribio a la lista NEW 7
+[INFO] 23:04:42:126 Broker/(21644:21644): socketero: 8
+[INFO] 23:04:42:126 Broker/(21644:21644): Se Suscribio a la lista GET 8
+[INFO] 23:05:30:202 Broker/(21685:21685): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:05:31:759 Broker/(21685:21685): socketero: 5
+[INFO] 23:05:31:762 Broker/(21685:21685): Se Suscribio a la lista CATCH 5
+[INFO] 23:05:31:763 Broker/(21685:21685): socketero: 7
+[INFO] 23:05:31:764 Broker/(21685:21685): Se Suscribio a la lista NEW 7
+[INFO] 23:05:31:764 Broker/(21685:21685): socketero: 8
+[INFO] 23:05:31:765 Broker/(21685:21685): Se Suscribio a la lista GET 8
+[INFO] 23:09:02:534 Broker/(21842:21842): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:09:04:247 Broker/(21842:21842): socketero: 5
+[INFO] 23:09:04:251 Broker/(21842:21842): Se Suscribio a la lista CATCH 5
+[INFO] 23:09:04:251 Broker/(21842:21842): socketero: 7
+[INFO] 23:09:04:252 Broker/(21842:21842): Se Suscribio a la lista NEW 7
+[INFO] 23:09:04:252 Broker/(21842:21842): socketero: 8
+[INFO] 23:09:04:253 Broker/(21842:21842): Se Suscribio a la lista GET 8
+[INFO] 23:11:40:527 Broker/(21906:21906): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:11:42:334 Broker/(21906:21906): socketero: 5
+[INFO] 23:11:42:336 Broker/(21906:21906): Se Suscribio a la lista CATCH 5
+[INFO] 23:11:42:337 Broker/(21906:21906): socketero: 7
+[INFO] 23:11:42:337 Broker/(21906:21906): Se Suscribio a la lista NEW 7
+[INFO] 23:11:42:338 Broker/(21906:21906): socketero: 8
+[INFO] 23:11:42:338 Broker/(21906:21906): Se Suscribio a la lista GET 8
+[INFO] 23:11:52:918 Broker/(21906:21906): socketero: 9
+[INFO] 23:11:52:924 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:11:52:927 Broker/(21906:21906): Se envio mensaje a todos los suscriptos!
+[INFO] 23:11:52:927 Broker/(21906:21906): socketero: 10
+[INFO] 23:11:52:928 Broker/(21906:21906): Llego a Destino
+[INFO] 23:11:56:158 Broker/(21906:21906): socketero: 11
+[INFO] 23:11:56:159 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:11:56:160 Broker/(21906:21906): socketero: 12
+[INFO] 23:11:56:160 Broker/(21906:21906): Llego a Destino
+[INFO] 23:12:04:47 Broker/(21906:21906): socketero: 13
+[INFO] 23:12:04:49 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:12:04:50 Broker/(21906:21906): Se envio mensaje a todos los suscriptos!
+[INFO] 23:12:04:50 Broker/(21906:21906): socketero: 14
+[INFO] 23:12:04:50 Broker/(21906:21906): Llego a Destino
+[INFO] 23:12:17:281 Broker/(21906:21906): socketero: 15
+[INFO] 23:12:17:281 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:12:17:282 Broker/(21906:21906): Se envio mensaje a todos los suscriptos!
+[INFO] 23:12:17:282 Broker/(21906:21906): socketero: 16
+[INFO] 23:12:17:282 Broker/(21906:21906): Llego a Destino
+[INFO] 23:12:41:868 Broker/(21906:21906): socketero: 17
+[INFO] 23:12:41:868 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:12:41:868 Broker/(21906:21906): Se envio mensaje a todos los suscriptos!
+[INFO] 23:12:41:869 Broker/(21906:21906): socketero: 18
+[INFO] 23:12:41:869 Broker/(21906:21906): Llego a Destino
+[INFO] 23:12:49:333 Broker/(21906:21906): socketero: 19
+[INFO] 23:12:49:333 Broker/(21906:21906): el pokemon es Pikachu
+[INFO] 23:12:49:334 Broker/(21906:21906): socketero: 20
+[INFO] 23:12:49:334 Broker/(21906:21906): Llego a Destino
+[INFO] 23:13:19:489 Broker/(21964:21964): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:13:21:537 Broker/(21964:21964): socketero: 5
+[INFO] 23:13:21:540 Broker/(21964:21964): Se Suscribio a la lista CATCH 5
+[INFO] 23:13:21:540 Broker/(21964:21964): socketero: 7
+[INFO] 23:13:21:547 Broker/(21964:21964): Se Suscribio a la lista NEW 7
+[INFO] 23:13:21:548 Broker/(21964:21964): socketero: 8
+[INFO] 23:13:21:548 Broker/(21964:21964): Se Suscribio a la lista GET 8
+[INFO] 23:13:23:929 Broker/(21964:21964): socketero: 9
+[INFO] 23:13:23:933 Broker/(21964:21964): el pokemon es Pikachu
+[INFO] 23:13:23:938 Broker/(21964:21964): Se envio mensaje a todos los suscriptos!
+[INFO] 23:13:23:938 Broker/(21964:21964): socketero: 10
+[INFO] 23:13:23:945 Broker/(21964:21964): Llego a Destino
+[INFO] 23:13:26:201 Broker/(21964:21964): socketero: 11
+[INFO] 23:13:26:202 Broker/(21964:21964): el pokemon es Pikachu
+[INFO] 23:13:26:202 Broker/(21964:21964): Se envio mensaje a todos los suscriptos!
+[INFO] 23:13:26:203 Broker/(21964:21964): socketero: 12
+[INFO] 23:13:26:203 Broker/(21964:21964): Llego a Destino
+[INFO] 23:13:28:313 Broker/(21964:21964): socketero: 13
+[INFO] 23:13:28:314 Broker/(21964:21964): el pokemon es Pikachu
+[INFO] 23:13:28:314 Broker/(21964:21964): Se envio mensaje a todos los suscriptos!
+[INFO] 23:13:28:315 Broker/(21964:21964): socketero: 14
+[INFO] 23:13:28:315 Broker/(21964:21964): Llego a Destino
+[INFO] 23:19:50:39 Broker/(22151:22151): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:19:51:563 Broker/(22151:22151): socketero: 5
+[INFO] 23:19:51:563 Broker/(22151:22151): Se Suscribio a la lista CATCH 5
+[INFO] 23:19:51:564 Broker/(22151:22151): socketero: 7
+[INFO] 23:19:51:564 Broker/(22151:22151): Se Suscribio a la lista NEW 7
+[INFO] 23:19:51:564 Broker/(22151:22151): socketero: 8
+[INFO] 23:19:51:564 Broker/(22151:22151): Se Suscribio a la lista GET 8
+[INFO] 23:20:42:56 Broker/(22191:22191): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:20:44:25 Broker/(22191:22191): socketero: 5
+[INFO] 23:20:44:25 Broker/(22191:22191): Se Suscribio a la lista CATCH 5
+[INFO] 23:20:44:25 Broker/(22191:22191): socketero: 7
+[INFO] 23:20:44:25 Broker/(22191:22191): Se Suscribio a la lista NEW 7
+[INFO] 23:20:44:26 Broker/(22191:22191): socketero: 8
+[INFO] 23:20:44:26 Broker/(22191:22191): Se Suscribio a la lista GET 8
+[INFO] 23:22:10:306 Broker/(22226:22226): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:22:12:387 Broker/(22226:22226): socketero: 5
+[INFO] 23:22:12:387 Broker/(22226:22226): Se Suscribio a la lista APPEARED 5
+[INFO] 23:22:12:387 Broker/(22226:22226): socketero: 7
+[INFO] 23:22:12:387 Broker/(22226:22226): Se Suscribio a la lista CAUGHT 7
+[INFO] 23:25:21:724 Broker/(22320:22320): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:25:23:573 Broker/(22320:22320): socketero: 5
+[INFO] 23:25:23:573 Broker/(22320:22320): Se Suscribio a la lista APPEARED 5
+[INFO] 23:25:23:573 Broker/(22320:22320): socketero: 7
+[INFO] 23:25:23:573 Broker/(22320:22320): Se Suscribio a la lista CAUGHT 7

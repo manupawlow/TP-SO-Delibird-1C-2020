@@ -5,6 +5,7 @@ int main(void) {
 
 	char* ip;
 	char* puerto;
+	int i=0;
 
 	t_log* logger;
 	t_config* config;
@@ -13,7 +14,7 @@ int main(void) {
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/broker/src/broker.config";
 
-	logger =log_create("broker.log", "Broker", 1, LOG_LEVEL_INFO);
+	logger = log_create("broker.log", "Broker", 1, LOG_LEVEL_INFO);
 
 	config=config_create(conf);
 
@@ -22,7 +23,6 @@ int main(void) {
 
 	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
-	int i=0;
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
@@ -31,8 +31,8 @@ int main(void) {
 	colas->cant_suscritos_get = 0;
 	colas->cant_suscritos_appeared = 0;
 	colas->cant_suscritos_localized = 0;
-	colas->cant_suscritos_caught =0;
-
+	colas->cant_suscritos_catch =0;
+	colas->cant_suscritos_new =0;
 
     while(1){
     	colas->socket_cliente = esperar_cliente(socket_servidor);

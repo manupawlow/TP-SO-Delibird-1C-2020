@@ -25,7 +25,7 @@ int main() {
 
 
 //HILOS DE CONEXIONES
-/*
+
 
 	pthread_t conexionGet;
 	pthread_create(&conexionGet, NULL,(void*)funcionGet,NULL);
@@ -38,39 +38,16 @@ int main() {
 	pthread_create(&conexionCatch, NULL,(void*)funcionCatch, NULL);
 
 	pthread_join(conexionGet,NULL);
-	pthread_join(conexionGet,NULL);
+	pthread_join(conexionNew,NULL);
 	pthread_join(conexionCatch,NULL);
 
-*/
-	pthread_t conexionGameboy;
+	/*pthread_t conexionGameboy;
 	pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
-	pthread_join(conexionGameboy,NULL);
+	pthread_join(conexionGameboy,NULL);*/
 
 
 
 return EXIT_SUCCESS;
-}
-
-void funcionGet(){
-char* mensaje;
-int conexionGet =	crear_conexion(ip,puerto);
-
-	if(conexionGet ==-1){
-		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionGet= reintentar_conexion(ip,puerto,tiempoReconexion);
-	}
-
-	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
-	log_info(logger,"Me suscribi a la cola GET!");
-
-
-	while(1){
-		mensaje=funcionACK(conexionGet);
-		pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *)buscarPokemon, mensaje);
-		pthread_detach(solicitud);
-	}
-
 }
 //PARA EL GET
 void buscarPokemon(char* mensaje){
@@ -112,34 +89,6 @@ int socketLoc = crear_conexion(ip, puerto);
 
 
 
-
-
-
-
-
-void funcionCatch(int socket){
-char* mensaje;
-
-int conexionCatch =	crear_conexion(ip,puerto);
-
-	if(conexionCatch ==-1){
-		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionCatch= reintentar_conexion(ip,puerto,tiempoReconexion);
-	}
-
-
-	enviar_mensaje("Suscribime",conexionCatch, SUS_CATCH);
-	log_info(logger,"Me suscribi a la cola CATCH!");
-
-
-	while(1){
-		mensaje=funcionACK(conexionCatch);
-		pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void*)agarrarPokemon,(gamecard*) mensaje);
-		pthread_detach(solicitud);
-	}
-
-}
 
 //TODO
 //PARA EL CATCH
@@ -234,49 +183,10 @@ t_poke* pokemon= obtenerDatosPokemon(f);
 
 
 //TODO
-void funcionNew(int socket){
-char* mensaje;
-
-int conexionNew =	crear_conexion(ip,puerto);
-
-	if(conexionNew ==-1){
-		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-	    conexionNew= reintentar_conexion(ip,puerto,tiempoReconexion);
-	}
-
-	enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
-	log_info(logger,"Me suscribi a la cola NEW!");
-
-
-	while(1){
-		mensaje=funcionACK(conexionNew);
-		pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *)nuevoPokemon, (gamecard*)mensaje);
-		pthread_detach(solicitud);
-	}
-
-}
-
-
-
-
-
-
-
 
 
 void nuevoPokemon(char* mensaje){
 
-}
-
-
-
-char* funcionACK(int socket ){
-	char* msg;
-			msg = recibir_mensaje_cliente(socket);
-
-			devolver_mensaje(msg,sizeof(msg),socket,ACK);
-			return msg;
 }
 
 
@@ -374,32 +284,109 @@ void conexion_gameboy(){
     	process_request(socket_cliente);
     }
 }
+void funcionNew(int socket){
 
-void process_request(int socket_cliente){
-char* mensaje;
+    int conexionNew = crear_conexion(ip,puerto);
 
-	//-----------------------------------------
-		op_code operacion;
-				recv(socket_cliente,&operacion,sizeof(operacion),0);
-				int buffer_size;
-				recv(socket_cliente,&buffer_size,sizeof(buffer_size),0);
-				char *buffer = malloc(buffer_size);
-				recv(socket_cliente,buffer,buffer_size,0);
-				if (buffer[buffer_size - 1] != '\0'){
+    if(conexionNew == -1){
+    	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
+        conexionNew= reintentar_conexion(ip,puerto,tiempoReconexion);
+    }
 
-					//ACA ES CON LOG
-					printf("WARN: El buffer no es un string\n");
-				}
-	mensaje= buffer;
+    enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
+    log_info(logger,"Me suscribi a la cola NEW!");
 
-	switch (operacion){
+
+    while(conexionNew != -1){
+    	process_request(conexionNew);
+    }
+}
+void funcionCatch(int socket){
+
+    int conexionCatch =	crear_conexion(ip,puerto);
+
+    if(conexionCatch == -1){
+    	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
+        conexionCatch= reintentar_conexion(ip,puerto,tiempoReconexion);
+    }
+
+
+    enviar_mensaje("Suscribime",conexionCatch, SUS_CATCH);
+    log_info(logger,"Me suscribi a la cola CATCH!");
+
+
+    while(conexionCatch != -1){
+    	process_request(conexionCatch);
+    }
+
+}
+void funcionGet(){
+	int conexionGet = crear_conexion(ip,puerto);
+
+	if(conexionGet == -1){
+		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
+        conexionGet= reintentar_conexion(ip,puerto,tiempoReconexion);
+	}
+
+	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
+	log_info(logger,"Me suscribi a la cola GET!");
+
+
+	while(conexionGet != -1){
+		process_request(conexionGet);
+	}
+
+}
+void funcionACK(int socket){
+	int conexionRespuesta;
+	conexionRespuesta = crear_conexion(ip,puerto);
+	enviar_mensaje("Llego a Destino",conexionRespuesta,ACK);
+}
+
+void process_request(int socket){
+	int cod_op;
+	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+
+	if(recv(socket, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
+			cod_op = -1;
+
+	switch (cod_op){
 	case GET_POKEMON:
-		buscarPokemon(mensaje);
+		mensaje = recibir_mensaje_struct(socket);
+		funcionACK(socket);
+		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		/*pthread_t solicitud;
+		pthread_create(&solicitud, NULL,(void *) buscarPokemon, mensaje);
+		pthread_detach(solicitud);*/
 		free(mensaje);
 		break;
 	case NEW_POKEMON:
+		mensaje = recibir_mensaje_struct(socket);
+		funcionACK(socket);
+		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		/*pthread_t solicitud;
+		pthread_create(&solicitud, NULL,(void *) nuevoPokemon,(gamecard*) mensaje);
+		pthread_detach(solicitud);*/
+		free(mensaje);
 		break;
 	case CATCH_POKEMON:
+		mensaje = recibir_mensaje_struct(socket);
+		funcionACK(socket);
+		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		/*pthread_t solicitud;
+		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);
+		pthread_detach(solicitud);*/
+		free(mensaje);
+		break;
+	case ACK:
+		log_info(logger,"hola");
+		break;
+	case -1:
+		//ip = config_get_string_value(config,"IP_GAMECARD");
+		//puerto = config_get_string_value(config,"PUERTO_GAMECARD");
+		//socket = iniciar_servidor(ip,puerto);
+		socket = crear_conexion(ip,puerto);
+		log_info(logger,"Codigo de operacion invalido, iniciando servidor gamecard");
 		break;
 	default:
 		exit(1);
