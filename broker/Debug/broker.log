@@ -1279,3 +1279,52 @@
 [INFO] 23:25:23:573 Broker/(22320:22320): Se Suscribio a la lista APPEARED 5
 [INFO] 23:25:23:573 Broker/(22320:22320): socketero: 7
 [INFO] 23:25:23:573 Broker/(22320:22320): Se Suscribio a la lista CAUGHT 7
+[INFO] 23:33:19:809 Broker/(22641:22641): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:33:21:250 Broker/(22641:22641): socketero: 5
+[INFO] 23:33:21:250 Broker/(22641:22641): Se Suscribio a la lista CATCH 5
+[INFO] 23:33:21:250 Broker/(22641:22641): socketero: 7
+[INFO] 23:33:21:250 Broker/(22641:22641): Se Suscribio a la lista NEW 7
+[INFO] 23:33:21:250 Broker/(22641:22641): socketero: 8
+[INFO] 23:33:21:251 Broker/(22641:22641): Se Suscribio a la lista GET 8
+[INFO] 23:33:22:930 Broker/(22641:22641): socketero: 9
+[INFO] 23:33:22:931 Broker/(22641:22641): el pokemon es Pikachu
+[INFO] 23:33:22:931 Broker/(22641:22641): Se envio mensaje a todos los suscriptos!
+[INFO] 23:33:22:931 Broker/(22641:22641): socketero: 10
+[INFO] 23:33:22:931 Broker/(22641:22641): Llego a Destino
+[INFO] 23:33:24:834 Broker/(22641:22641): socketero: 11
+[INFO] 23:33:24:834 Broker/(22641:22641): el pokemon es Pikachu
+[INFO] 23:33:24:834 Broker/(22641:22641): Se envio mensaje a todos los suscriptos!
+[INFO] 23:33:24:835 Broker/(22641:22641): socketero: 12
+[INFO] 23:33:24:835 Broker/(22641:22641): Llego a Destino
+[INFO] 23:33:29:354 Broker/(22641:22641): socketero: 13
+[INFO] 23:33:29:354 Broker/(22641:22641): el pokemon es Pikachu
+[INFO] 23:33:29:354 Broker/(22641:22641): Se envio mensaje a todos los suscriptos!
+[INFO] 23:33:29:354 Broker/(22641:22641): socketero: 14
+[INFO] 23:33:29:355 Broker/(22641:22641): Llego a Destino
+[INFO] 23:38:52:344 Broker/(22756:22756): Servidor con IP 127.0.0.1 y puerto 5003
+[INFO] 23:38:53:529 Broker/(22756:22756): socketero: 5
+[INFO] 23:38:53:529 Broker/(22756:22756): Se Suscribio a la lista CATCH 5
+[INFO] 23:38:53:530 Broker/(22756:22756): socketero: 7
+[INFO] 23:38:53:530 Broker/(22756:22756): Se Suscribio a la lista NEW 7
+[INFO] 23:38:53:530 Broker/(22756:22756): socketero: 8
+[INFO] 23:38:53:530 Broker/(22756:22756): Se Suscribio a la lista GET 8
+[INFO] 23:38:55:505 Broker/(22756:22756): socketero: 9
+[INFO] 23:38:55:505 Broker/(22756:22756): el pokemon es Pikachu
+[INFO] 23:38:55:505 Broker/(22756:22756): Se envio mensaje a todos los suscriptos!
+[INFO] 23:38:55:506 Broker/(22756:22756): socketero: 10
+[INFO] 23:38:55:506 Broker/(22756:22756): Llego a Destino
+[INFO] 23:38:56:1 Broker/(22756:22756): socketero: 11
+[INFO] 23:38:56:1 Broker/(22756:22756): el pokemon es Pikachu
+[INFO] 23:38:56:1 Broker/(22756:22756): Se envio mensaje a todos los suscriptos!
+[INFO] 23:38:56:2 Broker/(22756:22756): socketero: 12
+[INFO] 23:38:56:2 Broker/(22756:22756): Llego a Destino
+[INFO] 23:39:01:161 Broker/(22756:22756): socketero: 13
+[INFO] 23:39:01:162 Broker/(22756:22756): el pokemon es Pikachu
+[INFO] 23:39:01:162 Broker/(22756:22756): Se envio mensaje a todos los suscriptos!
+[INFO] 23:39:01:162 Broker/(22756:22756): socketero: 14
+[INFO] 23:39:01:162 Broker/(22756:22756): Llego a Destino
+[INFO] 23:39:02:938 Broker/(22756:22756): socketero: 15
+[INFO] 23:39:02:938 Broker/(22756:22756): el pokemon es Pikachu
+[INFO] 23:39:02:938 Broker/(22756:22756): Se envio mensaje a todos los suscriptos!
+[INFO] 23:39:02:938 Broker/(22756:22756): socketero: 16
+[INFO] 23:39:02:938 Broker/(22756:22756): Llego a Destino

@@ -337,7 +337,7 @@ void funcionGet(){
 	}
 
 }
-void funcionACK(int socket){
+void funcionACK(){
 	int conexionRespuesta;
 	conexionRespuesta = crear_conexion(ip,puerto);
 	enviar_mensaje("Llego a Destino",conexionRespuesta,ACK);
@@ -353,7 +353,7 @@ void process_request(int socket){
 	switch (cod_op){
 	case GET_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(socket);
+		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		/*pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void *) buscarPokemon, mensaje);
@@ -362,7 +362,7 @@ void process_request(int socket){
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(socket);
+		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		/*pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void *) nuevoPokemon,(gamecard*) mensaje);
@@ -371,7 +371,7 @@ void process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(socket);
+		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		/*pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);

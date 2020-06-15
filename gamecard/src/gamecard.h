@@ -37,7 +37,7 @@ typedef struct{
 void buscarPokemon(char* mensaje);
 void nuevoPokemon(char* mensaje);
 void agarrarPokemon(char* mensaje);
-void funcionACK(int socket);
+void funcionACK();
 void funcionGet();
 void funcionNew();
 void funcionCatch();

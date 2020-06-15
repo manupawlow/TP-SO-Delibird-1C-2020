@@ -268,6 +268,7 @@ void process_request(Colas *loquito) {
 			//log_info(loquito->logger,"A gamecard le llego el mensaje");
 			msg = recibir_mensaje(loquito->socket_cliente, &size);
 			log_info(loquito->logger,"%s",msg);
+			free(msg);
 			//guardar_ACK(msg);
 			break;
 //-----------------------------------------------------------------
