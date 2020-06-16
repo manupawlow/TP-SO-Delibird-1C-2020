@@ -6,7 +6,9 @@ int main() {
 	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
 	config=config_create(conf);
 
-	fs(config);
+
+	//fs(config,block_size,blocks);
+	fs(config,64,5192);
 
 
 	ip = config_get_string_value(config,"IP_BROKER");
@@ -15,6 +17,7 @@ int main() {
 	tiempoReconexion=config_get_int_value(config,"TIEMPO_DE_REINTENTO_CONEXION");
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
+
 
 
 	pthread_mutex_init(&mxArchivo, NULL);
@@ -46,42 +49,55 @@ int main() {
 	pthread_join(conexionGameboy,NULL);*/
 
 
-
 return EXIT_SUCCESS;
 }
 //PARA EL GET
-void buscarPokemon(char* mensaje){
+void buscarPokemon(t_mensaje* mensaje){
 
-FILE * f;
+FILE * f;/*
+uint32_t pokemon_length;
+    char* pokemon;
+    uint8_t posx;
+    uint8_t posy;
+	uint8_t cantidad;
+	uint8_t id_mensaje;
+	uint8_t id_mensaje_correlativo;
+	uint32_t resultado_length;
+	char* resultado;*/
 
-char* pokeNombre=malloc(sizeof(char*));
-char* datoArchivo=string_new();
 
-		pokeNombre=strtok(mensaje," ");
+t_mensaje* pokemon;
+
+char* montaje= string_new();
 //TODO
 	// NO ANDA UN STRING APPEND ANDA A SABER POR K
-		//string_append_with_format(&mntPokemon,"%s",pokeNombre);
-		//string_append(&mntPokemon,pokeNombre);
+
+		string_append(&montaje,mntPokemon);
+		string_append(&montaje,mensaje->pokemon);
+
 		pthread_mutex_lock(&mxArchivo);
-		f = fopen(mntPokemon,"r");
-		t_poke* pokemon=	obtenerDatosPokemon(f);
+		f = fopen(montaje,"r");
+
+		pokemon=obtenerDatosPokemon(f,mensaje);
 		fclose(f);
+
 		pthread_mutex_unlock(&mxArchivo);
 
 
-		datoArchivo= obtenerPokemonString(pokemon);
+		//datoArchivo= obtenerPokemonString(pokemon);
 
 
 int socketLoc = crear_conexion(ip, puerto);
 
 	if(socketLoc ==-1){
 			log_info(logger,"No se pudo conectar con el broker.");
-			log_info(logger,"%s",datoArchivo);
+			//log_info(logger,"%s",datoArchivo);
 
 	}else{
 //TODO
-//Agregar el id del mensaje original a datoArchivo
-		enviar_mensaje(datoArchivo, socketLoc,LOCALIZED_POKEMON);
+
+			enviar_mensaje_struct(mensaje, socketLoc,LOCALIZED_POKEMON);
+
 	}
 
 }
@@ -112,17 +128,17 @@ if(socketCaugth ==-1){
 		if(f==NULL){
 			log_info(logger,"ERROR: no hay pokemon.");
 		}else{
-t_poke* pokemon= obtenerDatosPokemon(f);
+t_mensaje* pokemon= obtenerDatosPokemon(f,mensaje);
 
 	fclose(f);
 			if(igualPosicion(f, mensaje,pokemon)!=1){
 				log_info(logger,"ERROR: no hay pokemon.");
 			}else{
-				if(pokemon->y==1){
+				if(pokemon->posy==1){
 					f=fopen(mntPokemon,"r+");
 					eliminarLinea();
 					fclose(f);
-				}else if(pokemon->y<1){
+				}else if(pokemon->posy<1){
 					log_info(logger,"ERROR: no hay pokemon.");
 				}else{
 					f=fopen(mntPokemon,"r+");
@@ -181,11 +197,76 @@ t_poke* pokemon= obtenerDatosPokemon(f);
 
 
 
-
 //TODO
 
 
-void nuevoPokemon(char* mensaje){
+void nuevoPokemon(t_mensaje* mensaje){
+
+	FILE * f;/*
+	uint32_t pokemon_length;
+	    char* pokemon;
+	    uint8_t posx;
+	    uint8_t posy;
+		uint8_t cantidad;
+		uint8_t id_mensaje;
+		uint8_t id_mensaje_correlativo;
+		uint32_t resultado_length;
+		char* resultado;*/
+
+
+
+	char* montaje= string_new();
+	string_append(&montaje,mntPokemon);
+	string_append(&montaje,mensaje->pokemon);
+	pthread_mutex_lock(&mxArchivo);
+	f = fopen(montaje,"r");
+/* si open = y -> esperarReintentar
+ * else
+ * mandale mecha
+ */
+	if(f==NULL){
+
+		crearBloques(mensaje);
+
+
+		mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		string_append(&montaje,"/Metadata.bin");
+		f=fopen(montaje,"w+");
+		escribirMeta(f,mensaje);
+		fclose(f);
+
+		contadorBloques++;
+		}else{
+			//yes
+			cambiar_meta_blocks(montaje);
+			//no
+			fclose(f);
+
+		}
+
+	//pokemon=obtenerDatosPokemon(f,mensaje);
+
+
+	pthread_mutex_unlock(&mxArchivo);
+
+
+			//datoArchivo= obtenerPokemonString(pokemon);
+
+
+	int socketLoc = crear_conexion(ip, puerto);
+
+		if(socketLoc ==-1){
+				log_info(logger,"No se pudo conectar con el broker.");
+				//log_info(logger,"%s",datoArchivo);
+
+		}else{
+	//TODO
+
+				enviar_mensaje_struct(mensaje, socketLoc,LOCALIZED_POKEMON);
+
+		}
+
+
 
 }
 
@@ -238,31 +319,26 @@ int i= 0;
 
 }
 
-t_poke* obtenerDatosPokemon(FILE* fp){
+t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje){
 
-t_poke* pokemon = malloc(sizeof(t_poke));
-int posx;
-int posy;
-int cant;
-char* poki=string_new();
-
+uint8_t posx;
+uint8_t posy;
+uint8_t cant;
 
 	if(fp==NULL){
-		pokemon->x= 0;
-		pokemon->y=0;
-		pokemon->cant=0;
-		pokemon->nombre="";
+		mensaje->posx= 0;
+		mensaje->posy =0;
+		mensaje->cantidad=0;
 	}else{
 
-		fscanf(fp,"%s %d %d %d",poki, posx,posy,cant );
+		fscanf(fp,"%d-%d=%d", posx,posy,cant );
 
-		pokemon->x= posx;
-		pokemon->y=posy;
-		pokemon->cant=cant;
-		pokemon->nombre=poki;
+		mensaje->posx= posx;
+		mensaje->posy=posy;
+		mensaje->cantidad=cant;
 
 	}
-	return pokemon;
+	return mensaje;
 }
 
 void eliminarLinea(FILE* fp){
@@ -355,18 +431,18 @@ void process_request(int socket){
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
-		/*pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *) buscarPokemon, mensaje);
-		pthread_detach(solicitud);*/
+		pthread_t solicitudGet;
+		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
+		pthread_detach(solicitudGet);
 		free(mensaje);
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
-		/*pthread_t solicitud;
-		pthread_create(&solicitud, NULL,(void *) nuevoPokemon,(gamecard*) mensaje);
-		pthread_detach(solicitud);*/
+		pthread_t solicitudNew;
+		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
+		pthread_detach(solicitudNew);
 		free(mensaje);
 		break;
 	case CATCH_POKEMON:
@@ -393,6 +469,134 @@ void process_request(int socket){
 		break;
 	}
 }
+
+
+
+//-------------------------------------------------------------------------------------
+
+
+void crearBloques(t_mensaje* mensaje){
+
+FILE* f;
+char* contador;
+char* bloques=string_new();
+char* escribirBloque=string_new();
+
+
+char* x=string_itoa(mensaje->posx);
+char* y=string_itoa(mensaje->posy);
+char* cant=string_itoa(mensaje->cantidad);
+
+contador=string_itoa(contadorBloques);
+string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
+string_append(&bloques,contador);
+string_append(&bloques,".bin");
+
+f=fopen(bloques,"w+");
+
+string_append(&escribirBloque, x);
+string_append_with_format(&escribirBloque, "-%s",y);
+string_append_with_format(&escribirBloque, "=%s\n",cant);
+
+
+fprintf(f,"%s",escribirBloque);
+fclose(f);
+
+
+
+}
+
+
+void escribirMeta(FILE* f,t_mensaje* mensaje){
+
+	fprintf(f,"DIRECTORY=N\n");
+	fprintf(f,"SIZE=%d\n",64);
+	fprintf(f,"BLOCKS=%d\n",contadorBloques);
+	fprintf(f,"OPEN=N");
+
+
+}
+
+
+void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
+	FILE* fblocks;
+	char* bloques;
+
+	//falta liberar
+	t_config* configBloques;
+
+	char** arrayBloques;
+	int arrayBloquesInt[10];
+	char** basura;
+	char** nroBloque;
+
+	configBloques= config_create(montaje);
+	bloques=config_get_string_value(configBloques,"BLOCKS");
+	log_info(logger,"%s",bloques);
+
+	basura=string_split(bloques,"[");
+	nroBloque=string_split(basura[0],"]");
+	arrayBloques=string_split(nroBloque[0],",");
+
+
+ /*
+	while(arrayBloques[i]!= NULL){
+		arrayBloquesInt[i]=atoi(arrayBloques[i]);
+		log_info(logger,"%d",arrayBloquesInt[i]);
+		i++;
+
+	}*/
+
+	for(int i=0;i<strlen(arrayBloques);i++){
+		char* montajeBlocks=string_new();
+		string_append(montajeBlocks,montaje);
+		string_append_with_format(montajeBlocks,"/%s.bin",arrayBloques[i]);
+		fblocks= fopen(montajeBlocks, "r+");
+
+		if(fblocks== NULL){
+			//fclose(fblocks);
+			log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+		}else{
+			compararBlocks(fblocks, mensaje);
+		}
+	}
+
+
+
+
+void compararBlocks(FILE* f, t_mensaje* mensaje){
+int x;
+int y;
+int cant;
+
+	fscanf(f,"%d-%d=%d",x,y,cant);
+
+	if(x==mensaje->posx){
+		if(y==mensaje->posy){
+
+		}
+	}
+
+}
+
+
+
+
+
+
+
+	free(bloques);
+	free(arrayBloques);
+	free(basura);
+	free(nroBloque);
+
+
+
+}
+
+
+
+
 
 
 

@@ -1,14 +1,23 @@
-#include <sys/stat.h>
-#include <sys/types.h>
 #include "fs.h"
 t_log* logger;
 t_config* config;
 
 pthread_mutex_t mxArchivo;
 
-char* mntPokemon="/home/utnso/Escritorio/TALL_GRASS/Files/";
+char* mntPokemon="/home/utnso/Escritorio/TALL_GRASS/Pokemon/";
+
+int contadorBloques=1;
 
 
+char* pruebaMontaje="/home/utnso/Escritorio/TALL_GRASS/Pokemon/Pikachu/Metadata.bin";
+
+typedef struct{
+	uint8_t id_mensaje;
+	char* pokemon;
+	uint8_t posx;
+	uint8_t posy;
+	uint8_t cantidad;
+}t_pokeNew;
 
 
 
@@ -34,8 +43,8 @@ typedef struct{
 
 
 
-void buscarPokemon(char* mensaje);
-void nuevoPokemon(char* mensaje);
+void buscarPokemon(t_mensaje* mensaje);
+void nuevoPokemon(t_mensaje* mensaje);
 void agarrarPokemon(char* mensaje);
 void funcionACK();
 void funcionGet();
@@ -44,11 +53,10 @@ void funcionCatch();
 
 char* obtenerPokemonString(t_poke* pokemon);
 int igualPosicion(FILE *fp, char* mensaje, t_poke* pokemon);
-t_poke* obtenerDatosPokemon(FILE* fp);
+t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje);
 
 void process_request(int socket_cliente);
 void conexion_gameboy();
-
 
 
 
