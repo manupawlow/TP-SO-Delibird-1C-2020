@@ -9,7 +9,7 @@ t_list* listaUnica(t_list *listaDeListas);
 t_list* listaDeListas(t_config* config, char* cadena);
 t_list* listaPosiciones(t_config* config, char* cadena);
 void recorrerLista(t_list *lista, t_log *logger);
-void menorDistancia (Posicion posicion);
+void menorDistancia (Poketeam pokemon);
 float distancia(Entrenador *entrenador, Posicion posicion);
 t_list *obtenerObjetivoGlobal();
 

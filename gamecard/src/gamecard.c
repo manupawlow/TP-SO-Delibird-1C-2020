@@ -3,7 +3,7 @@ int main() {
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
-	logger =log_create("gamecard.log", "Gamecard", 1, LOG_LEVEL_INFO);
+	logger =log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config=config_create(conf);
 
 

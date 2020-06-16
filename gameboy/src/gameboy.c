@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gameboy/src/gameboy.config";
 
-	logger =log_create("gameboy.log", "Gameboy", 1, LOG_LEVEL_INFO);
+	logger =log_create("/home/utnso/gameboy.txt", "Gameboy", 1, LOG_LEVEL_INFO);
 
 	config=config_create(conf);
 

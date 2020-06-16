@@ -14,7 +14,7 @@ int main(void) {
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/broker/src/broker.config";
 
-	logger = log_create("broker.log", "Broker", 1, LOG_LEVEL_INFO);
+	logger = log_create("/home/utnso/broker.txt", "Broker", 1, LOG_LEVEL_INFO);
 
 	config=config_create(conf);
 

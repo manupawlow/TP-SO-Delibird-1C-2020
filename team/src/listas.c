@@ -41,6 +41,8 @@ t_list* filtrado(t_list* capturados, t_list* objetivos){
 
 	for(int i=0; i<list_size(objetivos); i++){
 		char *objetivo= list_get(objetivos,i);
+		if(capturados==NULL)
+			return aux;
 		for(int j=0; j<list_size(capturados); j++){
 			char *capturado= list_get(capturados,j);
 			if(strcmp(objetivo,capturado)==0){
@@ -58,16 +60,20 @@ t_list* filtrado(t_list* capturados, t_list* objetivos){
 Config_Team* construirConfigTeam(t_config* config){
 
 	Config_Team* config_team = malloc(sizeof(Config_Team));
+	config_team->objetivos_entrenadores= malloc(sizeof(t_list));
+	config_team->posiciones_entrenadores= malloc(sizeof(t_list));
+	config_team->pokemon_entrenadores= malloc(sizeof(t_list));
 
-	config_team -> ip_broker = config_get_string_value(config, "IP_BROKER");
-	config_team -> puerto_broker = config_get_string_value(config, "PUERTO_BROKER");
+	config_team->ip_broker = config_get_string_value(config, "IP_BROKER");
+	config_team->puerto_broker = config_get_string_value(config, "PUERTO_BROKER");
 
-	config_team -> objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
-	config_team -> pokemon_entrenadores = listaDeListas(config, "POKEMON_ENTRENADORES");
-	config_team -> posiciones_entrenadores = listaPosiciones(config, "POSICIONES_ENTRENADORES");
+	config_team->objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
+	config_team->pokemon_entrenadores = listaDeListas(config, "POKEMON_ENTRENADORES");
+	config_team->posiciones_entrenadores = listaPosiciones(config, "POSICIONES_ENTRENADORES");
 
-	config_team -> retardo_cpu = config_get_int_value(config, "RETARDO_CICLO_CPU");
-	config_team -> reconexion = config_get_int_value(config, "TIEMPO_RECONEXION");
+	config_team->retardo_cpu = config_get_int_value(config, "RETARDO_CICLO_CPU");
+	config_team->reconexion = config_get_int_value(config, "TIEMPO_RECONEXION");
+	config_team->log = config_get_string_value(config, "LOG_FILE");
 
 	return config_team;
 }
@@ -128,27 +134,74 @@ t_list* listaPosiciones(t_config* config, char* cadena) {
   return posiciones;
 }
 
-void menorDistancia (Posicion posicion){
-
-	Entrenador *entrenadorMasCerca = list_get(new,0);
+int indiceMasCercano(Posicion posicion, t_list *lista){
+	Entrenador *entrenadorMasCerca = list_get(lista,0);
 	int indiceEntrenadorMasCerca = 0;
 
-	for(int i=1; i<list_size(new);i++){
-		Entrenador *entrenador= list_get(new,i);
-		if( distancia(entrenador,posicion) < distancia(entrenadorMasCerca,posicion) ){
-			entrenadorMasCerca=entrenador;
-		    indiceEntrenadorMasCerca=i;
+		for(int i=1; i<list_size(lista);i++){
+			Entrenador *entrenador= list_get(lista,i);
+			if( distancia(entrenador,posicion) < distancia(entrenadorMasCerca,posicion) ){
+				entrenadorMasCerca=entrenador;
+			    indiceEntrenadorMasCerca=i;
+			}
+		}
+	return indiceEntrenadorMasCerca;
+}
+
+bool puedeFinalizar(Entrenador *entrenador){
+	t_list *finalizar;
+
+	finalizar = filtrado(entrenador->pokemones_capturados, entrenador->pokemones_objetivos);
+
+	return list_is_empty(finalizar);
+}
+
+void ponerEnReady(Entrenador *entrenador, t_list *lista, int indice, Poketeam pokemon){
+	entrenador->posicion_a_capturar->x = pokemon.pos.x;
+    entrenador->posicion_a_capturar->y = pokemon.pos.y;
+    entrenador->pokemon_a_caputar = pokemon.pokemon;
+	list_remove(lista,indice);
+	list_add(ready,entrenador);
+	sem_post(&semaforoExce);
+}
+
+void menorDistancia (Poketeam pokemon){
+
+	int indiceNew;
+	int indiceBlock;
+	Entrenador *entrenadorMasCercaNew;
+	Entrenador *entrenadorMasCercaBlock;
+	Posicion posicion = pokemon.pos;
+
+	if(list_is_empty(new) && list_is_empty(block)){
+			log_info(logger,"No hay entrenador disponible");
+		}
+
+	else if(!list_is_empty(new) && !list_is_empty(block)){
+		indiceNew = indiceMasCercano(posicion,new);
+		entrenadorMasCercaNew = list_get(new,indiceNew);
+		indiceBlock = indiceMasCercano(posicion,block);
+		entrenadorMasCercaBlock = list_get(block,indiceBlock);
+
+		if(distancia(entrenadorMasCercaBlock,posicion) < distancia(entrenadorMasCercaNew,posicion)){
+			ponerEnReady(entrenadorMasCercaBlock,block,indiceBlock,pokemon);
+		}else{
+			ponerEnReady(entrenadorMasCercaNew,new,indiceNew,pokemon);
 		}
 	}
 
-	entrenadorMasCerca = list_get(new,indiceEntrenadorMasCerca);
-	entrenadorMasCerca->posicion_a_capturar->x = posicion.x;
-	entrenadorMasCerca->posicion_a_capturar->y = posicion.y;
-	list_remove(new,indiceEntrenadorMasCerca);
-	list_add(ready,entrenadorMasCerca);
+	else if(list_is_empty(new) && !list_is_empty(block)){
+		indiceBlock = indiceMasCercano(posicion,block);
+		entrenadorMasCercaBlock = list_get(block,indiceBlock);
+		ponerEnReady(entrenadorMasCercaBlock,block,indiceBlock,pokemon);
+	}
 
-	sem_post(&semaforoExce);
-	
+	else if(!list_is_empty(new) && list_is_empty(block)){
+		indiceNew = indiceMasCercano(posicion,new);
+		entrenadorMasCercaNew = list_get(new,indiceNew);
+		ponerEnReady(entrenadorMasCercaNew,new,indiceNew,pokemon);
+	}
+
 }
 
 float distancia(Entrenador *entrenador, Posicion posicion){
