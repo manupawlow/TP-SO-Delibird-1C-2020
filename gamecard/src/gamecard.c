@@ -185,94 +185,6 @@ t_mensaje* pokemon= obtenerDatosPokemon(f,mensaje);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-//TODO
-
-
-void nuevoPokemon(t_mensaje* mensaje){
-
-	FILE * f;/*
-	uint32_t pokemon_length;
-	    char* pokemon;
-	    uint8_t posx;
-	    uint8_t posy;
-		uint8_t cantidad;
-		uint8_t id_mensaje;
-		uint8_t id_mensaje_correlativo;
-		uint32_t resultado_length;
-		char* resultado;*/
-
-
-
-	char* montaje= string_new();
-	string_append(&montaje,mntPokemon);
-	string_append(&montaje,mensaje->pokemon);
-	pthread_mutex_lock(&mxArchivo);
-	f = fopen(montaje,"r");
-/* si open = y -> esperarReintentar
- * else
- * mandale mecha
- */
-	if(f==NULL){
-
-		crearBloques(mensaje);
-
-
-		mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-		string_append(&montaje,"/Metadata.bin");
-		f=fopen(montaje,"w+");
-		escribirMeta(f,mensaje);
-		fclose(f);
-
-		contadorBloques++;
-		}else{
-			//yes
-			cambiar_meta_blocks(montaje);
-			//no
-			fclose(f);
-
-		}
-
-	//pokemon=obtenerDatosPokemon(f,mensaje);
-
-
-	pthread_mutex_unlock(&mxArchivo);
-
-
-			//datoArchivo= obtenerPokemonString(pokemon);
-
-
-	int socketLoc = crear_conexion(ip, puerto);
-
-		if(socketLoc ==-1){
-				log_info(logger,"No se pudo conectar con el broker.");
-				//log_info(logger,"%s",datoArchivo);
-
-		}else{
-	//TODO
-
-				enviar_mensaje_struct(mensaje, socketLoc,LOCALIZED_POKEMON);
-
-		}
-
-
-
-}
-
-
-
-
 char* obtenerPokemonString(t_poke* pokemon){
 	char* poke;
 	char* x=string_new();
@@ -470,7 +382,53 @@ void process_request(int socket){
 	}
 }
 
+void nuevoPokemon(t_mensaje* mensaje){
 
+	FILE * f;
+
+	char* montaje= string_new();
+	string_append(&montaje,mntPokemon);
+	string_append(&montaje,mensaje->pokemon);
+	pthread_mutex_lock(&mxArchivo);
+	f = fopen(montaje,"r");
+
+	if(f==NULL){
+
+		crearBloques(mensaje);
+
+		mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+		string_append(&montaje,"/Metadata.bin");
+		f=fopen(montaje,"w+");
+		escribirMeta(f,mensaje);
+		fclose(f);
+		contadorBloques++;
+		}else{
+			//yes
+			fclose(f);
+			string_append(&montaje,"/Metadata.bin");
+			f = fopen(montaje,"r");
+			cambiar_meta_blocks(montaje,mensaje);
+			//no
+			fclose(f);
+
+		}
+
+	//pokemon=obtenerDatosPokemon(f,mensaje);
+
+	pthread_mutex_unlock(&mxArchivo);
+
+			//datoArchivo= obtenerPokemonString(pokemon);
+
+	/*int socketLoc = crear_conexion(ip, puerto);
+
+		if(socketLoc ==-1){
+				log_info(logger,"No se pudo conectar con el broker.");
+				//log_info(logger,"%s",datoArchivo);
+		}else{
+				enviar_mensaje_struct(mensaje, socketLoc,LOCALIZED_POKEMON);
+		}
+*/
+}
 
 //-------------------------------------------------------------------------------------
 
@@ -502,8 +460,16 @@ string_append_with_format(&escribirBloque, "=%s\n",cant);
 fprintf(f,"%s",escribirBloque);
 fclose(f);
 
+}
 
-
+void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks){
+	fblocks= fopen(montajeBlocks, "w+");
+	int i = 0;
+	while(blockRenovado[i] != NULL){
+		fprintf(fblocks,"%s\n",blockRenovado[i]);
+		i++;
+	}
+	fclose(fblocks);
 }
 
 
@@ -511,10 +477,8 @@ void escribirMeta(FILE* f,t_mensaje* mensaje){
 
 	fprintf(f,"DIRECTORY=N\n");
 	fprintf(f,"SIZE=%d\n",64);
-	fprintf(f,"BLOCKS=%d\n",contadorBloques);
+	fprintf(f,"BLOCKS=[%d]\n",contadorBloques);
 	fprintf(f,"OPEN=N");
-
-
 }
 
 
@@ -526,72 +490,77 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
 	t_config* configBloques;
 
 	char** arrayBloques;
-	int arrayBloquesInt[10];
 	char** basura;
 	char** nroBloque;
-
-	configBloques= config_create(montaje);
+	configBloques = config_create(montaje);
 	bloques=config_get_string_value(configBloques,"BLOCKS");
-	log_info(logger,"%s",bloques);
 
 	basura=string_split(bloques,"[");
 	nroBloque=string_split(basura[0],"]");
 	arrayBloques=string_split(nroBloque[0],",");
+	log_info(logger,"%s", arrayBloques[0]);
 
-
- /*
-	while(arrayBloques[i]!= NULL){
-		arrayBloquesInt[i]=atoi(arrayBloques[i]);
-		log_info(logger,"%d",arrayBloquesInt[i]);
-		i++;
-
-	}*/
-
-	for(int i=0;i<strlen(arrayBloques);i++){
+	int i = 0;
+	while(arrayBloques[i] != NULL){
 		char* montajeBlocks=string_new();
-		string_append(montajeBlocks,montaje);
-		string_append_with_format(montajeBlocks,"/%s.bin",arrayBloques[i]);
-		fblocks= fopen(montajeBlocks, "r+");
+		string_append(&montajeBlocks,mntBlocks);
+		string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
+		fblocks= fopen(montajeBlocks, "r");
 
-		if(fblocks== NULL){
-			//fclose(fblocks);
+		if(fblocks == NULL){
 			log_info(logger,"El bloque %s no existe", arrayBloques[i]);
 		}else{
-			compararBlocks(fblocks, mensaje);
+			compararBlocksYCambiar(fblocks, mensaje, montajeBlocks);
 		}
+		i++;
 	}
-
-
-
-
-void compararBlocks(FILE* f, t_mensaje* mensaje){
-int x;
-int y;
-int cant;
-
-	fscanf(f,"%d-%d=%d",x,y,cant);
-
-	if(x==mensaje->posx){
-		if(y==mensaje->posy){
-
-		}
-	}
-
-}
-
-
-
-
-
-
-
 	free(bloques);
 	free(arrayBloques);
 	free(basura);
 	free(nroBloque);
+}
 
 
+void compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks){
+	int i;
+	int contadorDeCoincidencias = 0;
+	char* blockAComparar = string_new();
+	char* cantidadDePokemon = string_new();
+	char** posicionesYCantidad;
+	char* mensajePosiciones = string_new();
+	char** blockRenovado;
+	char* basura = string_new();
+	string_append(&mensajePosiciones,string_itoa(mensaje->posx));
+	string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
 
+	fscanf(fblocks," %[^\n]",blockAComparar);
+	while(!feof(fblocks)){
+		posicionesYCantidad = string_split(blockAComparar,"=");
+		if(strcmp(posicionesYCantidad[0], mensajePosiciones) == 0){
+			char* blockARenovar = string_new();
+			int cant = atoi(posicionesYCantidad[1]);
+			cant += mensaje->cantidad;
+			cantidadDePokemon = string_itoa(cant);
+			string_append(&blockARenovar,mensajePosiciones);
+			string_append_with_format(&blockARenovar,"=%s",cantidadDePokemon);
+			log_info(logger,"%s",blockARenovar);
+			string_append_with_format(&basura,"%s ",blockARenovar);
+			contadorDeCoincidencias++;
+		}else if(contadorDeCoincidencias==0){
+			string_append_with_format(&basura,"%s ",blockAComparar);
+		}
+		i++;
+		fscanf(fblocks," %[^\n]",blockAComparar);
+	}
+	fclose(fblocks);
+	if(contadorDeCoincidencias == 0){
+		char* blockARenovar = string_new();
+		string_append(&blockARenovar,mensajePosiciones);
+		string_append_with_format(&blockARenovar,"=%s",string_itoa(mensaje->cantidad));
+		string_append_with_format(&basura,"%s",blockARenovar);
+	}
+	blockRenovado = string_split(basura," ");
+	recrearBlocks(fblocks,blockRenovado,montajeBlocks);
 }
 
 
