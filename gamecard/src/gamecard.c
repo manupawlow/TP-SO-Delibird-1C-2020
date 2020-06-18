@@ -466,7 +466,7 @@ fclose(f);
 void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks){
 	fblocks= fopen(montajeBlocks, "w+");
 	int i = 0;
-	while(blockRenovado[i] != '\0'){
+	while(blockRenovado[i] != NULL){
 		fprintf(fblocks,"%s\n",blockRenovado[i]);
 		i++;
 	}
@@ -509,7 +509,7 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
 
     int verificador= 0;
     int i = 0;
-    while(arrayBloques[i] != '\0'){
+    while(arrayBloques[i] != NULL){
         char* montajeBlocks=string_new();
         string_append(&montajeBlocks,mntBlocks);
         string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
@@ -519,7 +519,11 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
             log_info(logger,"El bloque %s no existe", arrayBloques[i]);
         }else{
             block = compararBlocksYCambiar(fblocks, mensaje, montajeBlocks);
-            if(strcmp(block->blockARenovar," ") != 0){
+            char* mensajePosiciones = string_new();
+            string_append(&mensajePosiciones,string_itoa(mensaje->posx));
+            string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
+            string_append_with_format(&mensajePosiciones,"=%s",string_itoa(mensaje->cantidad));
+            if(strcmp(block->blockARenovar,mensajePosiciones) != 0){
 
             	verificarTamBlock(size,block,fblocks,montajeBlocks, montaje, nroBloque);
 
@@ -531,25 +535,11 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     }
 
     if(verificador==0){
-    	//el mayor bin
-
     	char* montajeUltimoBlock = string_new();
     	string_append(&montajeUltimoBlock,mntBlocks);
     	string_append_with_format(&montajeUltimoBlock,"/%s.bin",arrayBloques[i-1]);
     	verificarTamBlock(size,block,fblocks,montajeUltimoBlock, montaje, nroBloque);
-
-    	//reescribirMeta(montaje, string_itoa(contadorBloques),nroBloque);
     }
-    /*
-     * chequeatodos()
-     * encontradoPosicion=nroBIN
-     * encontradoPosicion=0
-     * [23 , 1 , 5 ]
-     *
-     * buscarMayor()
-     * tamBin()
-     *
-     */
     free(bloques);
     free(arrayBloques);
     free(basura);
@@ -615,7 +605,7 @@ void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBloc
 	}
 
 
-	if(tamTotal< size){
+	if(tamTotal < size){
 
 		recrearBlocks(fblocks,block->blockRenovado,montajeBlocks);
 
@@ -631,7 +621,7 @@ void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBloc
 		fblocks=fopen(bloques,"w+");
 
 
-		fprintf(fblocks,"%s",block->blockARenovar);
+		fprintf(fblocks,"%s\n",block->blockARenovar);
 		fclose(fblocks);
 		reescribirMeta(montaje, string_itoa(contadorBloques),nroBloque);
 		contadorBloques++;
@@ -642,7 +632,7 @@ void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBloc
 
 void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque){
 	FILE* fmeta;
-char* todo= string_new();
+	char* todo= string_new();
 
 	string_append(&todo,nroBloque[0]);
 	string_append_with_format(&todo,",%s",nuevoBloque);
@@ -650,12 +640,12 @@ char* todo= string_new();
 	fmeta=fopen(montaje,"w+");
 
 
-log_info(logger,"%s",todo);
+	log_info(logger,"%s",todo);
 	fprintf(fmeta,"DIRECTORY=N\n");
-		fprintf(fmeta,"SIZE=%d\n",12);
-		fprintf(fmeta,"BLOCKS=[%s]\n",todo);
-		fprintf(fmeta,"OPEN=N");
+	fprintf(fmeta,"SIZE=%d\n",12);
+	fprintf(fmeta,"BLOCKS=[%s]\n",todo);
+	fprintf(fmeta,"OPEN=N");
 
-		fclose(fmeta);
+	fclose(fmeta);
 }
 
