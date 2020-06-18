@@ -504,7 +504,6 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     basura=string_split(bloques,"[");
     nroBloque=string_split(basura[0],"]");
     arrayBloques=string_split(nroBloque[0],",");
-    log_info(logger,"%s", nroBloque[0]);
     log_info(logger,"%s", arrayBloques[0]);
 
     int verificador= 0;
@@ -523,6 +522,7 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
             string_append(&mensajePosiciones,string_itoa(mensaje->posx));
             string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
             string_append_with_format(&mensajePosiciones,"=%s",string_itoa(mensaje->cantidad));
+            //Este If entra si hay alguna coincidencia de las posiciones del mensaje con las que estan en el bin
             if(strcmp(block->blockARenovar,mensajePosiciones) != 0){
 
             	verificarTamBlock(size,block,fblocks,montajeBlocks, montaje, nroBloque);
@@ -573,7 +573,7 @@ t_block* compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeB
             log_info(logger,"%s",blockARenovar);
             string_append_with_format(&basura,"%s ",blockARenovar);
             contadorDeCoincidencias++;
-        }else if(contadorDeCoincidencias==0){
+        }else{
             string_append_with_format(&basura,"%s ",blockAComparar);
         }
         i++;
@@ -588,8 +588,6 @@ t_block* compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeB
     blockRenovado = string_split(basura," ");
     block->blockRenovado = blockRenovado;
     block->blockARenovar = blockARenovar;
-    //verificarTamBlock();
-    //recrearBlocks(fblocks,blockRenovado,montajeBlocks);
     return block;
 }
 
@@ -600,12 +598,12 @@ void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBloc
 	int i=0;
 	int tamTotal=0;
 	while(block->blockRenovado[i]!=NULL){
-		tamTotal+= sizeof(block->blockRenovado[i]);
+		tamTotal+= strlen(block->blockRenovado[i]) +1;
 		i++;
 	}
 
 
-	if(tamTotal < size){
+	if(tamTotal <= size){
 
 		recrearBlocks(fblocks,block->blockRenovado,montajeBlocks);
 
