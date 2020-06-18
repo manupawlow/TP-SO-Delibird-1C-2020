@@ -5,12 +5,11 @@ t_config* config;
 pthread_mutex_t mxArchivo;
 
 char* mntPokemon = "/home/utnso/Escritorio/TALL_GRASS/Pokemon/";
-char* mntBlocks = "/home/utnso/Escritorio/TALL_GRASS/Blocks/";
+char* mntBlocks = "/home/utnso/Escritorio/TALL_GRASS/Blocks";
 
 int contadorBloques = 1;
 
 
-char* pruebaMontaje="/home/utnso/Escritorio/TALL_GRASS/Pokemon/Pikachu/Metadata.bin";
 
 typedef struct{
 	uint8_t id_mensaje;
@@ -34,7 +33,10 @@ typedef struct{
 	char* nombre;
 }t_poke;
 
-
+typedef struct{
+    char ** blockRenovado;
+    char * blockARenovar;
+}t_block;
 
 
 typedef struct{
@@ -56,8 +58,17 @@ char* obtenerPokemonString(t_poke* pokemon);
 int igualPosicion(FILE *fp, char* mensaje, t_poke* pokemon);
 t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje);
 
-void compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks);
+
+
+void crearBloques(t_mensaje* mensaje);
+void escribirMeta(FILE* f,t_mensaje* mensaje);
+void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje);
+t_block* compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks);
 void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks);
+void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque);
+void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque);
+
+
 
 void process_request(int socket_cliente);
 void conexion_gameboy();

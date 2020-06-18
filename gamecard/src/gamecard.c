@@ -400,8 +400,9 @@ void nuevoPokemon(t_mensaje* mensaje){
 		string_append(&montaje,"/Metadata.bin");
 		f=fopen(montaje,"w+");
 		escribirMeta(f,mensaje);
-		fclose(f);
 		contadorBloques++;
+		fclose(f);
+
 		}else{
 			//yes
 			fclose(f);
@@ -465,7 +466,7 @@ fclose(f);
 void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks){
 	fblocks= fopen(montajeBlocks, "w+");
 	int i = 0;
-	while(blockRenovado[i] != NULL){
+	while(blockRenovado[i] != '\0'){
 		fprintf(fblocks,"%s\n",blockRenovado[i]);
 		i++;
 	}
@@ -475,97 +476,186 @@ void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks){
 
 void escribirMeta(FILE* f,t_mensaje* mensaje){
 
+
+
 	fprintf(f,"DIRECTORY=N\n");
-	fprintf(f,"SIZE=%d\n",64);
+	fprintf(f,"SIZE=%d\n",12);
 	fprintf(f,"BLOCKS=[%d]\n",contadorBloques);
 	fprintf(f,"OPEN=N");
 }
 
 
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
-	FILE* fblocks;
-	char* bloques;
+    FILE* fblocks;
+    char* bloques;
+    t_block* block;
+    //falta liberar
+    t_config* configBloques;
 
-	//falta liberar
-	t_config* configBloques;
+    char** arrayBloques;
+    char** basura;
+    char** nroBloque;
+    configBloques = config_create(montaje);
+    bloques=config_get_string_value(configBloques,"BLOCKS");
 
-	char** arrayBloques;
-	char** basura;
-	char** nroBloque;
-	configBloques = config_create(montaje);
-	bloques=config_get_string_value(configBloques,"BLOCKS");
+    int size= atoi(config_get_string_value(configBloques,"SIZE"));
 
-	basura=string_split(bloques,"[");
-	nroBloque=string_split(basura[0],"]");
-	arrayBloques=string_split(nroBloque[0],",");
-	log_info(logger,"%s", arrayBloques[0]);
 
-	int i = 0;
-	while(arrayBloques[i] != NULL){
-		char* montajeBlocks=string_new();
-		string_append(&montajeBlocks,mntBlocks);
-		string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
-		fblocks= fopen(montajeBlocks, "r");
+    basura=string_split(bloques,"[");
+    nroBloque=string_split(basura[0],"]");
+    arrayBloques=string_split(nroBloque[0],",");
+    log_info(logger,"%s", nroBloque[0]);
+    log_info(logger,"%s", arrayBloques[0]);
 
-		if(fblocks == NULL){
-			log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-		}else{
-			compararBlocksYCambiar(fblocks, mensaje, montajeBlocks);
-		}
-		i++;
-	}
-	free(bloques);
-	free(arrayBloques);
-	free(basura);
-	free(nroBloque);
+    int verificador= 0;
+    int i = 0;
+    while(arrayBloques[i] != '\0'){
+        char* montajeBlocks=string_new();
+        string_append(&montajeBlocks,mntBlocks);
+        string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
+        fblocks= fopen(montajeBlocks, "r");
+
+        if(fblocks == NULL){
+            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+        }else{
+            block = compararBlocksYCambiar(fblocks, mensaje, montajeBlocks);
+            if(strcmp(block->blockARenovar," ") != 0){
+
+            	verificarTamBlock(size,block,fblocks,montajeBlocks, montaje, nroBloque);
+
+                verificador++;
+            	break;
+            }
+        }
+        i++;
+    }
+
+    if(verificador==0){
+    	//el mayor bin
+
+    	char* montajeUltimoBlock = string_new();
+    	string_append(&montajeUltimoBlock,mntBlocks);
+    	string_append_with_format(&montajeUltimoBlock,"/%s.bin",arrayBloques[i-1]);
+    	verificarTamBlock(size,block,fblocks,montajeUltimoBlock, montaje, nroBloque);
+
+    	//reescribirMeta(montaje, string_itoa(contadorBloques),nroBloque);
+    }
+    /*
+     * chequeatodos()
+     * encontradoPosicion=nroBIN
+     * encontradoPosicion=0
+     * [23 , 1 , 5 ]
+     *
+     * buscarMayor()
+     * tamBin()
+     *
+     */
+    free(bloques);
+    free(arrayBloques);
+    free(basura);
+    free(nroBloque);
 }
 
 
-void compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks){
-	int i;
-	int contadorDeCoincidencias = 0;
-	char* blockAComparar = string_new();
-	char* cantidadDePokemon = string_new();
-	char** posicionesYCantidad;
-	char* mensajePosiciones = string_new();
-	char** blockRenovado;
-	char* basura = string_new();
-	string_append(&mensajePosiciones,string_itoa(mensaje->posx));
-	string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
+t_block* compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks){
+    t_block* block = malloc(sizeof(t_block));
+    int i;
+    int contadorDeCoincidencias = 0;
+    char* blockAComparar = string_new();
+    char* cantidadDePokemon = string_new();
+    char** posicionesYCantidad;
+    char* mensajePosiciones = string_new();
+    char* blockARenovar = string_new();
+    char** blockRenovado;
+    char* basura = string_new();
+    string_append(&mensajePosiciones,string_itoa(mensaje->posx));
+    string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
 
-	fscanf(fblocks," %[^\n]",blockAComparar);
-	while(!feof(fblocks)){
-		posicionesYCantidad = string_split(blockAComparar,"=");
-		if(strcmp(posicionesYCantidad[0], mensajePosiciones) == 0){
-			char* blockARenovar = string_new();
-			int cant = atoi(posicionesYCantidad[1]);
-			cant += mensaje->cantidad;
-			cantidadDePokemon = string_itoa(cant);
-			string_append(&blockARenovar,mensajePosiciones);
-			string_append_with_format(&blockARenovar,"=%s",cantidadDePokemon);
-			log_info(logger,"%s",blockARenovar);
-			string_append_with_format(&basura,"%s ",blockARenovar);
-			contadorDeCoincidencias++;
-		}else if(contadorDeCoincidencias==0){
-			string_append_with_format(&basura,"%s ",blockAComparar);
-		}
-		i++;
-		fscanf(fblocks," %[^\n]",blockAComparar);
-	}
-	fclose(fblocks);
-	if(contadorDeCoincidencias == 0){
-		char* blockARenovar = string_new();
-		string_append(&blockARenovar,mensajePosiciones);
-		string_append_with_format(&blockARenovar,"=%s",string_itoa(mensaje->cantidad));
-		string_append_with_format(&basura,"%s",blockARenovar);
-	}
-	blockRenovado = string_split(basura," ");
-	recrearBlocks(fblocks,blockRenovado,montajeBlocks);
+    fscanf(fblocks," %[^\n]",blockAComparar);
+    while(!feof(fblocks)){
+        posicionesYCantidad = string_split(blockAComparar,"=");
+        if(strcmp(posicionesYCantidad[0], mensajePosiciones) == 0){
+            int cant = atoi(posicionesYCantidad[1]);
+            cant += mensaje->cantidad;
+            cantidadDePokemon = string_itoa(cant);
+            string_append(&blockARenovar,mensajePosiciones);
+            string_append_with_format(&blockARenovar,"=%s",cantidadDePokemon);
+            log_info(logger,"%s",blockARenovar);
+            string_append_with_format(&basura,"%s ",blockARenovar);
+            contadorDeCoincidencias++;
+        }else if(contadorDeCoincidencias==0){
+            string_append_with_format(&basura,"%s ",blockAComparar);
+        }
+        i++;
+        fscanf(fblocks," %[^\n]",blockAComparar);
+    }
+    fclose(fblocks);
+    if(contadorDeCoincidencias == 0){
+        string_append(&blockARenovar,mensajePosiciones);
+        string_append_with_format(&blockARenovar,"=%s",string_itoa(mensaje->cantidad));
+        string_append_with_format(&basura,"%s",blockARenovar);
+    }
+    blockRenovado = string_split(basura," ");
+    block->blockRenovado = blockRenovado;
+    block->blockARenovar = blockARenovar;
+    //verificarTamBlock();
+    //recrearBlocks(fblocks,blockRenovado,montajeBlocks);
+    return block;
 }
 
 
 
+void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque){
+
+	int i=0;
+	int tamTotal=0;
+	while(block->blockRenovado[i]!=NULL){
+		tamTotal+= sizeof(block->blockRenovado[i]);
+		i++;
+	}
 
 
+	if(tamTotal< size){
 
+		recrearBlocks(fblocks,block->blockRenovado,montajeBlocks);
+
+	}else{
+
+
+		char* contador=string_itoa(contadorBloques);
+		char* bloques= string_new();
+
+		string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
+		string_append_with_format(&bloques,"%s.bin",contador);
+
+		fblocks=fopen(bloques,"w+");
+
+
+		fprintf(fblocks,"%s",block->blockARenovar);
+		fclose(fblocks);
+		reescribirMeta(montaje, string_itoa(contadorBloques),nroBloque);
+		contadorBloques++;
+	}
+
+
+}
+
+void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque){
+	FILE* fmeta;
+char* todo= string_new();
+
+	string_append(&todo,nroBloque[0]);
+	string_append_with_format(&todo,",%s",nuevoBloque);
+
+	fmeta=fopen(montaje,"w+");
+
+
+log_info(logger,"%s",todo);
+	fprintf(fmeta,"DIRECTORY=N\n");
+		fprintf(fmeta,"SIZE=%d\n",12);
+		fprintf(fmeta,"BLOCKS=[%s]\n",todo);
+		fprintf(fmeta,"OPEN=N");
+
+		fclose(fmeta);
+}
 
