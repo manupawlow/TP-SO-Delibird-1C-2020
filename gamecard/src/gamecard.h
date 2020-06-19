@@ -34,7 +34,7 @@ typedef struct{
 }t_poke;
 
 typedef struct{
-    char ** blockRenovado;
+    char ** blocksRenovados;
     char * blockARenovar;
 }t_block;
 
@@ -63,10 +63,13 @@ t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje);
 void crearBloques(t_mensaje* mensaje);
 void escribirMeta(FILE* f,t_mensaje* mensaje);
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje);
-t_block* compararBlocksYCambiar(FILE* fblocks, t_mensaje* mensaje,char* montajeBlocks);
-void recrearBlocks(FILE* fblocks,char** blockRenovado,char* montajeBlocks);
-void verificarTamBlock(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque);
+t_block* buscarCoincidencias(FILE* fblocks, t_mensaje* mensaje);
+void recrearBlock(FILE* fblocks,char** blockRenovado,char* montajeBlocks);
+void verificarTamBlockYActualizarlo(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque);
 void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque);
+
+char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_block* block);
+void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje);
 
 
 
