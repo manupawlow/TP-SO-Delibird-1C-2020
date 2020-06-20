@@ -4,7 +4,7 @@ t_config* config;
 
 pthread_mutex_t mxArchivo;
 
-char* mntPokemon = "/home/utnso/Escritorio/TALL_GRASS/Pokemon/";
+char* mntPokemon = "/home/utnso/Escritorio/TALL_GRASS/Files/";
 char* mntBlocks = "/home/utnso/Escritorio/TALL_GRASS/Blocks";
 char* ip;
 char* puerto;
@@ -14,13 +14,13 @@ int contadorBloques = 0;
 
 int sizeBlock = 24;
 
+
+
 typedef struct{
-	uint8_t id_mensaje;
+	char** array;
 	char* pokemon;
-	uint8_t posx;
-	uint8_t posy;
-	uint8_t cantidad;
-}t_pokeNew;
+}t_array;
+
 
 
 typedef struct{
@@ -45,7 +45,7 @@ typedef struct{
 
 void buscarPokemon(t_mensaje* mensaje);
 void nuevoPokemon(t_mensaje* mensaje);
-void agarrarPokemon(char* mensaje);
+void agarrarPokemon(t_mensaje* mensaje);
 void funcionACK();
 void funcionGet();
 void funcionNew();
@@ -69,6 +69,9 @@ char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_
 void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje);
 
 
+void freeDoblePuntero(char** doblePuntero);
+char* montarBlocks(char** arrayBloques, int i);
+char** agarrarBlocks(t_mensaje* mensaje);
 
 void process_request(int socket_cliente);
 void conexion_gameboy();
