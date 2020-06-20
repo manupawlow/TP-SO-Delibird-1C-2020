@@ -12,7 +12,11 @@ int main() {
 	ip = config_get_string_value(config,"IP_BROKER");
 	puerto = config_get_string_value(config,"PUERTO_BROKER");
 
-	tiempoReconexion=config_get_int_value(config,"TIEMPO_DE_REINTENTO_CONEXION");
+	tiempoReconexion = config_get_int_value(config,"TIEMPO_DE_REINTENTO_CONEXION");
+
+	tiempoDeReintento = config_get_int_value(config,"TIEMPO_DE_REINTENTO_OPERACION");
+
+	tiempoDeRetardo = config_get_int_value(config,"TIEMPO_RETARDO_OPERACION");
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
@@ -342,8 +346,8 @@ void process_request(int socket){
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
 		pthread_detach(solicitudGet);
-		free(mensaje->pokemon);
-		free(mensaje->resultado);
+		//free(mensaje->pokemon);
+		//free(mensaje->resultado);
 		free(mensaje);
 		break;
 	case NEW_POKEMON:
@@ -353,8 +357,8 @@ void process_request(int socket){
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
 		pthread_detach(solicitudNew);
-		free(mensaje->pokemon);
-		free(mensaje->resultado);
+		//free(mensaje->pokemon);
+		//free(mensaje->resultado);
 		free(mensaje);
 		break;
 	case CATCH_POKEMON:
@@ -364,8 +368,8 @@ void process_request(int socket){
 		/*pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);
 		pthread_detach(solicitud);*/
-		free(mensaje->pokemon);
-		free(mensaje->resultado);
+		//free(mensaje->pokemon);
+		//free(mensaje->resultado);
 		free(mensaje);
 		break;
 	case ACK:
@@ -391,20 +395,12 @@ void nuevoPokemon(t_mensaje* mensaje){
 	char* montaje= string_new();
 	string_append(&montaje,mntPokemon);
 	string_append(&montaje,mensaje->pokemon);
-	pthread_mutex_lock(&mxArchivo);
-	f = fopen(montaje,"r");
 
+	f = fopen(montaje,"r");
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
-
-		crearBloques(mensaje);
-
-		mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-		string_append(&montaje,"/Metadata.bin");
-		f=fopen(montaje,"w+");
-		escribirMeta(f,mensaje);
 		contadorBloques++;
-		fclose(f);
+		crearBloquesYMetadata(mensaje,montaje);
 
 		}else{
 			fclose(f);
@@ -415,8 +411,6 @@ void nuevoPokemon(t_mensaje* mensaje){
 
 		}
 
-	pthread_mutex_unlock(&mxArchivo);
-
 	/*int socketLoc = crear_conexion(ip, puerto);
 
 		if(socketLoc ==-1){
@@ -425,14 +419,12 @@ void nuevoPokemon(t_mensaje* mensaje){
 		}else{
 				enviar_mensaje_struct(mensaje, socketLoc,LOCALIZED_POKEMON);
 		}*/
-
-	free(f);
 }
 
 //-------------------------------------------------------------------------------------
 
 
-void crearBloques(t_mensaje* mensaje){
+void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje){
 
 	FILE* f;
 	char* contador;
@@ -458,7 +450,21 @@ void crearBloques(t_mensaje* mensaje){
 	fprintf(f,"%s",escribirBloque);
 	fclose(f);
 
-	free(f);
+	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	string_append(&montaje,"/Metadata.bin");
+	f=fopen(montaje,"w+");
+	escribirMeta(f,mensaje,contador);
+	fprintf(f,"OPEN=Y");
+	fclose(f);
+	log_info(logger,"%d",tiempoDeRetardo);
+	log_info(logger,"Empiezo a esperar");
+	sleep(tiempoDeRetardo);
+	f=fopen(montaje,"w+");
+	escribirMeta(f,mensaje,contador);
+	fprintf(f,"OPEN=N");
+	fclose(f);
+	log_info(logger,"Termino de esperar");
+
 	free(contador);
 	free(bloques);
 	free(escribirBloque);
@@ -477,31 +483,45 @@ void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){
 	}
 	fclose(fblocks);
 	free(montajeBlocks);
+	sleep(tiempoDeRetardo);
 }
 
 
-void escribirMeta(FILE* f,t_mensaje* mensaje){
+void escribirMeta(FILE* f,t_mensaje* mensaje,char* contador){
 	fprintf(f,"DIRECTORY=N\n");
-	fprintf(f,"SIZE=%d\n",24);
-	fprintf(f,"BLOCKS=[%d]\n",contadorBloques);
-	fprintf(f,"OPEN=N");
+	fprintf(f,"SIZE=%d\n",sizeBlock);
+	fprintf(f,"BLOCKS=[%s]\n",contador);
 }
 
 
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     FILE* fblocks;
-    char* bloques;
+    char* bloques = string_new();
+    char* valorOpen = string_new();
     t_block* block;
     t_config* configBloques;
 
     char** arrayBloques;
     char** basura;
     char** nroBloque;
+
     configBloques = config_create(montaje);
-    bloques=config_get_string_value(configBloques,"BLOCKS");
 
-    int size= atoi(config_get_string_value(configBloques,"SIZE"));
+    int size = atoi(config_get_string_value(configBloques,"SIZE"));
 
+	valorOpen = config_get_string_value(configBloques,"OPEN");
+
+	while(strcmp(valorOpen,"Y") == 0){
+		log_info(logger,"Estoy esperando");
+		log_info(logger,"%s",valorOpen);
+		sleep(tiempoDeReintento);
+
+		config_destroy(configBloques);
+	    configBloques = config_create(montaje);
+
+		valorOpen = config_get_string_value(configBloques,"OPEN");
+	}
+	bloques = config_get_string_value(configBloques,"BLOCKS");
 
     basura=string_split(bloques,"[");
     nroBloque=string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
@@ -541,11 +561,6 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     }
 
     if(verificador==0){
-    	//char* montajeUltimoBlock = string_new();
-    	//string_append(&montajeUltimoBlock,mntBlocks);
-    	//string_append_with_format(&montajeUltimoBlock,"/%s.bin",arrayBloques[i-1]);
-    	//verificarTamBlock(size,block,fblocks,montajeBlocks,montaje,nroBloque);
-
 		//Aca se busca si ya existe un .bin en donde entre la posicion del block->blockARenovar
 		//En el caso en el que exista y con ese .bin no exceda el size del block, se lo agrega al final de ese .bin
 		//En el caso en el que no exista, se crea un nuevo .bin en el que se lo agrega
@@ -554,7 +569,8 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     free(bloques);
     free(arrayBloques);
     free(basura);
-    config_destroy(config);
+	free(valorOpen);
+	//config_destroy(configBloques);
 }
 
 
@@ -623,42 +639,28 @@ void verificarTamBlockYActualizarlo(int size,t_block* block, FILE* fblocks, char
 	//Si el tamTotal es <= size significa que el blockARenovar se puede agregar a ese .bin
 	//En caso contrario, se debe crear un .bin nuevo, que es lo que se hace en el else
 	if(tamTotal <= size){
-
+		pthread_mutex_lock(&mxArchivo);
 		recrearBlock(fblocks,block->blocksRenovados,montajeBlocks);
-		free(fblocks);
 		free(block->blocksRenovados);
 		free(block->blockARenovar);
 		free(block);
+		pthread_mutex_unlock(&mxArchivo);
 
 	}else{
-//////////Si saco lo de abajo queda como antes-----------------------------------------------------------------------------------------------------
 		char** copiaBlocks;
 		//copiarBlocksMenosElQueSuperaElSize() saca del .bin la posicion que excede los bytes del size y devuelve las otras posiciones que estaban en ese .bin
 		copiaBlocks = copiarBlocksMenosElQueSuperaElSize(fblocks,montajeBlocks,block);
 
 		//Aca se recrea ese .bin sin la posicion que excede los bytes del size
+		pthread_mutex_lock(&mxArchivo);
 		recrearBlock(fblocks,copiaBlocks,montajeBlocks);
+		pthread_mutex_unlock(&mxArchivo);
 
 		//Aca se busca si ya existe un .bin en donde entre la posicion anteriormente excluida
 		//En el caso en el que exista y con ese .bin no exceda el size del block, se lo agrega al final de ese .bin
 		//En el caso en el que no exista, se crea un nuevo .bin en el que se lo agrega
 		buscarBinEnDondeEntreElBlockARenovarYRenovarlo(nroBloque,size,fblocks,block,montaje);
-//////////Si saco lo de arriba queda como antes----------------------------------------------------------------------------------------------------
 
-		/*char* contador=string_itoa(contadorBloques);
-		char* bloques= string_new();
-
-		string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
-		string_append_with_format(&bloques,"%s.bin",contador);
-
-		fblocks=fopen(bloques,"w+");
-
-		fprintf(fblocks,"%s\n",block->blockARenovar);
-		fclose(fblocks);
-
-		reescribirMeta(montaje, contador,nroBloque);
-
-		contadorBloques++;*/
 		free(copiaBlocks);
 	}
 
@@ -667,21 +669,34 @@ void verificarTamBlockYActualizarlo(int size,t_block* block, FILE* fblocks, char
 
 void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque){
 	FILE* fmeta;
-	char* todo= string_new();
+	char* todo = string_new();
 
 	string_append(&todo,nroBloque[0]);
 	string_append_with_format(&todo,",%s",nuevoBloque);
 
 	fmeta=fopen(montaje,"w+");
 
+	log_info(logger,"%s",todo);
+	fprintf(fmeta,"DIRECTORY=N\n");
+	fprintf(fmeta,"SIZE=%d\n",sizeBlock);
+	fprintf(fmeta,"BLOCKS=[%s]\n",todo);
+	fprintf(fmeta,"OPEN=Y");
+	log_info(logger,"Empiezo a esperar");
+	fclose(fmeta);
+
+	sleep(tiempoDeRetardo);
+
+	fmeta=fopen(montaje,"w+");
 
 	log_info(logger,"%s",todo);
 	fprintf(fmeta,"DIRECTORY=N\n");
-	fprintf(fmeta,"SIZE=%d\n",24);
+	fprintf(fmeta,"SIZE=%d\n",sizeBlock);
 	fprintf(fmeta,"BLOCKS=[%s]\n",todo);
 	fprintf(fmeta,"OPEN=N");
 
 	fclose(fmeta);
+	log_info(logger,"Termino de esperar");
+
 	free(todo);
 	free(montaje);
 }
@@ -723,7 +738,9 @@ void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FI
         	}
 
         	if(tamTotal <= size){
+        		pthread_mutex_lock(&mxArchivo);
         		recrearBlock(fblocks,blockTotal,montajeBlocks);
+        		pthread_mutex_unlock(&mxArchivo);
         		encontroBinBool++;
         		break;
         	}
@@ -735,8 +752,9 @@ void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FI
         free(montajeBlocks);
 	}
 	if(encontroBinBool == 0){
-		char* contador=string_itoa(contadorBloques);
-		char* bloques= string_new();
+		contadorBloques++;
+		char* contador = string_itoa(contadorBloques);
+		char* bloques = string_new();
 
 		string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
 		string_append_with_format(&bloques,"%s.bin",contador);
@@ -748,14 +766,11 @@ void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FI
 
 		reescribirMeta(montaje, contador,nroBloque);
 
-		contadorBloques++;
-
 		free(contador);
 		free(bloques);
 	}
 	free(arrayBloques);
 	free(nroBloque);
-	free(fblocks);
 	free(block->blocksRenovados);
 	free(block->blockARenovar);
 	free(block);

@@ -6,10 +6,13 @@ pthread_mutex_t mxArchivo;
 
 char* mntPokemon = "/home/utnso/Escritorio/TALL_GRASS/Pokemon/";
 char* mntBlocks = "/home/utnso/Escritorio/TALL_GRASS/Blocks";
+char* ip;
+char* puerto;
+int tiempoReconexion,tiempoDeRetardo,tiempoDeReintento;
 
-int contadorBloques = 1;
+int contadorBloques = 0;
 
-
+int sizeBlock = 24;
 
 typedef struct{
 	uint8_t id_mensaje;
@@ -19,12 +22,6 @@ typedef struct{
 	uint8_t cantidad;
 }t_pokeNew;
 
-
-
-
-char* ip;
-char* puerto;
-int tiempoReconexion;
 
 typedef struct{
 	int x;
@@ -60,8 +57,8 @@ t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje);
 
 
 
-void crearBloques(t_mensaje* mensaje);
-void escribirMeta(FILE* f,t_mensaje* mensaje);
+void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje);
+void escribirMeta(FILE* f,t_mensaje* mensaje,char* contador);
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje);
 t_block* buscarCoincidencias(FILE* fblocks, t_mensaje* mensaje);
 void recrearBlock(FILE* fblocks,char** blockRenovado,char* montajeBlocks);
