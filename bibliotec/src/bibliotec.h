@@ -91,5 +91,7 @@ char* concatena(int , char** );
 void* enviarACK(op_code* );
 void* recibir_mensaje_ACK(int);
 
+void freeDoblePuntero(char** doblePuntero);
+
 
 void terminar_programa(int , t_log* , t_config* );

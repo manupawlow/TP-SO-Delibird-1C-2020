@@ -2,7 +2,7 @@
 
 void fs(t_config* config, int block_size, int blocks){
 
-	char* mnt=string_new();
+	char* mnt = string_new();
 	string_append(&mnt,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
 	mkdir(mnt,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 //----------------FILES-------------------------------------
@@ -19,7 +19,7 @@ void fs(t_config* config, int block_size, int blocks){
 
 void crearFiles (char* mnt){
 	FILE* f;
-	char* Files=string_new();
+	char* Files = string_new();
 
 	string_append(&Files, mnt);
 	string_append(&Files, "/Files");
@@ -36,7 +36,7 @@ void crearFiles (char* mnt){
 
 void crearBlocks(int blocks,char* mnt){
 	FILE* f;
-	char* Bloques= string_new();
+	char* Bloques = string_new();
 	string_append(&Bloques,mnt);
 	string_append(&Bloques,"/Blocks");
 	mkdir(Bloques,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -59,20 +59,20 @@ void crearBlocks(int blocks,char* mnt){
 void crearMetadata(int block_size, int blocks, char* mnt){
 	FILE* f;
 	char* cadena[3];
-	cadena[0]=string_new();
-	cadena[1]=string_new();
-	cadena[2]=string_new();
+	cadena[0] = string_new();
+	cadena[1] = string_new();
+	cadena[2] = string_new();
 
 	string_append(&cadena[2],"MAGIC_NUMBER=TALL_GRASS");
 
-	char* Meta=string_new();
+	char* Meta = string_new();
 	string_append(&Meta,mnt);
 	string_append(&Meta,"/Metadata");
 	mkdir(Meta,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	string_append(&Meta,"/Metadata.bin");
 
-	f= fopen(Meta,"w+");
-	//free(Meta);
+	f = fopen(Meta,"w+");
+	free(Meta);
 	char* sizeBlock=string_itoa(block_size);
 	char*blockString=string_itoa(blocks);
 	string_append_with_format(&cadena[0],"BLOCK_SIZE=%s",sizeBlock);
@@ -82,9 +82,8 @@ void crearMetadata(int block_size, int blocks, char* mnt){
 		fprintf(f,"%s\n",cadena[i]);
 		free(cadena[i]);
 	}
-	//free(cadena);
-	//free(sizeBlock);
-	//free(blockString);
+	free(sizeBlock);
+	free(blockString);
 	fclose(f);
 }
 

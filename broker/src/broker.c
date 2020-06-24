@@ -5,7 +5,7 @@ int main(void) {
 
 	char* ip;
 	char* puerto;
-	int i=0;
+	int i = 0;
 
 	t_log* logger;
 	t_config* config;
@@ -16,10 +16,10 @@ int main(void) {
 
 	logger = log_create("/home/utnso/broker.txt", "Broker", 1, LOG_LEVEL_INFO);
 
-	config=config_create(conf);
+	config = config_create(conf);
 
-	ip= config_get_string_value(config,"IP_BROKER");
-	puerto= config_get_string_value(config,"PUERTO_BROKER");
+	ip = config_get_string_value(config,"IP_BROKER");
+	puerto = config_get_string_value(config,"PUERTO_BROKER");
 
 	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
@@ -31,19 +31,22 @@ int main(void) {
 	colas->cant_suscritos_get = 0;
 	colas->cant_suscritos_appeared = 0;
 	colas->cant_suscritos_localized = 0;
-	colas->cant_suscritos_caught =0;
-	colas->cant_suscritos_catch =0;
-	colas->cant_suscritos_new =0;
+	colas->cant_suscritos_caught = 0;
+	colas->cant_suscritos_catch = 0;
+	colas->cant_suscritos_new = 0;
 
     while(1){
     	colas->socket_cliente = esperar_cliente(socket_servidor);
 
-    	socketero[i]= colas->socket_cliente;
+    	socketero[i] = colas->socket_cliente;
     	log_info(logger,"socketero: %d", socketero[i]);
     	i++;
 
     	process_request(colas);
     }
+
+    log_destroy(logger);
+    config_destroy(config);
 
 	//char *mensaje = recibir_mensaje(conexion);
 

@@ -182,6 +182,8 @@ t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
 		memcpy(stream + offset, mensaje->resultado, strlen(mensaje->resultado)+1);
 
 		buffer->stream = stream;
+		free(mensaje->pokemon);
+		free(mensaje->resultado);
 		free(mensaje);
 		return buffer;
 
@@ -190,9 +192,6 @@ t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
 t_mensaje* deserializar_mensaje_struct(t_buffer* buffer)
 {
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
-
-	//void* stream = malloc(buffer->size);
-	//stream = buffer->stream;
 
 	void* stream = buffer->stream;
 
@@ -224,10 +223,10 @@ void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 
 	//----------------EMPAQUETAMIENTO----------------
 			t_paquete *paquete = malloc(sizeof(t_paquete));
-			paquete->codigo_operacion= codigo;
+			paquete->codigo_operacion = codigo;
 			paquete->buffer = malloc(sizeof(t_buffer));
-			paquete->buffer->stream= mensaje;
-			paquete->buffer->size= strlen(mensaje) + 1 ;
+			paquete->buffer->stream = mensaje;
+			paquete->buffer->size = strlen(mensaje) + 1 ;
 
 	//----------------ACA SE USA serializar_paquete----------------
 			int size_serializado;
@@ -235,6 +234,8 @@ void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 			send(socket_cliente,serializado,size_serializado,0);
 	//----------------libero la memoria del paquete mandado----------------
 			free(serializado);
+			free(paquete->buffer);
+			free(paquete);
 
 }
 
@@ -387,4 +388,13 @@ char* concatena(int cant, char* argv[]){
 
 	return mensajeFinal;
 
+}
+
+void freeDoblePuntero(char** doblePuntero){
+	int i=0;
+	while(doblePuntero[i] != NULL){
+		free(doblePuntero[i]);
+		i++;
+	}
+	free(doblePuntero);
 }

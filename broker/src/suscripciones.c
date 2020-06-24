@@ -49,6 +49,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_GET[loquito->cant_suscritos_get] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista GET %d", loquito->SUSCRITOS_GET[loquito->cant_suscritos_get]);
 			loquito->cant_suscritos_get++;
+			free(mensaje);
 			break;
 
 		case GET_POKEMON:
@@ -86,6 +87,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_LOCALIZED[loquito->cant_suscritos_localized] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista LOCALIZED %d", loquito->SUSCRITOS_LOCALIZED[loquito->cant_suscritos_localized]);
 			loquito->cant_suscritos_localized++;
+			free(mensaje);
 			break;
 
 		case LOCALIZED_POKEMON:
@@ -117,6 +119,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_CATCH[loquito->cant_suscritos_catch] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista CATCH %d", loquito->SUSCRITOS_CATCH[loquito->cant_suscritos_catch]);
 			loquito->cant_suscritos_catch++;
+			free(mensaje);
 			break;
 
 		case CATCH_POKEMON:
@@ -156,6 +159,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista CAUGHT %d", loquito->SUSCRITOS_CAUGHT[loquito->cant_suscritos_caught]);
 			loquito->cant_suscritos_caught++;
+			free(mensaje);
 			break;
 
 		case CAUGHT_POKEMON:
@@ -193,6 +197,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_NEW[loquito->cant_suscritos_new] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista NEW %d", loquito->SUSCRITOS_NEW[loquito->cant_suscritos_new]);
 			loquito->cant_suscritos_new++;
+			free(mensaje);
 			break;
 
 		case NEW_POKEMON:
@@ -231,6 +236,7 @@ void process_request(Colas *loquito) {
 			loquito->SUSCRITOS_APPEARED[loquito->cant_suscritos_appeared] = loquito->socket_cliente;
 			log_info(loquito->logger,"Se Suscribio a la lista APPEARED %d", loquito->SUSCRITOS_APPEARED[loquito->cant_suscritos_appeared]);
 			loquito->cant_suscritos_appeared++;
+			free(mensaje);
 			break;
 
 		case APPEARED_POKEMON:

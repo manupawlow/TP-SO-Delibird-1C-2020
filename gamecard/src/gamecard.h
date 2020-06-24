@@ -41,6 +41,11 @@ typedef struct{
 	char* msg;
 }gamecard;
 
+/*typedef struct {
+	char *bitarray;
+	size_t size;
+	bit_numbering_t mode;
+} t_bitarray;*/
 
 
 void buscarPokemon(t_mensaje* mensaje);
@@ -69,7 +74,6 @@ char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_
 void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje);
 
 
-void freeDoblePuntero(char** doblePuntero);
 char* montarBlocks(char** arrayBloques, int i);
 char** agarrarBlocks(t_mensaje* mensaje);
 

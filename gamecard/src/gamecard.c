@@ -3,8 +3,8 @@ int main() {
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
-	logger =log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
-	config=config_create(conf);
+	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
+	config = config_create(conf);
 
 	//fs(config,block_size,blocks);
 	fs(config,64,5192);
@@ -19,6 +19,10 @@ int main() {
 	tiempoDeRetardo = config_get_int_value(config,"TIEMPO_RETARDO_OPERACION");
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
+
+	/*char data[] = { 0, 0, 0 };
+
+	t_bitarray* bitarray = bitarray_create(data,sizeof(data));*/
 
 	pthread_mutex_init(&mxArchivo, NULL);
 	//ip = config_get_string_value(config,"IP_GAMECARD");
@@ -839,19 +843,9 @@ char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_
 	return copiaBlocks;
 }
 
-void freeDoblePuntero(char** doblePuntero){
-	int i=0;
-	while(doblePuntero!=NULL){
-		free(doblePuntero[i]);
-		i++;
-	}
-	free(doblePuntero);
-}
-
-
 char* montarBlocks(char** arrayBloques, int i){
 
-	char* montajeBlocks=string_new();
+	char* montajeBlocks = string_new();
 	string_append(&montajeBlocks,mntBlocks);
 	string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
 
@@ -861,17 +855,17 @@ char* montarBlocks(char** arrayBloques, int i){
 
 char** agarrarBlocks(t_mensaje* mensaje){
 
-		char* montaje= string_new();
-		string_append(&montaje,mntPokemon);
-		string_append(&montaje,mensaje->pokemon);
+	char* montaje = string_new();
+	string_append(&montaje,mntPokemon);
+	string_append(&montaje,mensaje->pokemon);
 
-	 char* bloques = string_new();
+	char* bloques = string_new();
 	t_config* configBloques = config_create(montaje);
 	bloques = config_get_string_value(configBloques,"BLOCKS");
 
-	char**basura=string_split(bloques,"[");
-	char**nroBloque=string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
-	char**arrayBloques=string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
+	char**basura = string_split(bloques,"[");
+	char**nroBloque = string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
+	char**arrayBloques = string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
 	return arrayBloques;
 }
 
