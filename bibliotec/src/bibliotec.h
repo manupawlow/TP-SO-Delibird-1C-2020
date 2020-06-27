@@ -79,6 +79,7 @@ void* serializar_paquete(t_paquete* , int );
 void devolver_mensaje(void* , int , int , op_code );
 
 int crear_conexion(char*, char*);
+int crear_conexion_broker(char*, char*, t_log*, int, op_code);
 int reintentar_conexion(char* , char*  , int );
 void enviar_mensaje(char* , int , op_code );
 char* recibir_mensaje_cliente(int );

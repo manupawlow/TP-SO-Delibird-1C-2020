@@ -33,25 +33,34 @@ typedef struct{
 	char *pokemon_a_caputar;
 	t_list *pokemones_capturados;
 	t_list *pokemones_objetivos;
+	t_list *pokemones_faltantes;
+	t_list *pokemones_a_intercambiar;
+	bool block_capturar;
+	bool block_agarrar;
+	bool block_deadlock;
 	int puede_capturar;
 	int idCatch;
-	sem_t mx_entrenador;
-	pthread_t hilo;
+	sem_t sem_entrenador;
 }Entrenador;
 
 char* ip;
 char* puerto;
 t_log* logger;
 Config_Team *config;
-t_list *entrenadores;
+
 t_list *objetivoGlobal;
+
 t_list *new;
 t_list *ready;
-t_queue *exce;
 t_list *block;
-t_list *blockCaugth;
-t_list *blockDeadlock;
+
+t_list *id_localized;
+t_list *id_catch;
+
 pthread_mutex_t mxExce;
 sem_t semaforoExce;
+sem_t semaforoIntercambio;
+sem_t semaforoDeadlock;
+
 
 #endif /* TEAM_H_ */

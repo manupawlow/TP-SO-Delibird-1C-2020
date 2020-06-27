@@ -120,6 +120,21 @@ int crear_conexion(char *ip, char* puerto)
 	return socket_cliente;
 }
 
+int crear_conexion_broker(char *ip, char* puerto, t_log *logger, int reconexion, op_code codigo)
+{
+	int conexion = crear_conexion(ip,puerto);
+
+	if(conexion ==-1){
+			log_info(logger,"Reintenando reconectar cada %d segundos", reconexion);
+	        conexion= reintentar_conexion(ip,puerto,reconexion);
+	}
+
+	enviar_mensaje("Suscribime",conexion, codigo);
+
+	return conexion;
+
+}
+
 int reintentar_conexion(char* ip, char* puerto , int tiempo)
 {
 	int conexion = crear_conexion(ip,puerto);

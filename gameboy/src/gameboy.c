@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
 
 	if(strcmp(argv[2],"NEW_POKEMON") == 0){
 		if(strcmp(argv[1],"BROKER") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
@@ -119,6 +120,7 @@ int main(int argc, char *argv[]) {
 		}
 	}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
 		if(strcmp(argv[1],"TEAM") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);

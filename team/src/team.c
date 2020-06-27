@@ -1,6 +1,6 @@
 #include "team.h"
-#include "conexiones.h"
-#include "listas.h"
+#include "funciones_auxiliares.h"
+#include "hilos.h"
 
 int main(void){
 
@@ -9,12 +9,11 @@ int main(void){
 	config = construirConfigTeam(config_team);
 	logger = log_create(config->log, "Team", 1, LOG_LEVEL_INFO);
 
-	setearVariablesGlobales();
-
 	//Crear hilo por cada entrenadores y definir objetivo global
 
 	log_info(logger,"Cantidad de entrenadores %d", list_size(config->objetivos_entrenadores));
 	new = crearEntrenadores(config_team);
+	setearVariablesGlobales();
 
 	log_info(logger,"Objetivo Global:");
 	objetivoGlobal = obtenerObjetivoGlobal(config_team);
@@ -43,29 +42,16 @@ int main(void){
     pthread_t ponerEnEjecuccion;
     pthread_create(&ponerEnEjecuccion, NULL, (void*) poner_en_exce, NULL);
 
-    Entrenador *ent= list_get(new,0);
-    pthread_join(ent->hilo,NULL);
-    //pthread_join(conexionLocalized,NULL);
-    //pthread_join(conexionGameboy,NULL);
-    //pthread_join(conexionAppeared,NULL);
+    pthread_t deadLock;
+    pthread_create(&deadLock, NULL, (void*) deadlock, NULL);
+
+    pthread_join(deadLock, NULL);
 
     free(config->ip_broker);
     free(config->log);
     free(config->puerto_broker);
-    free(config->objetivos_entrenadores);
-    free(config->pokemon_entrenadores);
-    free(config->posiciones_entrenadores);
     free(config);
     log_destroy(logger);
     free(config_team);
 
 }
-/*
-./gameboy TEAM APPEARED_POKEMON Pikachu 1 1
-./gameboy TEAM APPEARED_POKEMON Squirtle 9 7
-./gameboy TEAM APPEARED_POKEMON Onix 2 2
-
-./gameboy TEAM APPEARED_POKEMON Squirtle 3 5
-./gameboy TEAM APPEARED_POKEMON Gengar 7 5
-
-*/
