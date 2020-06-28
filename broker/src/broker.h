@@ -29,7 +29,31 @@ typedef struct {
 	t_log *logger;
 }Colas;
 
-int contador_de_id;
+uint32_t contador_de_id;
+
+typedef struct{
+	uint32_t id_particion;
+	uint32_t size;
+	uint32_t offset_init;
+}Particion;
+
+typedef struct{
+	uint32_t size;
+	uint32_t offset_init;
+}ParticionLibre;
+
+typedef struct{
+	uint32_t longitud_nombre;
+	char *nombre_pokemon;
+}msg_get;
+
+uint32_t contador_id_particiones;
+
+t_list *particiones;
+t_list *particiones_libres;
+
+
+void *memoria;
 
 /*
 int cant_mensajes_en_broker = 0;
@@ -40,4 +64,6 @@ int recibidos_ACK[cant_recibidos_ACK];
 */
 
 #endif /* BROKER_H_ */
+
+
 
