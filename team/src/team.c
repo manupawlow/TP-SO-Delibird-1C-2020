@@ -8,12 +8,12 @@ int main(void){
 	t_config *config_team = config_create(conf);
 	config = construirConfigTeam(config_team);
 	logger = log_create(config->log, "Team", 1, LOG_LEVEL_INFO);
+	setearVariablesGlobales();
 
 	//Crear hilo por cada entrenadores y definir objetivo global
 
-	log_info(logger,"Cantidad de entrenadores %d", list_size(config->objetivos_entrenadores));
+	log_info(logger,"Cantidad de entrenadores %d", cantEntrenadores);
 	new = crearEntrenadores(config_team);
-	setearVariablesGlobales();
 
 	log_info(logger,"Objetivo Global:");
 	objetivoGlobal = obtenerObjetivoGlobal(config_team);
@@ -53,5 +53,10 @@ int main(void){
     free(config);
     log_destroy(logger);
     free(config_team);
+
+    pthread_mutex_destroy(&mxExce);
+    sem_destroy(&semaforoExce);
+    sem_destroy(&semaforoIntercambio);
+    sem_destroy(&semaforoDeadlock);
 
 }

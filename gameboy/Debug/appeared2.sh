@@ -1,2 +1,0 @@
-./gameboy BROKER APPEARED_POKEMON Onix 6 6 4
-./gameboy BROKER APPEARED_POKEMON Pikachu 2 2 4

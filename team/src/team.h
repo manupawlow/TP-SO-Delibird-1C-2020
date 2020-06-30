@@ -45,6 +45,7 @@ typedef struct{
 
 char* ip;
 char* puerto;
+int cantEntrenadores;
 t_log* logger;
 Config_Team *config;
 

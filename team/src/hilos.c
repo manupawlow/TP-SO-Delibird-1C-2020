@@ -18,7 +18,7 @@ t_list *crearEntrenadores(){
 		entrenador->pokemones_capturados= list_create();
 		entrenador->pokemones_a_intercambiar = list_create();
 		if(list_get(pokemonesCapturados,i)!= NULL){
-			a_lista_segun_objetivo( list_get(pokemonesCapturados,i), entrenador);
+			agregar_segun_objetivo( list_get(pokemonesCapturados,i), entrenador);
 		}
 
 		entrenador->pokemones_faltantes= filtrado(list_get(pokemonesCapturados,i),list_get(pokemonesObjetivos,i));
@@ -99,26 +99,31 @@ void process_request(int socket_cliente){
 	switch (cod_op){
 	case APPEARED_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
-		Poketeam pokemon; // = malloc(sizeof(Poketeam));
-		pokemon.pos.x = mensaje->posx;
-		pokemon.pos.y = mensaje->posy;
-		pokemon.pokemon = mensaje->pokemon;
+		Poketeam *pokemon = malloc(sizeof(Poketeam));
+		pokemon->pokemon = malloc(mensaje->pokemon_length);
+		pokemon->pos.x = mensaje->posx;
+		pokemon->pos.y = mensaje->posy;
+		memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
+
 		log_info(logger,"Llego pokemon %s con posicion x:%d y:%d a la cola Appeared!",
-				pokemon.pokemon,pokemon.pos.x,pokemon.pos.y);
+				pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 
 		if(necesitaPokemon(mensaje->pokemon, objetivoGlobal)){
 			menorDistancia(pokemon);
 
 		}else
 			log_info(logger,"No se necesita!");
-		//free(mensaje);
+
+		free(pokemon->pokemon);
+		free(pokemon);
+		free(mensaje);
 		break;
 
 	case LOCALIZED_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
 
 		//if(id_correspondiente(mensaje->id_mensaje))
-			menorDistancia(pokemon);
+			//menorDistancia(pokemon);
 
 		break;
 	case CAUGHT_POKEMON:
@@ -130,7 +135,7 @@ void process_request(int socket_cliente){
 		remover_entrenador(entrenador->entrenadorNumero,block);
 		list_add(ready,entrenador);
 		sem_post(&semaforoExce);
-
+		free(mensaje);
 		break;
 	case -1:
 		socket_cliente = crear_conexion(ip,puerto);
@@ -165,7 +170,7 @@ void realizar_tareas(Entrenador *entrenador){
 		pos.y= entrenador->posicion->y;
 
 		int dis = distancia(entrenador->posicion_a_capturar, pos );//*config->retardo_cpu;
-		log_info(logger,"Entrenador %d moviendose a x:%d y:%d, tiempo requerido %d segundos:",
+		log_info(logger,"Entrenador %d moviendose a x:%d y:%d, tiempo requerido %d segundos",
 				entrenador->entrenadorNumero, entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y, dis);
 
 		sleep(dis);
@@ -173,15 +178,18 @@ void realizar_tareas(Entrenador *entrenador){
 
 		entrenador->block_capturar= true;
 		list_add(block,entrenador);
+		log_info(logger,"Entrenador %d en block a la espera de caugth",entrenador->entrenadorNumero);
 
 		pthread_mutex_unlock(&mxExce);
 
 		sem_wait(&entrenador->sem_entrenador);
 
-		agregar_segun_objetivo(entrenador->pokemon_a_caputar, entrenador);
+		agregar_segun_faltantes(entrenador->pokemon_a_caputar, entrenador);
+
 		log_info(logger,"Entrenador %d agarro pokemon %s en posicion x:%d y:%d",
 				entrenador->entrenadorNumero, entrenador->pokemon_a_caputar ,entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y, dis);
-
+		log_info(logger,"Entrenador %d intercambia pokemon %s",
+				entrenador->entrenadorNumero, list_get(entrenador->pokemones_a_intercambiar,0));
 		entrenador->puede_capturar -= 1;
 
 		pthread_mutex_unlock(&mxExce);
@@ -194,12 +202,12 @@ void realizar_tareas(Entrenador *entrenador){
 
 	if(puedeFinalizar(entrenador)){
 		log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
-		//sem_post(&semaforoDeadlock);
+		sem_post(&semaforoDeadlock);
 	}
 	else{
 		list_add(block,entrenador);
 		entrenador->block_deadlock = true;
-		//sem_post(&semaforoDeadlock);
+		sem_post(&semaforoDeadlock);
 	}
 
 	while(!puedeFinalizar(entrenador)){
@@ -212,9 +220,9 @@ void realizar_tareas(Entrenador *entrenador){
 
 		log_info(logger,"Tiempo %d segundos:", moverse);
 
-		sleep(moverse+5);
+		sleep(moverse);
 
-		agregar_segun_objetivo(entrenador->pokemon_a_caputar, entrenador);
+		agregar_segun_faltantes(entrenador->pokemon_a_caputar, entrenador);
 
 		sem_post(&semaforoIntercambio);
 		log_info(logger,"Se realizo el intercambio!");
@@ -227,28 +235,30 @@ void realizar_tareas(Entrenador *entrenador){
 		pthread_mutex_unlock(&mxExce);
 	}
 
+	//free_entrenador(entrenador);
 	log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 
 }
 
 void deadlock(){
 
-	//sem_wait(&semaforoDeadlock,5);
-//while(1){
-	sleep(70);
+	for(int i=0; i<cantEntrenadores; i++)
+		sem_wait(&semaforoDeadlock);
 
 	log_info(logger, "Inicio algoritmo deteccion de deadlock");
 	t_list *blockDeadlock= list_filter(block, (void*) bloqueado_por_deadlock);
+	bool intercambio= false;
 
-		while(list_size(blockDeadlock)>1){
-
+	while(list_size(blockDeadlock)>1){
 		Entrenador *entrenador= list_get(blockDeadlock,0);
 		Entrenador *entrenador_intercambio;
+		intercambio= false;
 		char *pokemon = list_get(entrenador->pokemones_faltantes,0);
+		char *mierda = list_get(entrenador->pokemones_a_intercambiar,0);
+		log_info(logger,"%s", mierda);
 
 		for(int i=1; i<list_size(blockDeadlock); i++){
 			entrenador_intercambio= list_get(blockDeadlock,i);
-			bool intercambio= false;
 
 			for(int j=0; j<list_size(entrenador_intercambio->pokemones_a_intercambiar); j++){
 				char *pokemon_intercambio = list_get(entrenador_intercambio->pokemones_a_intercambiar,j);
@@ -259,19 +269,20 @@ void deadlock(){
 							entrenador->entrenadorNumero, entrenador_intercambio->entrenadorNumero);
 
 					log_info(logger, "%d", entrenador_intercambio->posicion->x );
-					log_info(logger, "%d", entrenador->posicion->x );
-
 					log_info(logger, "%d", entrenador_intercambio->posicion->y );
+					log_info(logger, "%d", entrenador->posicion->x );
 					log_info(logger, "%d", entrenador->posicion->y );
 
+					entrenador->pokemon_a_caputar = pokemon_intercambio;//realloc(entrenador->pokemon_a_caputar, strlen(pokemon_intercambio)+1);
+					//memcpy(entrenador->pokemon_a_caputar, pokemon_intercambio ,strlen(pokemon_intercambio)+1);
 
+				    //memcpy(entrenador->posicion_a_capturar, entrenador_intercambio->posicion, sizeof(Posicion));
 					entrenador->posicion_a_capturar->x= entrenador_intercambio->posicion->x;
 					entrenador->posicion_a_capturar->y= entrenador_intercambio->posicion->y;
-					entrenador->pokemon_a_caputar= pokemon_intercambio;
+
 					list_remove(entrenador_intercambio->pokemones_a_intercambiar,j);
 
-
-					agregar_segun_objetivo(list_get(entrenador->pokemones_a_intercambiar,0),entrenador_intercambio);
+					agregar_segun_faltantes(mierda,entrenador_intercambio);
 					intercambio=true;
 
 					break;
@@ -283,12 +294,14 @@ void deadlock(){
 
 		}
 
-	remover_entrenador(entrenador->entrenadorNumero,block);
-	entrenador->block_deadlock=false;
-	list_add(ready,entrenador);
-	sem_post(&semaforoExce);
-	finalizar_si_corresponde(entrenador_intercambio);
-	blockDeadlock= list_filter(block, (void*) bloqueado_por_deadlock);
+		if(intercambio){
+			remover_entrenador(entrenador->entrenadorNumero,block);
+			entrenador->block_deadlock=false;
+			list_add(ready,entrenador);
+			sem_post(&semaforoExce);
+			finalizar_si_corresponde(entrenador_intercambio);
+			blockDeadlock= list_filter(block, (void*) bloqueado_por_deadlock);
+		}
 
 	}
 
@@ -304,26 +317,4 @@ void finalizar_si_corresponde(Entrenador *entrenador){
 		log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 	}
 
-}
-
-
-bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal){
-
-	for(int i=0; i< list_size(objetivoGlobal); i++){
-		char *objetivo = list_get(objetivoGlobal,i);
-		if(!strcmp(pokemon,objetivo)){
-			list_remove(objetivoGlobal,i);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool bloqueado_por_capturar(Entrenador *entrenador){
-	return entrenador->block_capturar;
-}
-
-bool bloqueado_por_deadlock(Entrenador *entrenador){
-	return entrenador->block_deadlock;
 }
