@@ -62,8 +62,8 @@ t_mensaje* obtenerDatosPokemon(FILE* fp, t_mensaje* mensaje);
 
 
 
-void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje);
-void escribirMeta(FILE* f,t_mensaje* mensaje,char* contador);
+void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje);
+void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista);
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje);
 t_block* buscarCoincidencias(FILE* fblocks, t_mensaje* mensaje);
 void recrearBlock(FILE* fblocks,char** blockRenovado,char* montajeBlocks);
@@ -74,6 +74,8 @@ char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_
 void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje);
 
 
+
+int tamRestante(FILE* f);
 char* montarBlocks(char** arrayBloques, int i);
 char** agarrarBlocks(t_mensaje* mensaje);
 

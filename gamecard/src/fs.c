@@ -12,6 +12,14 @@ void fs(t_config* config, int block_size, int blocks){
 	crearMetadata(block_size,blocks,mnt);
 //----------------BLOQUES-----------------------------------
 	crearBlocks(blocks, mnt);
+//----------------BITMAP------------------------------------
+	char data[blocks];
+
+	for(int i=0; i< blocks+1;i++){
+		data[i]=0;
+	}
+	bitmap= bitarray_create(data,sizeof(data));
+
 
 	free(mnt);
 }
@@ -42,7 +50,7 @@ void crearBlocks(int blocks,char* mnt){
 	mkdir(Bloques,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
 
-	/*for(int i=1; i<blocks+1;i++){
+	for(int i=1; i<blocks+1;i++){
 		char* montajeBlocks=string_new();
 		string_append(&montajeBlocks,Bloques);
 		string_append_with_format(&montajeBlocks,"/%s.bin",string_itoa(i));
@@ -51,7 +59,7 @@ void crearBlocks(int blocks,char* mnt){
 
 		free(montajeBlocks);
 	}
-*/
+
 	free(Bloques);
 }
 
@@ -86,5 +94,10 @@ void crearMetadata(int block_size, int blocks, char* mnt){
 	free(blockString);
 	fclose(f);
 }
+
+
+
+
+
 
 

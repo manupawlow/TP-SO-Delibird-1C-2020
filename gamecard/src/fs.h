@@ -1,9 +1,9 @@
 #include <bibliotec.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <commons/bitarray.h>
 
-
-
+t_bitarray* bitmap;
 
 
 

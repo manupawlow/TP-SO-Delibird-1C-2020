@@ -428,7 +428,6 @@ void process_request(int socket){
 void nuevoPokemon(t_mensaje* mensaje){
 
 	FILE * f;
-
 	char* montaje= string_new();
 	string_append(&montaje,mntPokemon);
 	string_append(&montaje,mensaje->pokemon);
@@ -437,7 +436,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
 		contadorBloques++;
-		crearBloquesYMetadata(mensaje,montaje);
+		asignarBloqueYcrearMeta(mensaje,montaje);
 
 		}else{
 			fclose(f);
@@ -461,7 +460,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 //-------------------------------------------------------------------------------------
 
 
-void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje){
+void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 
 	FILE* f;
 	char* contador;
@@ -475,33 +474,100 @@ void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje){
 
 	contador=string_itoa(contadorBloques);
 	string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
-	string_append(&bloques,contador);
-	string_append(&bloques,".bin");
+	string_append_with_format(&bloques,"%s.bin",contador);
 
-	f=fopen(bloques,"w+");
 
-	string_append(&escribirBloque, x);
-	string_append_with_format(&escribirBloque, "-%s",y);
-	string_append_with_format(&escribirBloque, "=%s\n",cant);
+//creamos el Meta para que no se rompa todo
 
-	fprintf(f,"%s",escribirBloque);
-	fclose(f);
 
-	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-	string_append(&montaje,"/Metadata.bin");
-	f=fopen(montaje,"w+");
-	escribirMeta(f,mensaje,contador);
-	fprintf(f,"OPEN=Y");
-	fclose(f);
-	log_info(logger,"%d",tiempoDeRetardo);
-	log_info(logger,"Empiezo a esperar");
-	sleep(tiempoDeRetardo);
-	f=fopen(montaje,"w+");
-	escribirMeta(f,mensaje,contador);
-	fprintf(f,"OPEN=N");
-	fclose(f);
-	log_info(logger,"Termino de esperar");
+//bit 1?
+	if(bitarray_test_bit(bitmap,(off_t)contadorBloques)){
+		log_info(logger, "El bloque esta ocupado. algo salio aml");
+	}else{
 
+		f=fopen(bloques,"w");
+
+		char** listaBloquesUsados= malloc(1000);
+		int i=0;
+		if(f!=NULL){
+//Bloque
+			string_append(&escribirBloque, x);
+			string_append_with_format(&escribirBloque, "-%s",y);
+			string_append_with_format(&escribirBloque, "=%s\n",cant);
+
+
+
+			if(strlen(escribirBloque)+1> tamRestante(f)){
+				//funcionara?
+			//	char** arrayAescribir = string_split(escribirBloque,"");
+
+				listaBloquesUsados[i]=string_itoa(contadorBloques);
+				while(tamRestante(f)!=0){
+
+					fprintf(f,"%c",escribirBloque[i]);
+					fclose(f);
+					bitarray_set_bit(bitmap, contadorBloques);
+
+					i++;
+					if(escribirBloque[i]!='\0' && tamRestante(f)==0){
+						contadorBloques++;
+
+
+						listaBloquesUsados[i]=string_itoa(contadorBloques);
+						//bit 1?
+						if(bitarray_test_bit(bitmap,(off_t)contadorBloques)){
+							log_info(logger, "El bloque esta ocupado. algo salio aml");
+						}else{
+							char* mntBasura = string_new();
+							contador=string_itoa(contadorBloques);
+							string_append(&mntBasura,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
+							string_append_with_format(&mntBasura,"%s.bin",contador);
+							f=fopen(mntBasura,"w");
+
+						}
+					}else{
+						f=fopen(bloques,"a");
+					}
+
+				}
+				fclose(f);
+				contadorBloques++;
+
+			}else{
+				fprintf(f,"%s",escribirBloque);
+				fclose(f);
+				listaBloquesUsados[i]= string_itoa(contadorBloques);
+				listaBloquesUsados[i+1]= NULL;
+
+				contadorBloques++;
+
+			}
+
+		}
+//Metadata
+			mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+			string_append(&montaje,"/Metadata.bin");
+			f=fopen(montaje,"w+");
+			fclose(f);
+			f=fopen(montaje,"w+");
+			escribirMeta(f,mensaje,listaBloquesUsados);
+			fprintf(f,"OPEN=Y");
+			fclose(f);
+			log_info(logger,"%d",tiempoDeRetardo);
+			log_info(logger,"Empiezo a esperar");
+			sleep(tiempoDeRetardo);
+			f=fopen(montaje,"w+");
+			escribirMeta(f,mensaje,listaBloquesUsados);
+			fprintf(f,"OPEN=N");
+			fclose(f);
+			log_info(logger,"Termino de esperar");
+
+
+
+			freeDoblePuntero(listaBloquesUsados);
+
+
+	}
 	free(contador);
 	free(bloques);
 	free(escribirBloque);
@@ -509,6 +575,24 @@ void crearBloquesYMetadata(t_mensaje* mensaje,char* montaje){
 	free(y);
 	free(cant);
 
+}
+
+int tamRestante(FILE* f){
+	int tam;
+
+	t_config* configMeta= config_create("/home/utnso/Escritorio/TALL_GRASS/Metadata/Metadata.bin");
+
+	int block_size= config_get_int_value(configMeta, "BLOCK_SIZE");
+
+	fseek(f,0L,SEEK_END);
+
+	tam= block_size - ftell(f);
+	if(tam<0){
+		tam=0;
+	}
+	fseek(f,0L,SEEK_SET);
+	config_destroy(configMeta);
+	return tam;
 }
 
 void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){
@@ -524,10 +608,18 @@ void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){
 }
 
 
-void escribirMeta(FILE* f,t_mensaje* mensaje,char* contador){
+void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista){
+
+	char* noBasura= string_new();
+	int i=0;
+	while(lista[i]!=NULL){
+		string_append_with_format(&noBasura, "%s, ",lista[i]);
+		i++;
+	}
+
 	fprintf(f,"DIRECTORY=N\n");
 	fprintf(f,"SIZE=%d\n",sizeBlock);
-	fprintf(f,"BLOCKS=[%s]\n",contador);
+	fprintf(f,"BLOCKS=[%s]\n",noBasura);
 }
 
 
@@ -547,7 +639,7 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     int size = atoi(config_get_string_value(configBloques,"SIZE"));
 
 	valorOpen = config_get_string_value(configBloques,"OPEN");
-
+//reintento
 	while(strcmp(valorOpen,"Y") == 0){
 		log_info(logger,"Estoy esperando");
 		log_info(logger,"%s",valorOpen);
@@ -559,27 +651,46 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
 		valorOpen = config_get_string_value(configBloques,"OPEN");
 	}
 	bloques = config_get_string_value(configBloques,"BLOCKS");
-
+//separar bloques [1,2,3] -> 1 2 3
     basura=string_split(bloques,"[");
     nroBloque=string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
     arrayBloques=string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
-    log_info(logger,"%s", arrayBloques[0]);
 
+    char* datosBins= string_new();
+  //  char* paraBuscarCoincidencias= string_new();
     int verificador= 0;
     int i = 0;
+
+//TODO
+    //A MEDIAS
+
+
     //Con este while recorro cada .bin
     while(arrayBloques[i] != NULL){
         char* montajeBlocks=string_new();
         string_append(&montajeBlocks,mntBlocks);
         string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
         fblocks= fopen(montajeBlocks, "r");
-
-        //Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
-        if(fblocks == NULL){
-            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+//Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
+        if(fblocks==NULL){
+        	log_info(logger,"El bloque %s no existe", arrayBloques[i]);
         }else{
-        	//Si fblocks es direfente de NULL significa que existe el .bin dentro de nuesta carpeta Blocks
-            block = buscarCoincidencias(fblocks, mensaje);
+//llenar datosBins 1
+        char* aux=malloc(sizeof(char*));
+        fscanf(fblocks," %[^\n]",aux);
+      //  string_append(&paraBuscarCoincidencias, aux);
+        string_append_with_format(&datosBins,"%s",aux);
+//llenar datosBins demas
+        while(!feof(fblocks)){
+        	fscanf(fblocks," %[^\n]",aux);
+        	string_append_with_format(&datosBins,"%s",aux);
+        	//string_append(&paraBuscarCoincidencias, aux);
+
+        }
+
+
+        //cambiar buscarCoincidencias
+          	block = buscarCoincidencias(fblocks, mensaje);
             char* mensajePosiciones = string_new();
             string_append(&mensajePosiciones,string_itoa(mensaje->posx));
             string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
@@ -596,6 +707,25 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
         }
         i++;
     }
+
+    // COINCIDENCIAS   TODAVIA NO VA
+
+    char* aComparar = string_new();
+    string_append(&aComparar, string_itoa(mensaje->posx));
+    string_append_with_format(&aComparar, "-%s=", string_itoa(mensaje->posy));
+    string_append_with_format(&aComparar,"%s\n", string_itoa(mensaje->cantidad));
+
+int j=0;
+char c= aComparar[0];
+    while(j< strlen(datosBins)){
+    	if(datosBins[j]==c){
+    		if(strncmp(&datosBins[j], aComparar, strlen(aComparar))==0){
+    			datosBins[j]= aComparar;
+    		}
+    	}
+    }
+
+//--------------------------------------------------------------
 
     if(verificador==0){
 		//Aca se busca si ya existe un .bin en donde entre la posicion del block->blockARenovar
