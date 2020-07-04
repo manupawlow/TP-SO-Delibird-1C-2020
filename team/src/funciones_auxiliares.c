@@ -35,6 +35,9 @@ void setearVariablesGlobales(){
 	ready= list_create();
 	block= list_create();
 
+	pokemones_en_busqueda = list_create();
+	pokemones_pendientes = list_create();
+
 	sem_init(&semaforoExce,0,0);
 	sem_init(&semaforoIntercambio,0,0);
 	sem_init(&semaforoDeadlock,0,0);
@@ -272,6 +275,24 @@ void remover_entrenador(int entrenadorNumero, t_list *lista){
 	list_remove_by_condition(lista, remover);
 }
 
+Entrenador* id_coincidente(int id, t_list *lista){
+
+	bool coincide(Entrenador *entrenador){
+		return entrenador->idCatch == id;
+	}
+
+	return list_find(lista,coincide);
+}
+
+bool lo_estan_buscando(char *pokemon){
+
+	bool coincide(char *busqueda){
+			return (strcmp(pokemon,busqueda) ==0);
+		}
+
+		return list_any_satisfy(pokemones_en_busqueda,coincide);
+}
+
 bool bloqueado_por_agarrar(Entrenador *entrenador){
 	return entrenador->block_agarrar;
 }
@@ -289,7 +310,6 @@ bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal){
 	for(int i=0; i< list_size(objetivoGlobal); i++){
 		char *objetivo = list_get(objetivoGlobal,i);
 		if(!strcmp(pokemon,objetivo)){
-			list_remove(objetivoGlobal,i);
 			return true;
 		}
 	}

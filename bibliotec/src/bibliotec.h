@@ -62,8 +62,7 @@ typedef struct
 	uint32_t cantidad;
 	uint8_t id_mensaje;
 	uint8_t id_mensaje_correlativo;
-	uint32_t resultado_length;
-	char* resultado;
+	uint32_t resultado;
 } t_mensaje;
 
 void* recibir_buffer(int*, int);

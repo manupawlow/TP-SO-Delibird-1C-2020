@@ -136,10 +136,11 @@ void process_request(Colas *loquito) {
 			mensaje->id_mensaje = asignar_id();
 			buffer = serializar_mensaje_struct(mensaje);
 
-			for(int i=0; i< loquito->cant_suscritos_localized; i++){
-				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_CATCH[i],CATCH_POKEMON);
+			enviar_mensaje_struct(buffer,loquito->socket_cliente,CATCH_POKEMON);
 
-			}
+
+
+
 			log_info(loquito->logger,"Se envio mensaje a todos los suscriptos!");
 			// W mutex de los id;
 			//asignar_id(msg); //////////

@@ -35,6 +35,7 @@ typedef struct{
 	t_list *pokemones_objetivos;
 	t_list *pokemones_faltantes;
 	t_list *pokemones_a_intercambiar;
+	bool puede_agarrar;
 	bool block_capturar;
 	bool block_agarrar;
 	bool block_deadlock;
@@ -56,7 +57,8 @@ t_list *ready;
 t_list *block;
 
 t_list *id_localized;
-t_list *id_catch;
+t_list *pokemones_pendientes;
+t_list *pokemones_en_busqueda;
 
 pthread_mutex_t mxExce;
 sem_t semaforoExce;

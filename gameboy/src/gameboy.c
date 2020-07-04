@@ -87,8 +87,7 @@ int main(int argc, char *argv[]) {
 
 		mensaje_struct->pokemon = string_new();
 		mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
-		mensaje_struct->resultado = string_new();
-		mensaje_struct->resultado_length = strlen(mensaje_struct->resultado)+1;
+		mensaje_struct->resultado = 0;
 		mensaje_struct->posx = 0;
 		mensaje_struct->posy = 0;
 		mensaje_struct->cantidad = 0;
@@ -159,8 +158,8 @@ int main(int argc, char *argv[]) {
 		}
 	}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
 		mensaje_struct->id_mensaje_correlativo = atoi(argv[3]);
-		strcpy(mensaje_struct->resultado,argv[4]);
-		mensaje_struct->resultado_length = strlen(mensaje_struct->resultado)+1;
+		if(strcmp(argv[4], "OK")== 0)
+			mensaje_struct->resultado = 1;
 		buffer = serializar_mensaje_struct(mensaje_struct);
 		enviar_mensaje_struct(buffer,conexion,CAUGHT_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
@@ -186,8 +185,8 @@ int main(int argc, char *argv[]) {
 	else if(strcmp(argv[2],"SUSCRIBIR") == 0){
 		strcpy(mensaje_struct->pokemon,argv[5]);
 		mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
-		strcpy(mensaje_struct->resultado,argv[6]);
-		mensaje_struct->resultado_length = strlen(mensaje_struct->resultado)+1;
+		if(strcmp(argv[6], "OK"))
+			mensaje_struct->resultado = 1;
 		mensaje_struct->posx = atoi(argv[3]);
 		mensaje_struct->posy = atoi(argv[4]);
 		mensaje_struct->cantidad = atoi(argv[7]);

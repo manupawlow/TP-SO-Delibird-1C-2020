@@ -12,9 +12,11 @@ int distancia(Posicion *posicion1, Posicion posicion2);
 void moverse(Entrenador *entrenador);
 bool puedeFinalizar(Entrenador *entrenador);
 void remover_entrenador(int entrenadorNumero, t_list *lista);
+Entrenador* id_coincidente(int id, t_list *lista);
 
 void agregar_segun_objetivo(t_list *capturados, Entrenador *entrenador);
 void agregar_segun_faltantes(char* pokemon, Entrenador *entrenador);
+bool lo_estan_buscando(char *pokemon);
 bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal);
 t_list* filtrado(t_list* capturados, t_list* objetivos);
 t_list* listaUnica(t_list *listaDeListas);
