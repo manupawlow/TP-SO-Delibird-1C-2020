@@ -15,7 +15,7 @@ void fs(t_config* config, int block_size, int blocks){
 //----------------BITMAP------------------------------------
 	char data[blocks];
 
-	for(int i=0; i< blocks+1;i++){
+	for(int i=1; i< blocks+1;i++){
 		data[i]=0;
 	}
 	bitmap= bitarray_create(data,sizeof(data));
@@ -53,7 +53,7 @@ void crearBlocks(int blocks,char* mnt){
 	for(int i=1; i<blocks+1;i++){
 		char* montajeBlocks=string_new();
 		string_append(&montajeBlocks,Bloques);
-		string_append_with_format(&montajeBlocks,"/%s.bin",string_itoa(i));
+		string_append_with_format(&montajeBlocks,"/%d.bin",i);
 		f = fopen(montajeBlocks,"w+");
 		fclose(f);
 

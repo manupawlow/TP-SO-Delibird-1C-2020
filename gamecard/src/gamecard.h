@@ -10,9 +10,8 @@ char* ip;
 char* puerto;
 int tiempoReconexion,tiempoDeRetardo,tiempoDeReintento;
 
-int contadorBloques = 0;
-
-int sizeBlock = 24;
+int blockSize = 24;
+int cantBlocks = 5192;
 
 
 
@@ -73,7 +72,11 @@ void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque);
 char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_block* block);
 void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje);
 
-
+char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset);
+int calcularCantidadDeBLoques(char* escribirBloque);
+char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* mensaje,char* montaje);
+off_t primerBloqueDisponible();
+void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje);
 
 int tamRestante(FILE* f);
 char* montarBlocks(char** arrayBloques, int i);

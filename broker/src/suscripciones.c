@@ -10,6 +10,7 @@ void process_request(Colas *loquito) {
     int cod_op;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 	t_buffer *buffer;
+	int* size;
 
 	if(recv(loquito->socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
@@ -274,8 +275,8 @@ void process_request(Colas *loquito) {
 //----------------------------------------------------------------
 //--------------------ACK-----------------------------------------
 		case ACK:
-           	mensaje = recibir_mensaje_struct(loquito->socket_cliente);
-			//guardar_ACK(msg);
+           	mensaje = recibir_mensaje(loquito->socket_cliente,size);
+			log_info(loquito->logger,"Me llego el mensaje");
 			break;
 //-----------------------------------------------------------------
 		case SUSCRIBIR:

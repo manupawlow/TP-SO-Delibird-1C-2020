@@ -107,6 +107,7 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"GAMECARD") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
@@ -128,6 +129,7 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
@@ -139,6 +141,7 @@ int main(int argc, char *argv[]) {
 		}
 	}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
@@ -148,6 +151,7 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje_struct(buffer,conexion,CATCH_POKEMON);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
@@ -166,6 +170,7 @@ int main(int argc, char *argv[]) {
 	}
 	else if(strcmp(argv[2],"GET_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->id_mensaje = atoi(argv[4]);
@@ -173,6 +178,7 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje_struct(buffer,conexion,GET_POKEMON);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
+			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			buffer = serializar_mensaje_struct(mensaje_struct);

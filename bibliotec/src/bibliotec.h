@@ -60,8 +60,8 @@ typedef struct
     uint8_t posx;
     uint8_t posy;
 	uint32_t cantidad;
-	uint8_t id_mensaje;
-	uint8_t id_mensaje_correlativo;
+	uint32_t id_mensaje;
+	uint32_t id_mensaje_correlativo;
 	uint32_t resultado;
 } t_mensaje;
 
