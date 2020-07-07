@@ -20,9 +20,6 @@ int main() {
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
-	/*char data[] = { 0, 0, 0 };
-
-	t_bitarray* bitarray = bitarray_create(data,sizeof(data));*/
 
 	pthread_mutex_init(&mxArchivo, NULL);
 	//ip = config_get_string_value(config,"IP_GAMECARD");
@@ -59,69 +56,104 @@ int main() {
 void buscarPokemon(t_mensaje* mensaje){
 FILE * f;
 
+if(existePokemon(mensaje)){
+	char** arrayBloques=agarrarBlocks(mensaje);
 
-		char** arrayBloques=agarrarBlocks(mensaje);
+	char* montaje = montarPoke(mensaje);
+	string_append(&montaje, "/Metadata.bin");
+	esperaOpen(montaje);
 
-		char** arrayArchivo;
 
-		   char* datosArchivoSinFormato=string_new();
+	//falta malloc
 
-		   int i = 0;
-		   int j = 0;
-		    //Con este while recorro cada .bin
-		    while(arrayBloques[i] != NULL){
-		        char* montajeBlocks=montarBlocks(arrayBloques,i);
-		        f= fopen(montajeBlocks, "r");
 
-		        if(f == NULL){
-		            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-		        }else{
-		        	fscanf(f,"%[^\n]",arrayArchivo[j]);
-		        	string_append(&datosArchivoSinFormato, arrayArchivo[i]);
-		        	j++;
-		        	while(!feof(f)){
-		        		fscanf(f,"%[^\n]",arrayArchivo[j]);
-		        		string_append(&datosArchivoSinFormato, arrayArchivo[i]);
-		        		j++;
-		        	}
-		        	fclose(f);
-		        }
-		        free(montajeBlocks);
-		        i++;
-		        }
+	   char* datosArchivoSinFormato=string_new();
 
-		    freeDoblePuntero(arrayBloques);
+	   int i = 0;
+	   int j = 0;
+	    //Con este while recorro cada .bin
+	    while(arrayBloques[i] != NULL){
+	        char* montajeBlocks=montarBlocks(arrayBloques,i);
+	        f= fopen(montajeBlocks, "r");
+
+	        if(f == NULL){
+	            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+	        }else{
+	        	char* datoArchivo= string_new();
+	        	fscanf(f,"%[^\n]",datoArchivo);
+	        	string_append(&datosArchivoSinFormato, datoArchivo);
+	        	while(!feof(f)){
+	        		fscanf(f,"%[^\n]",datoArchivo);
+	        		string_append(&datosArchivoSinFormato, datoArchivo);
+	        	}
+	        	//esperar por consigna antes de cerrar archivo
+	        	sleep(tiempoDeRetardo);
+	        	fclose(f);
+	        }
+	        free(montajeBlocks);
+	        i++;
+	        }
+
+	    freeDoblePuntero(arrayBloques);
 
 
 char** arrayDatos= string_split(datosArchivoSinFormato, "\n");
 
-free(datosArchivoSinFormato);
-freeDoblePuntero(arrayArchivo);
+//free(datosArchivoSinFormato);
+//freeDoblePuntero(arrayArchivo);
 
 int socketLoc = crear_conexion(ip, puerto);
 
-	if(socketLoc ==-1){
-			log_info(logger,"No se pudo conectar con el broker.");
-			//log_info(logger,"%s",datoArchivo);
+if(socketLoc ==-1){
+		log_info(logger,"No se pudo conectar con el broker.");
+		//log_info(logger,"%s",datoArchivo);
 
-	}else{
+}else{
 //TODO
-		//pthread_mutex_lock(&mxArchivo);
-		//pthread_mutex_unlock(&mxArchivo);
 
-		t_array* mensajeArray=malloc(sizeof(t_array));
-		mensajeArray->array= arrayDatos;
-		mensajeArray->pokemon= mensaje->pokemon;
-		//enviar_mensaje_array(mensajeArray, socketLoc, LOCALIZED_POKEMON);
+//mandar un solo mensaje con el array
+	t_array* mensajeArray=malloc(sizeof(t_array));
+	mensajeArray->array= arrayDatos;
+	mensajeArray->pokemon= mensaje->pokemon;
+	//enviar_mensaje_array(mensajeArray, socketLoc, LOCALIZED_POKEMON);
 
-freeDoblePuntero(arrayDatos);
-freeDoblePuntero(mensajeArray->array);
-//free(mensajeArray->pokemon);
-free(mensajeArray);
+
+
+	//mandar muchos mensajes
+	int contador=0;
+	while(arrayDatos!=NULL){
+		//separo el arrayDatos
+		char** x= string_split(arrayDatos[contador], "-");
+		char** y= string_split(x[1], "=");
+		char** cant= string_split(y[1],"\n");
+
+		uint8_t posicionX= string_itoa(x[0]);
+		uint8_t posicionY= string_itoa(y[0]);
+		uint8_t cantidad= string_itoa(cant[0]);
+		mensaje->posx= posicionX;
+		mensaje->posy= posicionY;
+		mensaje->cantidad= cantidad;
+
+		enviar_mensaje_struct(mensaje,socketLoc,LOCALIZED_POKEMON);
+		contador++;
+
+		freeDoblePuntero(x);
+		freeDoblePuntero(y);
+		freeDoblePuntero(cant);
+
 	}
+freeDoblePuntero(arrayDatos);
+//freeDoblePuntero(mensajeArray->array);
+//free(mensajeArray->pokemon);
+//free(mensajeArray);
+}
+
+}else{
+	//mandar mensaje sin posiciones ni cantidades
 }
 
 
+}
 
 
 //TODO
@@ -429,11 +461,9 @@ void nuevoPokemon(t_mensaje* mensaje){
 
 	FILE * f;
 	t_buffer* buffer;
-	char* montaje= string_new();
-	string_append(&montaje,mntPokemon);
-	string_append(&montaje,mensaje->pokemon);
-
+	char* montaje= montarPoke(mensaje);
 	f = fopen(montaje,"r");
+
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
 		asignarBloqueYcrearMeta(mensaje,montaje);
@@ -470,6 +500,15 @@ off_t primerBloqueDisponible(){
 
 	return offset;
 }
+
+char* montarPoke(t_mensaje* mensaje){
+	char* montaje= string_new();
+	string_append(&montaje,mntPokemon);
+	string_append(&montaje,mensaje->pokemon);
+
+	return montaje;
+}
+
 
 void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 
@@ -649,39 +688,17 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     FILE* fblocks;
     char* bloques = string_new();
     char* valorOpen = string_new();
-    //t_block* block;
-    t_config* configBloques;
 
-    char** arrayBloques;
-    char** basura;
-    char** nroBloque;
 
     char* datosBins = string_new();
 	char** listaBloquesUsados;
 	char* bloquesActualizados;
 
-    configBloques = config_create(montaje);
-
-	valorOpen = config_get_string_value(configBloques,"OPEN");
-	//reintento volver a abrir
-	while(strcmp(valorOpen,"Y") == 0){
-		log_info(logger,"Estoy esperando");
-		log_info(logger,"%s",valorOpen);
-		sleep(tiempoDeReintento);
-
-		config_destroy(configBloques);
-	    configBloques = config_create(montaje);
-
-		valorOpen = config_get_string_value(configBloques,"OPEN");
-	}
-	bloques = config_get_string_value(configBloques,"BLOCKS");
+	esperaOpen(montaje);
 
     int i = 0;
 
-	//separar bloques [1,2,3] -> 1 2 3
-	basura=string_split(bloques,"[");
-	nroBloque=string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
-	arrayBloques=string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
+    char** arrayBloques= agarrarBlocks(mensaje);
 
 	//Con este while recorro cada .bin
     while(arrayBloques[i] != NULL){
@@ -729,11 +746,9 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
 	free(bloquesActualizados);
 
 	freeDoblePuntero(arrayBloques);
-	freeDoblePuntero(basura);
-	freeDoblePuntero(nroBloque);
+
 	freeDoblePuntero(listaBloquesUsados);
 
-	//config_destroy(configBloques);
 
 }
 
@@ -1029,6 +1044,8 @@ char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_
 
 // ESTO ERA TUYO GONZA NO SE SI LO USAMOS O NO AL FINAL----------------------------------------------------------------------------------
 
+//FUNCIONES AUXILIARES, MAS VALE QUE SE USAN PA, TE EMBELLECEN TODO EL CODIGO
+
 char* montarBlocks(char** arrayBloques, int i){
 
 	char* montajeBlocks = string_new();
@@ -1043,7 +1060,7 @@ char** agarrarBlocks(t_mensaje* mensaje){
 
 	char* montaje = string_new();
 	string_append(&montaje,mntPokemon);
-	string_append(&montaje,mensaje->pokemon);
+	string_append_with_format(&montaje,"%s/Metadata.bin",mensaje->pokemon);
 
 	char* bloques = string_new();
 	t_config* configBloques = config_create(montaje);
@@ -1052,6 +1069,51 @@ char** agarrarBlocks(t_mensaje* mensaje){
 	char**basura = string_split(bloques,"[");
 	char**nroBloque = string_split(basura[0],"]"); //En el nroBloques[0] se guardan los bin de esta forma "1,2,3"
 	char**arrayBloques = string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
+
+	config_destroy(configBloques);
+
+
 	return arrayBloques;
+}
+
+void esperaOpen(char* montaje){
+	char * valorOpen = string_new();
+	t_config* configBloques;
+
+	configBloques=config_create(montaje);
+
+	valorOpen = config_get_string_value(configBloques,"OPEN");
+		//reintento volver a abrir
+		while(strcmp(valorOpen,"Y") == 0){
+			log_info(logger,"Estoy esperando");
+			log_info(logger,"%s",valorOpen);
+			sleep(tiempoDeReintento);
+
+			config_destroy(configBloques);
+		    configBloques = config_create(montaje);
+
+			valorOpen = config_get_string_value(configBloques,"OPEN");
+		}
+		config_destroy(configBloques);
+}
+
+int existePokemon(t_mensaje* mensaje){
+	FILE* fp;
+
+	char* montajePokemon= string_new();
+
+	string_append(&montajePokemon, mntPokemon);
+	string_append(&montajePokemon, mensaje->pokemon);
+
+	fp= fopen(montajePokemon, "r");
+	if(fp==NULL){
+		return 0;
+	}else{
+		fclose(fp);
+		return 1;
+	}
+
+	free(montajePokemon);
+
 }
 

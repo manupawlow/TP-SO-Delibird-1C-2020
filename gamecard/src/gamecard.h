@@ -15,6 +15,8 @@ int cantBlocks = 5192;
 
 
 
+//TODOS ESTOS TYPES A CHEQUEAR
+
 typedef struct{
 	char** array;
 	char* pokemon;
@@ -78,9 +80,15 @@ char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* m
 off_t primerBloqueDisponible();
 void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje);
 
+
+
+//func auxiliares no borrar q muere el programa dale gracias
 int tamRestante(FILE* f);
 char* montarBlocks(char** arrayBloques, int i);
 char** agarrarBlocks(t_mensaje* mensaje);
+int existePokemon(t_mensaje* mensaje);
+char* montarPoke(t_mensaje* mensaje);
+void esperaOpen(char* montaje);
 
 void process_request(int socket_cliente);
 void conexion_gameboy();
