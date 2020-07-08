@@ -54,38 +54,39 @@ int main() {
 }
 //PARA EL GET
 void buscarPokemon(t_mensaje* mensaje){
-FILE * f;
 
-if(existePokemon(mensaje)){
-	char** arrayBloques=agarrarBlocks(mensaje);
+	FILE * f;
+	t_buffer* buffer;
 
-	char* montaje = montarPoke(mensaje);
-	string_append(&montaje, "/Metadata.bin");
-	esperaOpen(montaje);
+	if(existePokemon(mensaje)){
 
+		char** arrayBloques = agarrarBlocks(mensaje);
 
-	//falta malloc
+		char* montaje = montarPoke(mensaje);
+		string_append(&montaje, "/Metadata.bin");
+		esperaOpen(montaje);
 
+		//falta malloc
 
-	   char* datosArchivoSinFormato=string_new();
+		char* datosArchivoSinFormato = string_new();
 
-	   int i = 0;
-	   int j = 0;
-	    //Con este while recorro cada .bin
-	    while(arrayBloques[i] != NULL){
-	        char* montajeBlocks=montarBlocks(arrayBloques,i);
-	        f= fopen(montajeBlocks, "r");
+		int i = 0;
+		//Con este while recorro cada .bin
+		while(arrayBloques[i] != NULL){
+			char* montajeBlocks=montarBlocks(arrayBloques,i);
+			f= fopen(montajeBlocks, "r");
 
-	        if(f == NULL){
+			if(f == NULL){
 	            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
 	        }else{
-	        	char* datoArchivo= string_new();
-	        	fscanf(f,"%[^\n]",datoArchivo);
-	        	string_append(&datosArchivoSinFormato, datoArchivo);
-	        	while(!feof(f)){
-	        		fscanf(f,"%[^\n]",datoArchivo);
-	        		string_append(&datosArchivoSinFormato, datoArchivo);
-	        	}
+	        	int c;
+	        	do {
+	        	      c = fgetc(f);
+	        	      if( feof(f) ) {
+	        	         break ;
+	        	      }
+	        	      string_append_with_format(&datosArchivoSinFormato,"%c",c);
+	        	   } while(1);
 	        	//esperar por consigna antes de cerrar archivo
 	        	sleep(tiempoDeRetardo);
 	        	fclose(f);
@@ -97,60 +98,58 @@ if(existePokemon(mensaje)){
 	    freeDoblePuntero(arrayBloques);
 
 
-char** arrayDatos= string_split(datosArchivoSinFormato, "\n");
+	    char** arrayDatos= string_split(datosArchivoSinFormato, "\n");
 
-//free(datosArchivoSinFormato);
-//freeDoblePuntero(arrayArchivo);
+	    free(datosArchivoSinFormato);
 
-int socketLoc = crear_conexion(ip, puerto);
+	    int socketLoc = crear_conexion(ip, puerto);
 
-if(socketLoc ==-1){
-		log_info(logger,"No se pudo conectar con el broker.");
-		//log_info(logger,"%s",datoArchivo);
+	    if(socketLoc ==-1){
+	    	log_info(logger,"No se pudo conectar con el broker.");
+	    	//log_info(logger,"%s",datoArchivo);
 
-}else{
-//TODO
+	    }else{
 
-//mandar un solo mensaje con el array
-	t_array* mensajeArray=malloc(sizeof(t_array));
-	mensajeArray->array= arrayDatos;
-	mensajeArray->pokemon= mensaje->pokemon;
-	//enviar_mensaje_array(mensajeArray, socketLoc, LOCALIZED_POKEMON);
+	    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
+	    	mensajeGet->pokemon = mensaje->pokemon;
+	    	mensajeGet->pokemon_length = mensaje->pokemon_length;
+	    	mensajeGet->posiciones = list_create();
+			int j = 0;
 
+	    	while(arrayDatos[j] != NULL){
+	    		char** partirPosicionesYCantidad;
+	    		char** partirPosiciones;
 
+	    		partirPosicionesYCantidad = string_split(arrayDatos[j],"=");
+	    		mensajeGet->cantidad += atoi(partirPosicionesYCantidad[1]);
+	    		partirPosiciones = string_split(partirPosicionesYCantidad[0],"-");
 
-	//mandar muchos mensajes
-	int contador=0;
-	while(arrayDatos!=NULL){
-		//separo el arrayDatos
-		char** x= string_split(arrayDatos[contador], "-");
-		char** y= string_split(x[1], "=");
-		char** cant= string_split(y[1],"\n");
+	    		for(int i = 0;i<atoi(partirPosicionesYCantidad[1]);i++){
 
-		uint8_t posicionX= string_itoa(x[0]);
-		uint8_t posicionY= string_itoa(y[0]);
-		uint8_t cantidad= string_itoa(cant[0]);
-		mensaje->posx= posicionX;
-		mensaje->posy= posicionY;
-		mensaje->cantidad= cantidad;
+	    			t_posicion* posicion = malloc(sizeof(t_posicion));//no se bien cuando se libera, si pasa a estar adentro de t_list o no
 
-		enviar_mensaje_struct(mensaje,socketLoc,LOCALIZED_POKEMON);
-		contador++;
+		    		posicion->posx = atoi(partirPosiciones[0]);
+		    		posicion->posy = atoi(partirPosiciones[1]);
 
-		freeDoblePuntero(x);
-		freeDoblePuntero(y);
-		freeDoblePuntero(cant);
+		    		list_add(mensajeGet->posiciones,posicion);
+	    		}
 
-	}
-freeDoblePuntero(arrayDatos);
-//freeDoblePuntero(mensajeArray->array);
-//free(mensajeArray->pokemon);
-//free(mensajeArray);
-}
+	    		freeDoblePuntero(partirPosicionesYCantidad);
+	    		freeDoblePuntero(partirPosiciones);
+	    		j++;
+	    	}
+	    	//Esto de abajo solo si cambio el struct t_mensaje_get
+	    	//mensajeGet->list_size = list_size(mensajeGet->posiciones);
 
-}else{
+	    	freeDoblePuntero(arrayDatos);
+
+	    	buffer = serializar_mensaje_struct_get(mensajeGet);
+	    	enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
+	    }
+
+	}else{
 	//mandar mensaje sin posiciones ni cantidades
-}
+	}
 
 
 }
@@ -860,8 +859,6 @@ t_block* buscarCoincidencias(FILE* fblocks, t_mensaje* mensaje){
     free(basura);
     return block;
 }
-
-
 
 void verificarTamBlockYActualizarlo(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque){
 

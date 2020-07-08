@@ -254,7 +254,6 @@ void process_request(Colas *loquito) {
 
 			for(int i=0; i< loquito->cant_suscritos_appeared; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_APPEARED[i],APPEARED_POKEMON);
-
 			}
 
 			//enviar_a_todos(loquito->SUSCRITOS_APPEARED, loquito->cant_suscritos_appeared, msg, size, cod_op );

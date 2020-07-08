@@ -65,6 +65,24 @@ typedef struct
 	uint32_t resultado;
 } t_mensaje;
 
+typedef struct
+{
+	uint8_t posx;
+	uint8_t posy;
+}t_posicion;
+
+typedef struct
+{
+	uint32_t pokemon_length;
+	char* pokemon;
+	uint32_t cantidad;
+	uint32_t id_mensaje;
+	uint32_t id_mensaje_correlativo;
+	uint32_t list_size;
+	t_list* posiciones;
+}t_mensaje_get;
+
+
 void* recibir_buffer(int*, int);
 int iniciar_servidor(char*, char*);
 int esperar_cliente(int);
@@ -93,5 +111,8 @@ void* recibir_mensaje_ACK(int);
 
 void freeDoblePuntero(char** doblePuntero);
 
+t_buffer* serializar_mensaje_struct_get(t_mensaje_get* mensaje);
+t_mensaje_get* deserializar_mensaje_struct_get(t_buffer* buffer);
+t_mensaje_get* recibir_mensaje_struct_get(int );
 
 void terminar_programa(int , t_log* , t_config* );

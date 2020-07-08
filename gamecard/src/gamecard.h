@@ -18,13 +18,6 @@ int cantBlocks = 5192;
 //TODOS ESTOS TYPES A CHEQUEAR
 
 typedef struct{
-	char** array;
-	char* pokemon;
-}t_array;
-
-
-
-typedef struct{
 	int x;
 	int y;
 	int cant;
