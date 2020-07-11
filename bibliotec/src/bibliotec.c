@@ -356,7 +356,7 @@ t_mensaje* recibir_mensaje_struct(int socket_cliente)
 {
 	t_paquete* paquete = malloc(sizeof(t_paquete));
 	paquete->buffer = malloc(sizeof(t_buffer));
-	t_mensaje* mensaje = malloc(sizeof(t_mensaje));//Esto tambien se mallocquea en deserializar_mensaje_struct mirar que onda
+	t_mensaje* mensaje;
 
 	recv(socket_cliente, &(paquete->buffer->size), sizeof(uint32_t), MSG_WAITALL);
 	paquete->buffer->stream = malloc(paquete->buffer->size);
