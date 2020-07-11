@@ -16,14 +16,16 @@ Entrenador* id_coincidente(int id, t_list *lista);
 
 void agregar_segun_objetivo(t_list *capturados, Entrenador *entrenador);
 void agregar_segun_faltantes(char* pokemon, Entrenador *entrenador);
-bool lo_estan_buscando(char *pokemon);
+bool pokemon_en_lista(char *pokemon, t_list *lista);
+void eliminar_pokemon(char *pokemon, t_list *lista);
 bool necesitaPokemon(char *pokemon, t_list *objetivoGlobal);
 t_list* filtrado(t_list* capturados, t_list* objetivos);
 t_list* listaUnica(t_list *listaDeListas);
 t_list* listaDeListas(t_config* config, char* cadena);
 t_list* listaPosiciones(t_config* config, char* cadena);
 void recorrerLista(t_list *lista, t_log *logger);
-
+void enviar_catch(Entrenador *entrenador, int conexion_catch);
+void eliminar_pendientes(char *pokemon);
 
 bool bloqueado_por_agarrar(Entrenador *entrenador);
 bool bloqueado_por_capturar(Entrenador *entrenador);

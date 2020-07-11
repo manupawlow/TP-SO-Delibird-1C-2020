@@ -9,6 +9,7 @@ typedef struct{
 	char *log;
 	int retardo_cpu;
 	int reconexion;
+	int quantum;
 
 	t_list *pokemon_entrenadores;
 	t_list *objetivos_entrenadores;

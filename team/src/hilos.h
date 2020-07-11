@@ -14,5 +14,6 @@ void process_request(int );
 void poner_en_exce();
 void deadlock();
 void finalizar_si_corresponde(Entrenador *entrenador);
+void llegada_pokemon(t_mensaje* mensaje);
 
 #endif /* HILOS_H_ */

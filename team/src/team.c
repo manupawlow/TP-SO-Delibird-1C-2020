@@ -21,8 +21,8 @@ int main(void){
 
 	//Conectarse al broker
 
-	//pthread_t conexionLocalized;
-    //pthread_create(&conexionLocalized, NULL,(void*) conexion_localized, NULL);
+	pthread_t conexionLocalized;
+    pthread_create(&conexionLocalized, NULL,(void*) conexion_localized, NULL);
 
     pthread_t conexionCaugth;
     pthread_create(&conexionCaugth, NULL, (void*) conexion_caugth, NULL);
@@ -37,7 +37,7 @@ int main(void){
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
-    //solicitar_pokemones(objetivoGlobal,config_team);
+    solicitar_pokemones(objetivoGlobal);
 
     pthread_t ponerEnEjecuccion;
     pthread_create(&ponerEnEjecuccion, NULL, (void*) poner_en_exce, NULL);
