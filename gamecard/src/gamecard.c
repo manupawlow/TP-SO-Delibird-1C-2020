@@ -149,97 +149,143 @@ void buscarPokemon(t_mensaje* mensaje){
 //PARA EL CATCH
 void agarrarPokemon(t_mensaje* mensaje){
 
-FILE * f;
-char* pokemon;
-char* montajePoke= string_new();
+char* montaje= montarPoke(mensaje);
+
+string_append(&montaje,"/Metadata.bin" );
+t_buffer* buffer;
+
 int socketCaugth = crear_conexion(ip, puerto);
-
-char** arrayBloques=agarrarBlocks(mensaje);
-
-
-
-if(socketCaugth ==-1){
+	if(socketCaugth ==-1){
 		log_info(logger,"No se pudo conectar con el broker");
-
-		//TODO
-		//MANDAR DIRECTO
 	}else{
-		pokemon=strtok(mensaje," ");
-		string_append(&montajePoke, mntPokemon);
-		string_append(&montajePoke,"/Metadata.bin");
-		f = fopen(montajePoke,"r");
+		if(existePokemon(mensaje)){
+			esperaOpen(montaje);
 
-		if(f==NULL){
-			log_info(logger,"ERROR: no hay pokemon.");
-		}else{
-int i=0;
-		while(arrayBloques[i] != NULL){
-	        char* montajeBlocks=montarBlocks(arrayBloques,i);
-	        f= fopen(montajeBlocks, "r");
+			//necesito id pokemon posx posy
 
-	        if(f == NULL){
-            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-	        }else{
+			FILE* f;
+			char* x= string_itoa(mensaje->posx);
+			char* y= string_itoa(mensaje->posy);
+			int existe=0;
 
-	        }
-			fclose(f);
-			i++;
-		}
+			char* posicionMensaje= string_new();
+			string_append(&posicionMensaje, x);
+			string_append_with_format(&posicionMensaje, "-%s",y);
 
-t_mensaje* pokemon= obtenerDatosPokemon(f,mensaje);
 
-	fclose(f);
-			if(igualPosicion(f, mensaje,pokemon)!=1){
-				log_info(logger,"ERROR: no hay pokemon.");
-			}else{
-				if(pokemon->posy==1){
-					f=fopen(mntPokemon,"r+");
-					eliminarLinea();
-					fclose(f);
-				}else if(pokemon->posy<1){
-					log_info(logger,"ERROR: no hay pokemon.");
-				}else{
-					f=fopen(mntPokemon,"r+");
-					eliminarLinea();
-					fclose(f);
+			char* arrayTodo=string_new();
+
+
+			arrayTodo=guardarDatosBins(mensaje);
+
+			char** datosSeparados= string_split(arrayTodo, "\n");
+			int j=0;
+
+			while(datosSeparados!=NULL){
+				//falta free
+				char** posiciones= string_split(datosSeparados[j], "=");
+
+				if(strcmp(posicionMensaje,posiciones[0])==0){
+					//verificador q existe la pos
+					existe=1;
+					if(atoi(posiciones[1])<2){
+						datosSeparados[j]= datosSeparados[j+1];
+					}else{
+						//falta free
+						char* nuevaLinea=string_new();
+
+						int cantidad= atoi(posiciones[1])-1;
+						//falta free
+						char* nuevaCant= string_itoa(cantidad);
+
+						string_append(&nuevaLinea, posiciones[0]);
+						string_append_with_format(&nuevaLinea, "=%s", nuevaCant);
+						datosSeparados[j]= nuevaLinea;
+					}
+
+					break;
 				}
+				j++;
 			}
+
+
+			free(posicionMensaje);
+			free(x);
+			free(y);
+
+
+//si no existe informa error
+			if(existe==0){
+				log_info(logger,"ERROR. No existe esa posicion.");
+//mandar a broker q no existe.
+				mensaje->resultado= 0;
+				mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
+				buffer = serializar_mensaje_struct(mensaje);
+				enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
+				free(buffer->stream);
+				free(buffer);
+			}else{
+
+//escribir en los archivos
+				char* datosJuntos= string_new();
+				int i=0;
+
+				while(datosSeparados[i]!= NULL){
+					string_append_with_format(&datosJuntos, "%s\n", datosSeparados[i]);
+					i++;
+				}
+
+			//falta clean bit en los bloques viejos
+
+			off_t offsetVacio = primerBloqueDisponible();
+
+			char* montajeBlocks = string_new();
+			string_append(&montajeBlocks,mntBlocks);
+			string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
+			f = fopen(montajeBlocks,"w");
+			char **listaBloquesUsados = agregarBloquesAPartirDeString(datosJuntos,f,offsetVacio);
+
+
+			escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje);
+
+			freeDoblePuntero(listaBloquesUsados);
+			free(datosJuntos);
+			free(montajeBlocks);
+			freeDoblePuntero(datosSeparados);
+			free(arrayTodo);
+			//free(montaje);
+			//free(nuevaCant);
+
+	//mandar CAUGTH
+			mensaje->resultado= 1;
+			mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
+			buffer = serializar_mensaje_struct(mensaje);
+			enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
+			free(buffer->stream);
+			free(buffer);
+			}
+
+
+
+		}else{
+			log_info(logger,"ERROR. Pokemon No existente.");
+			//mandar a broker q no existe
+			mensaje->resultado= 0;
+			mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
+			buffer = serializar_mensaje_struct(mensaje);
+			enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 		}
-}
 
-/*
- *void resultado;             no se q es todavia
- 	 * if (msg.nombre != directorio.archivo[i]){
-	 * 	resultado=ERROR;
-	 * }else{
-	 * 	 if(checkMutex==0){
-	 * 		esperarReintentar(tiempoConfig)
-	 * 	}else{
-	 * 		if(msg.pos != archivo.pos){
-	 * 			resultado=ERROR;
-	 * 		}else{
-	 * 			if(archivo.cant == 1){
-	 * 				eliminarLinea(archivo);
-	 * 			}elseif(archivo.cant <1){
-	 * 				resultado=ERROR;
-	 * 			}else{
-	 * 				archivo.cant -=1;
-	 * 			}
-	 * 	esperar(tiempoConfig);    espera y cierra el archivo
-	 *
-	 * 	mensaje= resultado y ID mensaje original;
-	 *
-	 * 	int conexionCaugth = crear_conexion(ip, puerto);
-	 * 	enviar_mensaje(mensaje, a la cola CAUGTH);
-	 *
-	 *
-	 *
-	 * 	si no me puedo conectar al broker informo por logs y lo mando directo
-	 * }
-	 *
-*/
+
+
+
+	}
+	//free(mensaje);
 
 }
+
 
 
 
@@ -423,9 +469,9 @@ void process_request(int socket){
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK();
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
-		/*pthread_t solicitud;
+		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);
-		pthread_detach(solicitud);*/
+		pthread_detach(solicitud);
 		//free(mensaje->pokemon);
 		//free(mensaje->resultado);
 		free(mensaje);
