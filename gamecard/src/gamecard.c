@@ -113,33 +113,23 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
 	    	mensajeGet->pokemon = mensaje->pokemon;
 	    	mensajeGet->pokemon_length = mensaje->pokemon_length;
-	    	mensajeGet->posiciones = list_create();
+	    	mensajeGet->posiciones = string_new();
 			int j = 0;
 
 	    	while(arrayDatos[j] != NULL){
 	    		char** partirPosicionesYCantidad;
-	    		char** partirPosiciones;
 
 	    		partirPosicionesYCantidad = string_split(arrayDatos[j],"=");
 	    		mensajeGet->cantidad += atoi(partirPosicionesYCantidad[1]);
-	    		partirPosiciones = string_split(partirPosicionesYCantidad[0],"-");
 
 	    		for(int i = 0;i<atoi(partirPosicionesYCantidad[1]);i++){
 
-	    			t_posicion* posicion = malloc(sizeof(t_posicion));//no se bien cuando se libera, si pasa a estar adentro de t_list o no
-
-		    		posicion->posx = atoi(partirPosiciones[0]);
-		    		posicion->posy = atoi(partirPosiciones[1]);
-
-		    		list_add(mensajeGet->posiciones,posicion);
+	    			string_append_with_format(&mensajeGet->posiciones,".%s",partirPosicionesYCantidad[0]);
 	    		}
 
 	    		freeDoblePuntero(partirPosicionesYCantidad);
-	    		freeDoblePuntero(partirPosiciones);
 	    		j++;
 	    	}
-	    	//Esto de abajo solo si cambio el struct t_mensaje_get
-	    	//mensajeGet->list_size = list_size(mensajeGet->posiciones);
 
 	    	freeDoblePuntero(arrayDatos);
 
@@ -690,68 +680,41 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
 
 
     char* datosBins = string_new();
-	char** listaBloquesUsados;
-	char* bloquesActualizados;
+    char** listaBloquesUsados;
+    char* bloquesActualizados;
 
-	esperaOpen(montaje);
+    esperaOpen(montaje);
 
-    int i = 0;
 
-    char** arrayBloques= agarrarBlocks(mensaje);
+    datosBins=guardarDatosBins(mensaje);
 
-	//Con este while recorro cada .bin
-    while(arrayBloques[i] != NULL){
-        char* montajeBlocks = string_new();
-        string_append(&montajeBlocks,mntBlocks);
-        string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
-        fblocks= fopen(montajeBlocks, "r");
-        //Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
-        if(fblocks==NULL){
-        	log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-        }else{
-        	int c;
-        	do {
-        	      c = fgetc(fblocks);
-        	      if( feof(fblocks) ) {
-        	         break ;
-        	      }
-        	      string_append_with_format(&datosBins,"%c",c);
-        	   } while(1);
-        	fclose(fblocks);
-        	off_t offset = atoi(arrayBloques[i]);
-        	bitarray_clean_bit(bitmap, offset);
-        	log_info(logger,datosBins);
-        }
-        i++;
-        free(montajeBlocks);
-    }
-    bloquesActualizados = verificarCoincidenciasYsumarCantidad(fblocks,datosBins,mensaje,montaje);
+    bloquesActualizados = verificarCoincidenciasYsumarCantidad(datosBins,mensaje,montaje);
 
     off_t offsetVacio = primerBloqueDisponible();
 
     char* montajeBlocks = string_new();
     string_append(&montajeBlocks,mntBlocks);
     string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
-	fblocks = fopen(montajeBlocks,"w");
-	listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
+    fblocks = fopen(montajeBlocks,"w");
+    listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
 
-	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    //mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-	escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje);
+    escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje);
 
-	free(bloques);
-	free(valorOpen);
-	free(datosBins);
-	free(bloquesActualizados);
+    free(bloques);
+    free(valorOpen);
+    free(datosBins);
+    free(bloquesActualizados);
 
-	freeDoblePuntero(arrayBloques);
+    //freeDoblePuntero(arrayBloques);
 
-	freeDoblePuntero(listaBloquesUsados);
+    freeDoblePuntero(listaBloquesUsados);
 
 
 }
 
-char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* mensaje,char* montaje){
+char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,char* montaje){
 
     char* mensajePosiciones = string_new();
 
@@ -770,7 +733,7 @@ char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* m
 	while(bloques[i]!=NULL){
 		char** posicionDeBloque;
 		posicionDeBloque = string_split(bloques[i],"=");
-		if(string_contains(posicionDeBloque[0],mensajePosiciones)){
+		if(strcmp(posicionDeBloque[0],mensajePosiciones) == 0){
 			char** dividirPosicionCantidad = string_split(bloques[i],"=");
 			int cantidadActualizada = mensaje->cantidad + atoi(dividirPosicionCantidad[1]);
 			string_append_with_format(&mensajePosiciones, "=%s",string_itoa(cantidadActualizada));//Aca el mensajePosicones equivaldria a las posiciones con la cantidad actualizada
@@ -797,6 +760,39 @@ char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* m
 	freeDoblePuntero(bloques);
 
 	return bloquesActualizados;
+}
+
+char* guardarDatosBins(t_mensaje* mensaje){
+char* datosBins= string_new();
+FILE* fblocks;
+     int i = 0;
+     char** arrayBloques= agarrarBlocks(mensaje);
+
+        //Con este while recorro cada .bin
+        while(arrayBloques[i] != NULL){
+            char* montajeBlocks = montarBlocks(arrayBloques, i);
+            fblocks= fopen(montajeBlocks, "r");
+            //Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
+            if(fblocks==NULL){
+                log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+            }else{
+                int c;
+                do {
+                      c = fgetc(fblocks);
+                      if( feof(fblocks) ) {
+                         break ;
+                      }
+                      string_append_with_format(&datosBins,"%c",c);
+                   } while(1);
+                fclose(fblocks);
+                off_t offset = atoi(arrayBloques[i]);
+                bitarray_clean_bit(bitmap, offset);
+                log_info(logger,datosBins);
+            }
+            i++;
+            free(montajeBlocks);
+        }
+return datosBins;
 }
 
 // CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------

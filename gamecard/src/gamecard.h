@@ -69,11 +69,11 @@ void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FI
 
 char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset);
 int calcularCantidadDeBLoques(char* escribirBloque);
-char* verificarCoincidenciasYsumarCantidad(FILE* f,char* datosBins, t_mensaje* mensaje,char* montaje);
+char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,char* montaje);
 off_t primerBloqueDisponible();
 void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje);
 
-
+char* guardarDatosBins(t_mensaje* mensaje);
 
 //func auxiliares no borrar q muere el programa dale gracias
 int tamRestante(FILE* f);

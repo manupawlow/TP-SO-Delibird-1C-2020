@@ -48,13 +48,14 @@ int esperar_cliente(int socket_servidor)
     return socket_cliente;
 }
 
-void* recibir_mensaje(int socket_cliente, int* size)
+void* recibir_mensaje(int socket_cliente)
 {
 	void * buffer;
+	int size;
 
-	recv(socket_cliente, size, sizeof(int), MSG_WAITALL);
-	buffer = malloc(*size);
-	recv(socket_cliente, buffer, *size, MSG_WAITALL);
+	recv(socket_cliente, &size, sizeof(int), MSG_WAITALL);
+	buffer = malloc(size);
+	recv(socket_cliente, buffer, size, MSG_WAITALL);
 
 	return buffer;
 }
@@ -173,7 +174,7 @@ t_buffer* serializar_mensaje_struct_get(t_mensaje_get* mensaje)
 {
 		t_buffer* buffer = malloc(sizeof(t_buffer));
 
-		buffer->size =sizeof(uint32_t)*6 + strlen(mensaje->pokemon)+1 + list_size(mensaje->posiciones);
+		buffer->size = sizeof(uint32_t)*5 + strlen(mensaje->pokemon)+1 + strlen(mensaje->posiciones)+1;
 
 		void* stream = malloc(buffer->size);
 		int offset = 0;
@@ -188,15 +189,13 @@ t_buffer* serializar_mensaje_struct_get(t_mensaje_get* mensaje)
 		offset += sizeof(uint32_t);
 		memcpy(stream + offset, &(mensaje->id_mensaje_correlativo), sizeof(uint32_t));
 		offset += sizeof(uint32_t);
-		memcpy(stream + offset, &(mensaje->posiciones), sizeof(t_list));
-
-		/*memcpy(stream + offset, &(mensaje->list_size), sizeof(uint32_t));
+		memcpy(stream + offset, &(mensaje->posiciones_length), sizeof(uint32_t));
 		offset += sizeof(uint32_t);
-		memcpy(stream + offset, &(mensaje->posiciones), list_size(mensaje->posiciones));*/
+		memcpy(stream + offset, mensaje->posiciones, strlen(mensaje->posiciones)+1);
 
 		buffer->stream = stream;
 		free(mensaje->pokemon);
-		list_clean(mensaje->posiciones);
+		free(mensaje->posiciones);
 		free(mensaje);
 		return buffer;
 
@@ -219,13 +218,9 @@ t_mensaje_get* deserializar_mensaje_struct_get(t_buffer* buffer)
 	stream += sizeof(uint32_t);
 	memcpy(&(mensaje->id_mensaje_correlativo), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
-	mensaje->posiciones = malloc(sizeof(t_list));
-	memcpy(&(mensaje->posiciones), stream, sizeof(t_list));
-
-	/*memcpy(&(mensaje->list_size), stream, sizeof(uint32_t));
+	memcpy(&(mensaje->posiciones_length), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
-	mensaje->posiciones = malloc(sizeof(t_list);
-	memcpy(&(mensaje->posiciones), stream, mensaje->list_size);*/
+	mensaje->posiciones = malloc(mensaje->posiciones_length);
 
 
 	return mensaje;
@@ -375,8 +370,7 @@ t_mensaje_get* recibir_mensaje_struct_get(int socket_cliente)
 {
 	t_paquete* paquete = malloc(sizeof(t_paquete));
 	paquete->buffer = malloc(sizeof(t_buffer));
-	t_mensaje_get* mensaje = malloc(sizeof(t_mensaje_get));
-	mensaje->posiciones = malloc(sizeof(t_list));
+	t_mensaje_get* mensaje;
 
 	recv(socket_cliente, &(paquete->buffer->size), sizeof(uint32_t), MSG_WAITALL);
 	paquete->buffer->stream = malloc(paquete->buffer->size);

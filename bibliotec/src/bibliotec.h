@@ -67,26 +67,20 @@ typedef struct
 
 typedef struct
 {
-	uint8_t posx;
-	uint8_t posy;
-}t_posicion;
-
-typedef struct
-{
 	uint32_t pokemon_length;
 	char* pokemon;
 	uint32_t cantidad;
 	uint32_t id_mensaje;
 	uint32_t id_mensaje_correlativo;
-	uint32_t list_size;
-	t_list* posiciones;
+	uint32_t posiciones_length;
+	char* posiciones;
 }t_mensaje_get;
 
 
 void* recibir_buffer(int*, int);
 int iniciar_servidor(char*, char*);
 int esperar_cliente(int);
-void* recibir_mensaje(int , int* );
+void* recibir_mensaje(int );
 int recibir_operacion(int);
 t_buffer* serializar_mensaje_struct(t_mensaje* );
 t_mensaje* deserializar_mensaje_struct(t_buffer* );

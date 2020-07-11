@@ -5,6 +5,7 @@
 void process_request(Colas *loquito) {
     int cod_op;
 	t_mensaje* mensaje;
+	char* mensajeACK;
 	t_buffer *buffer;
 
 	if(recv(loquito->socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
@@ -172,13 +173,13 @@ void process_request(Colas *loquito) {
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, NEW_POKEMON);
+			//enviar_mensaje_struct(buffer, loquito->socket_cliente, NEW_POKEMON);
 
 
 			for(int i=0; i< loquito->cant_suscritos_new; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_NEW[i],NEW_POKEMON);
-
 			}
+
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			break;
@@ -206,7 +207,7 @@ void process_request(Colas *loquito) {
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, APPEARED_POKEMON);
+			//enviar_mensaje_struct(buffer, loquito->socket_cliente, APPEARED_POKEMON);
 
 
 			for(int i=0; i< loquito->cant_suscritos_appeared; i++){
@@ -220,8 +221,8 @@ void process_request(Colas *loquito) {
 //----------------------------------------------------------------
 //--------------------ACK-----------------------------------------
 		case ACK:
-           	mensaje = recibir_mensaje_struct(loquito->socket_cliente);
-			guardar_ACK(loquito->socket_cliente, mensaje);
+			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			//guardar_ACK(loquito->socket_cliente, mensaje);
 			break;
 //-----------------------------------------------------------------
 		case SUSCRIBIR:
