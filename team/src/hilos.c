@@ -137,8 +137,7 @@ void process_request(int socket_cliente){
 		break;
 
 	case LOCALIZED_POKEMON:
-		mensaje = recibir_mensaje_struct(socket_cliente);
-
+		 recibirLocalized(socket);
 		if(id_en_lista(mensaje->id_mensaje))
 			llegada_pokemon(mensaje);
 		else

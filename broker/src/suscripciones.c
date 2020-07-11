@@ -17,7 +17,7 @@ void process_request(Colas *loquito) {
 //--------------------GET-----------------------------------
 		case SUS_GET:
 			//Suscribir a la cola get
-			enviar_mensajes_en_memoria(loquito->socket_cliente, "GET"); // 				<--- TODO VERLO CON LOS DEMAS
+			//enviar_mensajes_en_memoria(loquito->socket_cliente, "GET"); // 				<--- TODO VERLO CON LOS DEMAS
 			//recibo mensaje cuando se suscribe y veo que id de team tiene
 
 			list_add(loquito->SUSCRITOS_GET, (void*) loquito->socket_cliente);
@@ -73,8 +73,9 @@ void process_request(Colas *loquito) {
 
 			for(int i=0; i< loquito->cant_suscritos_localized; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_LOCALIZED[i],LOCALIZED_POKEMON);
-
 			}
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			break;
@@ -108,8 +109,9 @@ void process_request(Colas *loquito) {
 
 			for(int i=0; i< loquito->cant_suscritos_catch; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_CATCH[i],CATCH_POKEMON);
-
 			}
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			break;
@@ -143,8 +145,9 @@ void process_request(Colas *loquito) {
 
 			for(int i=0; i< loquito->cant_suscritos_caught; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_CAUGHT[i],CAUGHT_POKEMON);
-
 			}
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			break;
@@ -173,12 +176,13 @@ void process_request(Colas *loquito) {
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			//enviar_mensaje_struct(buffer, loquito->socket_cliente, NEW_POKEMON);
-
+			enviar_mensaje_struct(buffer, loquito->socket_cliente, NEW_POKEMON);
 
 			for(int i=0; i< loquito->cant_suscritos_new; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_NEW[i],NEW_POKEMON);
 			}
+			free(buffer->stream);
+			free(buffer);
 
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
@@ -207,13 +211,14 @@ void process_request(Colas *loquito) {
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			//enviar_mensaje_struct(buffer, loquito->socket_cliente, APPEARED_POKEMON);
+			enviar_mensaje_struct(buffer, loquito->socket_cliente, APPEARED_POKEMON);
 
 
 			for(int i=0; i< loquito->cant_suscritos_appeared; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_APPEARED[i],APPEARED_POKEMON);
-
 			}
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			break;

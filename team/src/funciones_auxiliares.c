@@ -456,3 +456,35 @@ void enviar_catch(Entrenador *entrenador, int conexion_catch){
 	log_info(logger,"Id:%d", mensaje->id_mensaje);
 	close(conexion_catch);
 }
+
+t_list* recibirLocalized(int socket){
+	t_mensaje_get* mensaje = malloc(sizeof(t_mensaje_get));
+    mensaje = recibir_mensaje_struct_get(socket);
+
+    char** arrayPos= string_split(mensaje->posiciones,".");
+
+    t_list* listaPoke=list_create();
+
+    int cantidad = mensaje->cantidad;
+
+    int i=0;
+    while(arrayPos[i]!=NULL){
+
+    	char** posiciones= string_split(arrayPos[i],"-");
+
+    	Poketeam* pokemon = malloc(sizeof(Poketeam));
+    	pokemon->pokemon = malloc(mensaje->pokemon_length);
+    	memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
+    	pokemon->pos.x= atoi(posiciones[0]);
+    	pokemon->pos.y= atoi(posiciones[1]);
+
+    	list_add(listaPoke, pokemon);
+
+    	//free(pokemon);
+    	freeDoblePuntero(posiciones);
+
+    }
+
+    return listaPoke;
+
+}

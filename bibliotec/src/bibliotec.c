@@ -326,8 +326,8 @@ void enviar_mensaje_struct(t_buffer* buffer, int socket_cliente, op_code codigo)
 
 	//----------------libero la memoria del paquete mandado----------------
 			free(a_enviar);
-			free(paquete->buffer->stream);
-			free(paquete->buffer);
+			//free(paquete->buffer->stream);
+			//free(paquete->buffer);
 			free(paquete);
 }
 

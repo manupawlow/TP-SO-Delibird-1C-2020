@@ -7,7 +7,9 @@ int main(int argc, char *argv[]) {
 	int conexion;
 	char *ips = string_new();
 	char *puertos = string_new();
+	int cod_op;
 
+	t_mensaje* mensaje_a_recibir;
 	t_mensaje* mensaje_struct = malloc(sizeof(t_mensaje));
 	t_buffer* buffer;
 
@@ -105,7 +107,11 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->cantidad = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
+			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+			mensaje_a_recibir = recibir_mensaje_struct(conexion);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+			free(buffer->stream);
+			free(buffer);
 		} else if(strcmp(argv[1],"GAMECARD") == 0){
 			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
@@ -137,7 +143,11 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
+			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+			mensaje_a_recibir = recibir_mensaje_struct(conexion);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+			free(buffer->stream);
+			free(buffer);
 		}
 	}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
@@ -158,7 +168,11 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->posy = atoi(argv[5]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,CATCH_POKEMON);
+			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+			mensaje_a_recibir = recibir_mensaje_struct(conexion);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+			free(buffer->stream);
+			free(buffer);
 		}
 	}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
 		mensaje_struct->id_mensaje_correlativo = atoi(argv[3]);
@@ -183,7 +197,11 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,GET_POKEMON);
-		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+			mensaje_a_recibir = recibir_mensaje_struct(conexion);
+			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+			free(buffer->stream);
+			free(buffer);
 		}
 	}
 	//Este es para hacer las pruebas
@@ -204,6 +222,8 @@ int main(int argc, char *argv[]) {
 	}
 	free(ips);
 	free(puertos);
+	free(mensaje_a_recibir->pokemon);
+	free(mensaje_a_recibir);
 
 	terminar_programa(conexion,logger,config);
 

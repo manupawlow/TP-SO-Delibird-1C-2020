@@ -31,6 +31,8 @@ bool bloqueado_por_agarrar(Entrenador *entrenador);
 bool bloqueado_por_capturar(Entrenador *entrenador);
 bool bloqueado_por_deadlock(Entrenador *entrenador);
 
+t_list* recibirLocalized(int socket);
+
 void free_entrenador(Entrenador *entrenador);
 
 #endif
