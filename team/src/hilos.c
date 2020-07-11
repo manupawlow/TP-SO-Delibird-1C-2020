@@ -96,6 +96,7 @@ void process_request(int socket_cliente){
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 				cod_op = -1;
+	t_list * loca;
 
 	switch (cod_op){
 	case APPEARED_POKEMON:
@@ -137,11 +138,19 @@ void process_request(int socket_cliente){
 		break;
 
 	case LOCALIZED_POKEMON:
-		 recibirLocalized(socket);
-		if(id_en_lista(mensaje->id_mensaje))
-			llegada_pokemon(mensaje);
-		else
-			log_info(logger, "Descarto mensaje");
+
+		loca=recibirLocalized(socket_cliente);
+
+
+		for(int i=0; i< list_size(loca); i++){
+			Poketeam *poke = list_get(loca,i);
+			log_info(logger,"Pokemon %s pos %d %d", poke->pokemon, poke ->pos.x, poke->pos.y );
+		}
+
+		//if(id_en_lista(mensaje->id_mensaje))
+			//llegada_pokemon(mensaje);
+		//else
+			//log_info(logger, "Descarto mensaje");
 
 		break;
 	case CAUGHT_POKEMON:
