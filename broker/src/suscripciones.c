@@ -947,9 +947,9 @@ pthread_mutex_lock(&mx_memoria);
 		memcpy(&mensaje->pokemon_length, memoria + p->offset_init, sizeof(uint32_t)); //LENGTH
 		mensaje->pokemon = realloc(mensaje->pokemon, mensaje->pokemon_length);
 		memcpy(mensaje->pokemon, memoria + p->offset_init + sizeof(uint32_t), mensaje->pokemon_length); //POKEMON
-		memcpy(&mensaje->cantidad, memoria + p->offset_init + 2 * sizeof(uint32_t), sizeof(uint32_t)); //CANTIDAD
-		memcpy(&mensaje->posx, memoria + p->offset_init + 3 * sizeof(uint32_t), sizeof(uint32_t)); // POS X
-		memcpy(&mensaje->posy, memoria + p->offset_init + 4 * sizeof(uint32_t), sizeof(uint32_t)); // POS Y
+		memcpy(&mensaje->posx, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // POS X
+		memcpy(&mensaje->posy, memoria + p->offset_init + 2 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // POS Y
+		memcpy(&mensaje->cantidad, memoria + p->offset_init + 3 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); //CANTIDAD
 	}
 
 	//TODO APPEARED
@@ -958,13 +958,12 @@ pthread_mutex_lock(&mx_memoria);
 		memcpy(&mensaje->pokemon_length, memoria + p->offset_init, sizeof(uint32_t)); //LENGTH
 		mensaje->pokemon = realloc(mensaje->pokemon, mensaje->pokemon_length);
 		memcpy(mensaje->pokemon, memoria + p->offset_init + sizeof(uint32_t), mensaje->pokemon_length); //POKEMON
-		memcpy(&mensaje->posx, memoria + p->offset_init + 2 * sizeof(uint32_t), sizeof(uint32_t)); //POS X
-		memcpy(&mensaje->posy, memoria + p->offset_init + 3 * sizeof(uint32_t), sizeof(uint32_t)); // POS Y
+		memcpy(&mensaje->posx, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); //POS X
+		memcpy(&mensaje->posy, memoria + p->offset_init + 2 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // POS Y
 	}
 
-	if(strcmp(p->cola,"CAUGHT") == 0){
+	if(strcmp(p->cola,"CAUGHT") == 0)
 		memcpy(&mensaje->resultado, memoria + p->offset_init, sizeof(uint32_t));//RESPUESTA
-	}
 
 pthread_mutex_unlock(&mx_memoria);
 
@@ -1082,7 +1081,7 @@ void cachear_mensaje_new(t_mensaje *msg, int indice_libre){ //uint32 largo, nomb
 
 //Crea una nueva particion
 	Particion *new_particion = malloc(sizeof(Particion));
-	new_particion->cola = malloc(sizeof(char));
+	//new_particion->cola = malloc(sizeof(char));
 
 	new_particion->cola = "NEW";
 	new_particion->id_mensaje = msg->id_mensaje;
@@ -1229,7 +1228,7 @@ void cachear_mensaje_appeared_or_catch(t_mensaje *msg, int indice_libre, char* c
 
 //Crea una nueva particion
 	Particion *new_particion = malloc(sizeof(Particion));
-	new_particion->cola = malloc(sizeof(char));
+	//new_particion->cola = malloc(sizeof(char));
 
 	if(strcmp(cola, "CATCH") == 0)
 		new_particion->cola = "CATCH";
@@ -1303,7 +1302,7 @@ void cachear_mensaje_caught(t_mensaje *msg, int indice_libre){ //uint32 respuest
 
 //Crea una nueva particion
 	Particion *new_particion = malloc(sizeof(Particion));
-	new_particion->cola = malloc(sizeof(char));
+	//new_particion->cola = malloc(sizeof(char));
 
 	new_particion->cola = "CAUGHT";
 	new_particion->id_mensaje = msg->id_mensaje;
@@ -1349,10 +1348,5 @@ void cachear_mensaje_caught(t_mensaje *msg, int indice_libre){ //uint32 respuest
 	list_add(particiones, new_particion);
 
 }
-
-
-
-
-
 
 

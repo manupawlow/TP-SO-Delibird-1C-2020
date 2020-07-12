@@ -145,7 +145,7 @@ void dump_cache(int n){
 
 	f=fopen("dump.txt","w+");
 
-	fprintf(f, "-----------------------------------------------------------------------------------\n");
+	fprintf(f, "-----------------------------------------------------------------------------------------------------------------\n");
 
 	time_t tiempo = time(0);
 	struct tm *tlocal = localtime(&tiempo);
@@ -162,8 +162,8 @@ void dump_cache(int n){
 	char* particion=string_new();
 	Particion* p= list_get(particiones,i);
 			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
-			string_append_with_format(&particion, "%05p - ", &memoria + p->offset_init);
-			string_append_with_format(&particion, "%05p.", &memoria + p->offset_end);
+			string_append_with_format(&particion, "%#05X - ", p->offset_init);
+			string_append_with_format(&particion, "#%05X.", p->offset_end);
 			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->size) );
 			string_append_with_format(&particion, "LRU: %s ", string_itoa(p->tiempo_lru));
 			string_append_with_format(&particion, "Cola: %s", p->cola);
@@ -176,9 +176,9 @@ void dump_cache(int n){
 	for(int i=0; i<list_size(particiones_libres); i++){
 		char* particion = string_new();
 		ParticionLibre* libre = list_get(particiones_libres, i);
-		string_append_with_format(&particion, "Particion: %s: ",string_itoa(contador));
-		string_append_with_format(&particion, "%05p - ", &memoria + libre->offset_init);
-		string_append_with_format(&particion, "%05p.", &memoria + libre->offset_init + libre->size - 1);
+		string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
+		string_append_with_format(&particion, "%#05X - ", libre->offset_init);
+		string_append_with_format(&particion, "%#05X.", libre->offset_init + libre->size - 1);
 		string_append_with_format(&particion, "	[L] Size: %sb ",string_itoa(libre->size) );
 		fprintf(f, "%s\n",particion );
 		contador++;
@@ -186,8 +186,7 @@ void dump_cache(int n){
 	}
 
 
-	fprintf(f, "-----------------------------------------------------------------------------------\n");
-
+	fprintf(f, "-----------------------------------------------------------------------------------------------------------------\n");
 	fclose(f);
 
 	log_info(logger, "<CACHE> Actualize el dump de la cache!");
