@@ -69,6 +69,15 @@ int main(void) {
 		}
 
 
+
+		log_info(logger, "TIMEEEE");
+		log_info(logger, "%d", timestamp());
+		log_info(logger, "%d", timestamp());
+		sleep(2);
+		log_info(logger, "%d", timestamp());
+
+
+
 	/* EJEMPLO PARA TESTEAR LA COMPACTACION
 	  t_mensaje *msg = malloc(sizeof(t_mensaje));
 	msg->pokemon = malloc(sizeof(char));
@@ -109,13 +118,12 @@ int main(void) {
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
 	Colas *colas = malloc(sizeof(Colas));
+	colas->SUSCRITOS_NEW = list_create();
+	colas->SUSCRITOS_LOCALIZED = list_create();
 	colas->SUSCRITOS_GET = list_create();
-
-	colas->cant_suscritos_appeared = 0;
-	colas->cant_suscritos_localized = 0;
-	colas->cant_suscritos_caught =0;
-	colas->cant_suscritos_catch =0;
-	colas->cant_suscritos_new =0;
+	colas->SUSCRITOS_APPEARED = list_create();
+	colas->SUSCRITOS_CATCH = list_create();
+	colas->SUSCRITOS_CAUGHT = list_create();
 
 
     while(1){
@@ -133,6 +141,16 @@ int main(void) {
 
 
 	return EXIT_SUCCESS;
+}
+
+
+uint64_t timestamp(){
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
+	//unsigned long result = (unsigned long) tv.tv_usec;
+	uint64_t a = result;
+	return a;
 }
 
 

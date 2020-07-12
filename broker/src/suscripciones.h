@@ -7,6 +7,7 @@
 void enviar_a_todos(int suscritos[], int cant, char* msg,int size, int cod_op);
 void process_request(Colas *colas);
 uint32_t asignar_id();
+void actualizar_lista_suscritos(t_list*, Proceso*);
 
 //MEMORIA
 void cachear_mensaje_new(t_mensaje*, int);
@@ -25,11 +26,13 @@ int mover_particiones();
 void compactar_memoria();
 void almacenar_mensaje(t_mensaje*, char*);
 void almacenar_particion(t_mensaje*, char*, int);
-void enviar_mensajes_en_memoria(int, char*);
+void enviar_mensajes_en_memoria(Proceso*, char*);
 t_mensaje* leer_particion(Particion*);
 void guardar_ACK(int, t_mensaje*);
 void agregar_enviados(t_mensaje*, t_list*);
-bool recibio_el_mensaje(int, Particion*);
+bool se_le_envio_el_mensaje(Proceso*, Particion*);
+bool devolvio_ack(Proceso*, Particion*);
+
 //buddy
 int potencia_dos_mas_cercana(int);
 int buscar_buddy_por_id(int );
@@ -44,6 +47,7 @@ void consolidar_buddies(Buddy*);
 int tiene_hijos_libres_con_espacio(Buddy*, int);
 int buscar_buddy_por_id_particion(int);
 
+uint64_t timestamp();
 void dump_cache(int);
 void mostrar();
 

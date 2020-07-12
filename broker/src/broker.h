@@ -5,26 +5,10 @@
 #include <bibliotec.h>
 
 typedef struct {
+
 	int socket_cliente;
 
-	t_list* SUSCRITOS_GET;
-
-	int SUSCRITOS_LOCALIZED[10];
-	int cant_suscritos_localized;
-
-	int SUSCRITOS_CATCH[10];
-	int cant_suscritos_catch;
-
-	int SUSCRITOS_CAUGHT[10];
-	int cant_suscritos_caught;
-
-	int SUSCRITOS_NEW[10];
-	int cant_suscritos_new;
-
-	int SUSCRITOS_APPEARED[10];
-	int cant_suscritos_appeared;
-
-	/*	t_list* SUSCRITOS_NEW;
+	t_list* SUSCRITOS_NEW;
 
 	t_list* SUSCRITOS_LOCALIZED;
 
@@ -34,7 +18,8 @@ typedef struct {
 
 	t_list* SUSCRITOS_CATCH;
 
-	t_list* SUSCRITOS_CAUGHT;*/
+	t_list* SUSCRITOS_CAUGHT;
+
 }Colas;
 
 t_log* logger;
@@ -74,6 +59,11 @@ typedef struct{
 	uint32_t id_hijo1;
 	uint32_t id_hijo2;
 }Buddy;
+
+typedef struct{
+	int id_proceso;
+	int socket;
+}Proceso;
 
 uint32_t contador_id_particiones;
 uint32_t contador_id_buddy;
