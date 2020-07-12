@@ -69,7 +69,7 @@ void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FI
 
 char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset);
 int calcularCantidadDeBLoques(char* escribirBloque);
-char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,char* montaje);
+char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje);
 off_t primerBloqueDisponible();
 void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje);
 

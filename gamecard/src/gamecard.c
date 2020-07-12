@@ -46,6 +46,8 @@ int main() {
 	pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
 	pthread_join(conexionGameboy,NULL);*/
 
+	pthread_exit(&conexionGet);
+
 	free(mntPokemon);
 	free(mntBlocks);
 	config_destroy(config);
@@ -111,7 +113,6 @@ void buscarPokemon(t_mensaje* mensaje){
 	    }else{
 
 	    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
-	    	//mensajeGet->pokemon = malloc(mensaje->pokemon_length);
 	    	mensajeGet->pokemon = mensaje->pokemon;
 	    	mensajeGet->pokemon_length = mensaje->pokemon_length;
 	    	char* posiciones = string_new();
@@ -125,7 +126,6 @@ void buscarPokemon(t_mensaje* mensaje){
 
 	    		partirPosicionesYCantidad = string_split(arrayDatos[j],"=");
 
-	    		//mensajeGet->cantidad += atoi(partirPosicionesYCantidad[1]);
 	    		mensajeGet->cantidad++;
 
 	    		if(j==0){
@@ -511,30 +511,34 @@ void nuevoPokemon(t_mensaje* mensaje){
 	FILE * f;
 	t_buffer* buffer;
 	char* montaje= montarPoke(mensaje);
+	pthread_mutex_lock(&mxArchivo);
 	f = fopen(montaje,"r");
 
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
 		asignarBloqueYcrearMeta(mensaje,montaje);
-
-		}else{
+	}
+	pthread_mutex_unlock(&mxArchivo);
+	if(f!=NULL){
 			fclose(f);
 			string_append(&montaje,"/Metadata.bin");
 			f = fopen(montaje,"r");
 			cambiar_meta_blocks(montaje,mensaje);
 			fclose(f);
 
-		}
+	}
 
 	int socketAppeared = crear_conexion(ip, puerto);
 
-		if(socketAppeared ==-1){
-				log_info(logger,"No se pudo conectar con el broker.");
-				//log_info(logger,"%s",datoArchivo);
-		}else{
-			buffer = serializar_mensaje_struct(mensaje);
-			enviar_mensaje_struct(buffer, socketAppeared,APPEARED_POKEMON);
-		}
+	if(socketAppeared ==-1){
+		log_info(logger,"No se pudo conectar con el broker.");
+		//log_info(logger,"%s",datoArchivo);
+	}else{
+		buffer = serializar_mensaje_struct(mensaje);
+		enviar_mensaje_struct(buffer, socketAppeared,APPEARED_POKEMON);
+		free(buffer->stream);
+		free(buffer);
+	}
 }
 
 //-------------------------------------------------------------------------------------
@@ -570,6 +574,7 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 	char* y = string_itoa(mensaje->posy);
 	char* cant = string_itoa(mensaje->cantidad);
 
+	//pthread_mutex_lock(&mxArchivo);
 	offset = primerBloqueDisponible();
 
 	string_append(&bloques,mntBlocks);
@@ -588,14 +593,29 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 		string_append_with_format(&escribirBloque, "=%s\n",cant);
 
 		listaBloquesUsados = agregarBloquesAPartirDeString(escribirBloque,f,offset);
-
 	}
+	//pthread_mutex_unlock(&mxArchivo);
 //Metadata
 
 	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	string_append(&montaje,"/Metadata.bin");
 
-	escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje);
+	//escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje);
+
+	f = fopen(montaje,"w+");
+	escribirMeta(f,mensaje,listaBloquesUsados);
+	fprintf(f,"OPEN=Y");
+	fclose(f);
+	log_info(logger,"%d",tiempoDeRetardo);
+	log_info(logger,"Empiezo a esperar");
+	sleep(tiempoDeRetardo);
+	f=fopen(montaje,"w+");
+	escribirMeta(f,mensaje,listaBloquesUsados);
+	fprintf(f,"OPEN=N");
+	fclose(f);
+	log_info(logger,"Termino de esperar");
+
+	free(montaje);
 
 	free(bloques);
 	free(escribirBloque);
@@ -619,7 +639,8 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 	if(strlen(escribirBloque)>blockSize)
 		loQueNoEntraEnUnBloque = string_substring_from(escribirBloque,blockSize);
 	int cantidadDeBloques = calcularCantidadDeBLoques(escribirBloque);
-	log_info(logger,string_itoa(cantidadDeBloques));
+	char* cantidadDeBloquesString = string_itoa(cantidadDeBloques);
+	log_info(logger,cantidadDeBloquesString);
 	int i = 1;
 
 	fprintf(f,"%s",loQueEntraEnUnBloque);
@@ -654,6 +675,7 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 	free(contadores);
 	free(loQueEntraEnUnBloque);
 	free(loQueNoEntraEnUnBloque);
+	free(cantidadDeBloquesString);
 
 	return bloquesUsados;
 }
@@ -701,17 +723,21 @@ void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){
 }
 
 void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje){
+	pthread_mutex_lock(&mxArchivo);
 	f = fopen(montaje,"w+");
 	escribirMeta(f,mensaje,listaBloquesUsados);
 	fprintf(f,"OPEN=Y");
 	fclose(f);
+	pthread_mutex_unlock(&mxArchivo);
 	log_info(logger,"%d",tiempoDeRetardo);
 	log_info(logger,"Empiezo a esperar");
 	sleep(tiempoDeRetardo);
+	pthread_mutex_lock(&mxArchivo);
 	f=fopen(montaje,"w+");
 	escribirMeta(f,mensaje,listaBloquesUsados);
 	fprintf(f,"OPEN=N");
 	fclose(f);
+	pthread_mutex_unlock(&mxArchivo);
 	log_info(logger,"Termino de esperar");
 
 	free(montaje);
@@ -731,24 +757,23 @@ void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista){
 	fprintf(f,"DIRECTORY=N\n");
 	fprintf(f,"SIZE=%d\n",blockSize*i);
 	fprintf(f,"BLOCKS=[%s]\n",blocks);
+
+	free(blocks);
 }
 
 void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     FILE* fblocks;
-    char* bloques = string_new();
-    char* valorOpen = string_new();
 
-
-    char* datosBins = string_new();
+    char* datosBins;
     char** listaBloquesUsados;
     char* bloquesActualizados;
 
     esperaOpen(montaje);
 
+    pthread_mutex_lock(&mxArchivo);
+    datosBins = guardarDatosBins(mensaje);
 
-    datosBins=guardarDatosBins(mensaje);
-
-    bloquesActualizados = verificarCoincidenciasYsumarCantidad(datosBins,mensaje,montaje);
+    bloquesActualizados = verificarCoincidenciasYsumarCantidad(datosBins,mensaje);
 
     off_t offsetVacio = primerBloqueDisponible();
 
@@ -757,24 +782,20 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
     fblocks = fopen(montajeBlocks,"w");
     listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
-
-    //mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    pthread_mutex_unlock(&mxArchivo);
 
     escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje);
 
-    free(bloques);
-    free(valorOpen);
     free(datosBins);
     free(bloquesActualizados);
-
-    //freeDoblePuntero(arrayBloques);
+    free(montajeBlocks);
 
     freeDoblePuntero(listaBloquesUsados);
 
 
 }
 
-char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,char* montaje){
+char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje){
 
     char* mensajePosiciones = string_new();
 
@@ -796,10 +817,12 @@ char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,c
 		if(strcmp(posicionDeBloque[0],mensajePosiciones) == 0){
 			char** dividirPosicionCantidad = string_split(bloques[i],"=");
 			int cantidadActualizada = mensaje->cantidad + atoi(dividirPosicionCantidad[1]);
-			string_append_with_format(&mensajePosiciones, "=%s",string_itoa(cantidadActualizada));//Aca el mensajePosicones equivaldria a las posiciones con la cantidad actualizada
+			char* cantidadActualizadaString = string_itoa(cantidadActualizada);
+			string_append_with_format(&mensajePosiciones, "=%s",cantidadActualizadaString);//Aca el mensajePosicones equivaldria a las posiciones con la cantidad actualizada
 			string_append_with_format(&bloquesActualizados,"%s\n",mensajePosiciones);
 			contadorDeCoincidencias++;
 			freeDoblePuntero(dividirPosicionCantidad);
+			free(cantidadActualizadaString);
 		}else{
 			string_append_with_format(&bloquesActualizados,"%s\n",bloques[i]);
 		}
@@ -823,36 +846,43 @@ char* verificarCoincidenciasYsumarCantidad(char* datosBins, t_mensaje* mensaje,c
 }
 
 char* guardarDatosBins(t_mensaje* mensaje){
-char* datosBins= string_new();
-FILE* fblocks;
-     int i = 0;
-     char** arrayBloques= agarrarBlocks(mensaje);
+	char* datosBins = string_new();
+	FILE* fblocks;
+    int i = 0;
+    char** arrayBloques = agarrarBlocks(mensaje);
 
-        //Con este while recorro cada .bin
-        while(arrayBloques[i] != NULL){
-            char* montajeBlocks = montarBlocks(arrayBloques, i);
-            fblocks= fopen(montajeBlocks, "r");
-            //Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
-            if(fblocks==NULL){
-                log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-            }else{
-                int c;
-                do {
-                      c = fgetc(fblocks);
-                      if( feof(fblocks) ) {
-                         break ;
-                      }
-                      string_append_with_format(&datosBins,"%c",c);
-                   } while(1);
-                fclose(fblocks);
-                off_t offset = atoi(arrayBloques[i]);
-                bitarray_clean_bit(bitmap, offset);
-                log_info(logger,datosBins);
-            }
-            i++;
-            free(montajeBlocks);
-        }
-return datosBins;
+    //Con este while recorro cada .bin
+    while(arrayBloques[i] != NULL){
+    	char* montajeBlocks = montarBlocks(arrayBloques, i);
+    	fblocks= fopen(montajeBlocks, "r");
+    	//Si fblocks es igual a NULL significa que el .bin que trato de abrir no esta en la carpeta Blocks
+    	if(fblocks==NULL){
+    		log_info(logger,"El bloque %s no existe", arrayBloques[i]);
+    	}else{
+    		int c;
+    		do {
+    			c = fgetc(fblocks);
+    			if( feof(fblocks) ) {
+    				break ;
+    			}
+    			string_append_with_format(&datosBins,"%c",c);
+    		} while(1);
+
+    		fclose(fblocks);
+
+    		off_t offset = atoi(arrayBloques[i]);
+
+    		bitarray_clean_bit(bitmap, offset);
+
+    		log_info(logger,datosBins);
+    	}
+    	i++;
+    	free(montajeBlocks);
+    }
+
+    freeDoblePuntero(arrayBloques);
+
+    return datosBins;
 }
 
 // CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1115,7 +1145,7 @@ char** agarrarBlocks(t_mensaje* mensaje){
 	string_append(&montaje,mntPokemon);
 	string_append_with_format(&montaje,"%s/Metadata.bin",mensaje->pokemon);
 
-	char* bloques = string_new();
+	char* bloques;
 	t_config* configBloques = config_create(montaje);
 	bloques = config_get_string_value(configBloques,"BLOCKS");
 
@@ -1124,30 +1154,32 @@ char** agarrarBlocks(t_mensaje* mensaje){
 	char**arrayBloques = string_split(nroBloque[0],","); //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
 
 	config_destroy(configBloques);
-
+	free(montaje);
+	freeDoblePuntero(basura);
+	freeDoblePuntero(nroBloque);
 
 	return arrayBloques;
 }
 
 void esperaOpen(char* montaje){
-	char * valorOpen = string_new();
+	char * valorOpen;
 	t_config* configBloques;
 
 	configBloques=config_create(montaje);
 
 	valorOpen = config_get_string_value(configBloques,"OPEN");
-		//reintento volver a abrir
-		while(strcmp(valorOpen,"Y") == 0){
-			log_info(logger,"Estoy esperando");
-			log_info(logger,"%s",valorOpen);
-			sleep(tiempoDeReintento);
+	//reintento volver a abrir
+	while(strcmp(valorOpen,"Y") == 0){
+		log_info(logger,"Estoy esperando");
+		log_info(logger,"%s",valorOpen);
+		sleep(tiempoDeReintento);
 
-			config_destroy(configBloques);
-		    configBloques = config_create(montaje);
-
-			valorOpen = config_get_string_value(configBloques,"OPEN");
-		}
 		config_destroy(configBloques);
+	    configBloques = config_create(montaje);
+
+		valorOpen = config_get_string_value(configBloques,"OPEN");
+	}
+	config_destroy(configBloques);
 }
 
 int existePokemon(t_mensaje* mensaje){
