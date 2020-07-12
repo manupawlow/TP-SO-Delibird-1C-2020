@@ -1,7 +1,17 @@
 #include "broker.h"
 #include "suscripciones.h"
 #include <signal.h>
-#include <time.h>
+
+
+
+uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIME.H>
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
+	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
+	uint64_t a = result;
+	return a;
+}
 
 int main(void) {
 
@@ -31,7 +41,6 @@ int main(void) {
 
 		pthread_mutex_init(&mx_memoria, NULL);
 		pthread_mutex_init(&mx_mostrar, NULL);
-		pthread_mutex_init(&mx_lru, NULL);
 
 		frecuencia_compactacion = config_get_int_value(config,"FRECUENCIA_COMPACTACION");
 		tamanio_minimo = config_get_int_value(config,"TAMANO_MINIMO_PARTICION");
@@ -42,7 +51,6 @@ int main(void) {
 
 		memoria = malloc(memory_size);
 		contador_id_particiones = 0;
-		tiempo_lru = 0;
 		particiones = list_create();
 		if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 			particiones_libres = list_create();
@@ -68,13 +76,8 @@ int main(void) {
 			list_add(buddies, primer_buddy);
 		}
 
-
-
-		log_info(logger, "TIMEEEE");
-		log_info(logger, "%d", timestamp());
-		log_info(logger, "%d", timestamp());
-		sleep(2);
-		log_info(logger, "%d", timestamp());
+		log_info(logger, "<BROKER CONFIGURATION> %s | %s | %s | %d | %d | %d ",
+			algoritmo_memoria, algoritmo_particion_libre, algoritmo_reemplazo, memory_size, tamanio_minimo, frecuencia_compactacion);
 
 
 
@@ -90,6 +93,7 @@ int main(void) {
 
 		log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
 			almacenar_particion(msg, "GET");
+
 				log_info(logger, "cantidad libres despues %d   cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
 
 				log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
@@ -143,15 +147,6 @@ int main(void) {
 	return EXIT_SUCCESS;
 }
 
-
-uint64_t timestamp(){
-	struct timeval tv;
-	gettimeofday(&tv,NULL);
-	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
-	//unsigned long result = (unsigned long) tv.tv_usec;
-	uint64_t a = result;
-	return a;
-}
 
 
 

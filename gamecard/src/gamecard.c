@@ -1,5 +1,10 @@
 #include "gamecard.h"
-int main() {
+
+char* ID_PROCESO;
+
+int main(int argc, char *argv[]) {
+
+	ID_PROCESO = argv[1];
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
@@ -434,7 +439,7 @@ void funcionGet(){
         conexionGet= reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
-	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
+	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
 	log_info(logger,"Me suscribi a la cola GET!");
 
 

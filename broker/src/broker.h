@@ -33,7 +33,7 @@ typedef struct{
 	uint32_t size;
 	uint32_t offset_init;
 	uint32_t offset_end;
-	uint32_t tiempo_lru;
+	uint64_t tiempo_lru;
 
 	uint8_t id_mensaje;
 	char* cola;
@@ -67,7 +67,6 @@ typedef struct{
 
 uint32_t contador_id_particiones;
 uint32_t contador_id_buddy;
-uint32_t tiempo_lru;
 
 t_list *particiones;
 t_list *particiones_libres;

@@ -32,6 +32,8 @@ void guardar_ACK(int, t_mensaje*);
 void agregar_enviados(t_mensaje*, t_list*);
 bool se_le_envio_el_mensaje(Proceso*, Particion*);
 bool devolvio_ack(Proceso*, Particion*);
+int buscar_particion_por_id(int);
+int buscar_particion_por_id_mensaje(int);
 
 //buddy
 int potencia_dos_mas_cercana(int);
@@ -40,7 +42,6 @@ int dividir_buddy(Buddy*);
 void almacenar_buddy(t_mensaje*, char*, int);
 int indice_buddy_libre_para_almacenar(int);
 void almacenar_en_hijo_si_corresponde(int, t_mensaje*, char*, int);
-int buscar_particion_por_id(int);
 void borrar_buddy();
 void delete_buddy(Buddy*);
 void consolidar_buddies(Buddy*);
