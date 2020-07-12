@@ -5,6 +5,7 @@
 void process_request(Colas *loquito) {
     int cod_op;
 	t_mensaje* mensaje;
+	t_mensaje_get* mensajeGet;
 	char* mensajeACK;
 	t_buffer *buffer;
 
@@ -67,9 +68,9 @@ void process_request(Colas *loquito) {
 		case LOCALIZED_POKEMON:
 			//Agrega el mensaje a la cola localized
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
-			mensaje->id_mensaje = asignar_id();
-			buffer = serializar_mensaje_struct(mensaje);
+			mensajeGet = recibir_mensaje_struct_get(loquito->socket_cliente);
+			mensajeGet->id_mensaje = asignar_id();
+			buffer = serializar_mensaje_struct_get(mensajeGet);
 
 			for(int i=0; i< loquito->cant_suscritos_localized; i++){
 				enviar_mensaje_struct(buffer,loquito->SUSCRITOS_LOCALIZED[i],LOCALIZED_POKEMON);

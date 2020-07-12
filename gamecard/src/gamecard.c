@@ -111,20 +111,27 @@ void buscarPokemon(t_mensaje* mensaje){
 	    }else{
 
 	    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
+	    	//mensajeGet->pokemon = malloc(mensaje->pokemon_length);
 	    	mensajeGet->pokemon = mensaje->pokemon;
 	    	mensajeGet->pokemon_length = mensaje->pokemon_length;
-	    	mensajeGet->posiciones = string_new();
+	    	char* posiciones = string_new();
+	    	mensajeGet->id_mensaje = 0;
+			mensajeGet->id_mensaje_correlativo = 0;
+			mensajeGet->cantidad = 0;
 			int j = 0;
 
 	    	while(arrayDatos[j] != NULL){
 	    		char** partirPosicionesYCantidad;
 
 	    		partirPosicionesYCantidad = string_split(arrayDatos[j],"=");
-	    		mensajeGet->cantidad += atoi(partirPosicionesYCantidad[1]);
 
-	    		for(int i = 0;i<atoi(partirPosicionesYCantidad[1]);i++){
+	    		//mensajeGet->cantidad += atoi(partirPosicionesYCantidad[1]);
+	    		mensajeGet->cantidad++;
 
-	    			string_append_with_format(&mensajeGet->posiciones,".%s",partirPosicionesYCantidad[0]);
+	    		if(j==0){
+	    			string_append(&posiciones,partirPosicionesYCantidad[0]);
+	    		}else{
+	    			string_append_with_format(&posiciones,".%s",partirPosicionesYCantidad[0]);
 	    		}
 
 	    		freeDoblePuntero(partirPosicionesYCantidad);
@@ -133,8 +140,15 @@ void buscarPokemon(t_mensaje* mensaje){
 
 	    	freeDoblePuntero(arrayDatos);
 
+	    	mensajeGet->posiciones_length = strlen(posiciones)+1;
+	    	mensajeGet->posiciones = malloc(mensajeGet->posiciones_length);
+	    	strcpy(mensajeGet->posiciones,posiciones);
+
 	    	buffer = serializar_mensaje_struct_get(mensajeGet);
 	    	enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
+	    	free(posiciones);
+	    	free(buffer->stream);
+	    	free(buffer);
 	    }
 
 	}else{
@@ -437,7 +451,7 @@ void funcionACK(){
 
 void process_request(int socket){
 	int cod_op;
-	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+	t_mensaje* mensaje;
 
 	if(recv(socket, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
@@ -452,7 +466,7 @@ void process_request(int socket){
 		pthread_detach(solicitudGet);
 		//free(mensaje->pokemon);
 		//free(mensaje->resultado);
-		free(mensaje);
+		//free(mensaje);
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);

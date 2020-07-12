@@ -221,6 +221,7 @@ t_mensaje_get* deserializar_mensaje_struct_get(t_buffer* buffer)
 	memcpy(&(mensaje->posiciones_length), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
 	mensaje->posiciones = malloc(mensaje->posiciones_length);
+	memcpy(mensaje->posiciones, stream, mensaje->posiciones_length);
 
 
 	return mensaje;

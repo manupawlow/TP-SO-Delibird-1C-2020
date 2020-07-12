@@ -482,7 +482,7 @@ t_list* recibirLocalized(int socket){
 
     	//free(pokemon);
     	freeDoblePuntero(posiciones);
-
+    	i++;
     }
 
     return listaPoke;
