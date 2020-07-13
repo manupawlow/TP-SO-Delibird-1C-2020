@@ -112,6 +112,8 @@ int main(int argc, char *argv[]) {
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			free(buffer->stream);
 			free(buffer);
+			free(mensaje_a_recibir->pokemon);
+			free(mensaje_a_recibir);
 		} else if(strcmp(argv[1],"GAMECARD") == 0){
 			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
 			strcpy(mensaje_struct->pokemon,argv[3]);
@@ -152,6 +154,8 @@ int main(int argc, char *argv[]) {
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			free(buffer->stream);
 			free(buffer);
+			free(mensaje_a_recibir->pokemon);
+			free(mensaje_a_recibir);
 		}
 	}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
@@ -179,6 +183,8 @@ int main(int argc, char *argv[]) {
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			free(buffer->stream);
 			free(buffer);
+			free(mensaje_a_recibir->pokemon);
+			free(mensaje_a_recibir);
 		}
 	}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
 		mensaje_struct->id_mensaje_correlativo = atoi(argv[3]);
@@ -210,6 +216,8 @@ int main(int argc, char *argv[]) {
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			free(buffer->stream);
 			free(buffer);
+			free(mensaje_a_recibir->pokemon);
+			free(mensaje_a_recibir);
 		}
 	}
 	//Este es para hacer las pruebas
@@ -230,8 +238,6 @@ int main(int argc, char *argv[]) {
 	}
 	free(ips);
 	free(puertos);
-	//free(mensaje_a_recibir->pokemon);
-	//free(mensaje_a_recibir);
 
 	terminar_programa(conexion,logger,config);
 
