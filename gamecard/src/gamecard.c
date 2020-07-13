@@ -44,6 +44,9 @@ int main(int argc, char* argv[]) {
 	pthread_join(conexionCatch,NULL);
 
 	pthread_exit(&conexionGet);
+	pthread_exit(&conexionNew);
+	pthread_exit(&conexionCatch);
+	pthread_exit(&conexionGameboy);
 
 	free(mntPokemon);
 	free(mntBlocks);
@@ -105,7 +108,6 @@ void buscarPokemon(t_mensaje* mensaje){
 
 	    if(socketLoc ==-1){
 	    	log_info(logger,"No se pudo conectar con el broker.");
-	    	//log_info(logger,"%s",datoArchivo);
 
 	    }else{
 
@@ -114,7 +116,7 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	mensajeGet->pokemon_length = mensaje->pokemon_length;
 	    	char* posiciones = string_new();
 	    	mensajeGet->id_mensaje = 0;
-			mensajeGet->id_mensaje_correlativo = 0;
+			mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
 			mensajeGet->cantidad = 0;
 			int j = 0;
 
@@ -147,12 +149,25 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	free(buffer->stream);
 	    	free(buffer);
 	    }
-
+	    free(montaje);
 	}else{
-	//mandar mensaje sin posiciones ni cantidades
+
+		int socketLoc = crear_conexion(ip, puerto);
+
+    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
+    	mensajeGet->pokemon = mensaje->pokemon;
+    	mensajeGet->pokemon_length = mensaje->pokemon_length;
+    	mensajeGet->posiciones = string_new();
+    	mensajeGet->posiciones_length = sizeof(mensajeGet->posiciones);
+    	mensajeGet->id_mensaje = 0;
+		mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
+		mensajeGet->cantidad = 0;
+		buffer = serializar_mensaje_struct_get(mensajeGet);
+    	enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
+    	free(buffer->stream);
+    	free(buffer);
 	}
-
-
+	free(mensaje);
 }
 
 
@@ -534,8 +549,8 @@ void nuevoPokemon(t_mensaje* mensaje){
 
 	if(socketAppeared ==-1){
 		log_info(logger,"No se pudo conectar con el broker.");
-		//log_info(logger,"%s",datoArchivo);
 	}else{
+		mensaje->id_mensaje_correlativo = mensaje->id_mensaje;
 		buffer = serializar_mensaje_struct(mensaje);
 		enviar_mensaje_struct(buffer, socketAppeared,APPEARED_POKEMON);
 		free(buffer->stream);
@@ -879,248 +894,6 @@ char* guardarDatosBins(t_mensaje* mensaje){
     return datosBins;
 }
 
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// CODIGO VIEJO DE ACA EN ADELANTE ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-t_block* buscarCoincidencias(FILE* fblocks, t_mensaje* mensaje){
-    t_block* block = malloc(sizeof(t_block));
-    int i;
-    int contadorDeCoincidencias = 0; //Si aumenta esto, significa que el pokemon que mandamos en mensaje coincide con alguno de los que teniamos en el .bin
-    char* blockAComparar = string_new(); //Aca se va a guardar cada linea de texto del .bin que estemos recorriendo
-    char* cantidadDePokemon = string_new();
-    char** posicionesYCantidad;
-    char* mensajePosiciones = string_new(); //Con esto convertimos las posiciones del mensaje recibido por parametro en un string de tipo "1-1"
-    char* blockARenovar = string_new(); //Aca se va a guardar la linea de texto(solo las posiciones) del .bin que estemos recorriendo que se va a tener que cambiar(en el caso que encuentre coincidencias)
-    char** blocksRenovados;             //o agregar(en el caso en el que no encuentre coincidencias) dentro de ese .bin
-    char* basura = string_new(); //En basura se guardan las lineas de texto del .bin y la linea de texto que hay que renovar, separado por espacios
-    string_append(&mensajePosiciones,string_itoa(mensaje->posx));
-    string_append_with_format(&mensajePosiciones,"-%s",string_itoa(mensaje->posy));
-
-    fscanf(fblocks," %[^\n]",blockAComparar);
-    while(!feof(fblocks)){
-        posicionesYCantidad = string_split(blockAComparar,"="); //En posicioneYCantidad[0] se guardan solo las posiciones x e y
-        if(strcmp(posicionesYCantidad[0], mensajePosiciones) == 0){
-            int cant = atoi(posicionesYCantidad[1]); //En posicionesYCantidad[1] se guarda la cantidad de posicioneYCantidad[0]
-            cant += mensaje->cantidad;
-            cantidadDePokemon = string_itoa(cant);
-            string_append(&blockARenovar,mensajePosiciones);
-            string_append_with_format(&blockARenovar,"=%s",cantidadDePokemon);
-            log_info(logger,"%s",blockARenovar);
-            string_append_with_format(&basura,"%s ",blockARenovar);
-            contadorDeCoincidencias++;
-        }else{
-            string_append_with_format(&basura,"%s ",blockAComparar);
-        }
-        i++;
-        fscanf(fblocks," %[^\n]",blockAComparar);
-    }
-    fclose(fblocks);
-    //Si el contadorDeCoindencias es 0 entonces vamos a agregar el blockARenovar junto con la cantidad pasada por t_mensaje* mensaje al char* basura
-    if(contadorDeCoincidencias == 0){
-        string_append(&blockARenovar,mensajePosiciones);
-        string_append_with_format(&blockARenovar,"=%s",string_itoa(mensaje->cantidad));
-        string_append_with_format(&basura,"%s",blockARenovar);
-    }
-    blocksRenovados = string_split(basura," "); //En blocksRenovador guardamos un array de tipo char** de cada linea de texto del .bin con el blockARenovar incluido
-    block->blocksRenovados = blocksRenovados;
-    block->blockARenovar = blockARenovar;
-
-    free(blockAComparar);
-    free(cantidadDePokemon);
-    free(posicionesYCantidad);
-    free(mensajePosiciones);
-    free(basura);
-    return block;
-}
-
-void verificarTamBlockYActualizarlo(int size,t_block* block, FILE* fblocks, char* montajeBlocks, char* montaje, char** nroBloque){
-
-	int i=0;
-	int tamTotal=0; //Es el tamaño total de nuestro .bin, con el blockARenovar incluido
-	while(block->blocksRenovados[i]!=NULL){
-		tamTotal+= strlen(block->blocksRenovados[i]) +1;
-		i++;
-	}
-
-	//Si el tamTotal es <= size significa que el blockARenovar se puede agregar a ese .bin
-	//En caso contrario, se debe crear un .bin nuevo, que es lo que se hace en el else
-	if(tamTotal <= size){
-		pthread_mutex_lock(&mxArchivo);
-		recrearBlock(fblocks,block->blocksRenovados,montajeBlocks);
-		free(block->blocksRenovados);
-		free(block->blockARenovar);
-		free(block);
-		pthread_mutex_unlock(&mxArchivo);
-
-	}else{
-		char** copiaBlocks;
-		//copiarBlocksMenosElQueSuperaElSize() saca del .bin la posicion que excede los bytes del size y devuelve las otras posiciones que estaban en ese .bin
-		copiaBlocks = copiarBlocksMenosElQueSuperaElSize(fblocks,montajeBlocks,block);
-
-		//Aca se recrea ese .bin sin la posicion que excede los bytes del size
-		pthread_mutex_lock(&mxArchivo);
-		recrearBlock(fblocks,copiaBlocks,montajeBlocks);
-		pthread_mutex_unlock(&mxArchivo);
-
-		//Aca se busca si ya existe un .bin en donde entre la posicion anteriormente excluida
-		//En el caso en el que exista y con ese .bin no exceda el size del block, se lo agrega al final de ese .bin
-		//En el caso en el que no exista, se crea un nuevo .bin en el que se lo agrega
-		buscarBinEnDondeEntreElBlockARenovarYRenovarlo(nroBloque,size,fblocks,block,montaje);
-
-		free(copiaBlocks);
-	}
-
-
-}
-
-void reescribirMeta(char* montaje, char*nuevoBloque,char**nroBloque){
-	FILE* fmeta;
-	char* todo = string_new();
-
-	string_append(&todo,nroBloque[0]);
-	string_append_with_format(&todo,",%s",nuevoBloque);
-
-	fmeta=fopen(montaje,"w+");
-
-	log_info(logger,"%s",todo);
-	fprintf(fmeta,"DIRECTORY=N\n");
-	fprintf(fmeta,"SIZE=%d\n",blockSize);
-	fprintf(fmeta,"BLOCKS=[%s]\n",todo);
-	fprintf(fmeta,"OPEN=Y");
-	log_info(logger,"Empiezo a esperar");
-	fclose(fmeta);
-
-	sleep(tiempoDeRetardo);
-
-	fmeta=fopen(montaje,"w+");
-
-	log_info(logger,"%s",todo);
-	fprintf(fmeta,"DIRECTORY=N\n");
-	fprintf(fmeta,"SIZE=%d\n",blockSize);
-	fprintf(fmeta,"BLOCKS=[%s]\n",todo);
-	fprintf(fmeta,"OPEN=N");
-
-	fclose(fmeta);
-	log_info(logger,"Termino de esperar");
-
-	free(todo);
-	free(montaje);
-}
-
-void buscarBinEnDondeEntreElBlockARenovarYRenovarlo(char** nroBloque,int size,FILE * fblocks,t_block* block, char* montaje){
-	char** arrayBloques; //En la variable arrayBloques se guarda un array de tipo char** de cada .bin
-	int encontroBinBool = 0; //Si aumenta esto, significa que existe un .bin en el que si agregamos el block->blockARenovar, no excede el size del block
-	int i = 0;
-
-	arrayBloques=string_split(nroBloque[0],",");
-	while(arrayBloques[i] != NULL){
-		char* montajeBlocks=string_new();
-		string_append(&montajeBlocks,mntBlocks);
-        string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[i]);
-        fblocks= fopen(montajeBlocks, "r");
-
-        if(fblocks == NULL){
-            log_info(logger,"El bloque %s no existe", arrayBloques[i]);
-        }else{
-        	char* blockAGuardar = string_new();
-        	char* basura = string_new();
-        	char** blockTotal;
-        	fscanf(fblocks," %[^\n]",blockAGuardar);
-
-        	while(!feof(fblocks)){
-        		string_append_with_format(&basura,"%s ",blockAGuardar);
-        		fscanf(fblocks," %[^\n]",blockAGuardar);
-        	}
-        	string_append_with_format(&basura,"%s ",block->blockARenovar);
-        	blockTotal = string_split(basura," ");
-        	fclose(fblocks);
-
-        	int j=0;
-        	int tamTotal=0;
-
-        	while(blockTotal[j]!=NULL){
-        		tamTotal+= strlen(blockTotal[j]) +1;
-        		j++;
-        	}
-
-        	if(tamTotal <= size){
-        		pthread_mutex_lock(&mxArchivo);
-        		recrearBlock(fblocks,blockTotal,montajeBlocks);
-        		pthread_mutex_unlock(&mxArchivo);
-        		encontroBinBool++;
-        		break;
-        	}
-        	free(blockAGuardar);
-        	free(basura);
-        	free(blockTotal);
-        }
-        i++;
-        free(montajeBlocks);
-	}
-	if(encontroBinBool == 0){
-		//contadorBloques++;
-		//char* contador = string_itoa(contadorBloques);
-		char* bloques = string_new();
-
-		string_append(&bloques,"/home/utnso/Escritorio/TALL_GRASS/Blocks/");
-		//string_append_with_format(&bloques,"%s.bin",contador);
-
-		fblocks=fopen(bloques,"w+");
-
-		fprintf(fblocks,"%s\n",block->blockARenovar);
-		fclose(fblocks);
-
-		//reescribirMeta(montaje, contador,nroBloque);
-
-		//free(contador);
-		free(bloques);
-	}
-	free(arrayBloques);
-	free(nroBloque);
-	free(block->blocksRenovados);
-	free(block->blockARenovar);
-	free(block);
-}
-
-char** copiarBlocksMenosElQueSuperaElSize(FILE * fblocks, char* montajeBlocks,t_block* block){
-	char** copiaBlocks;
-	char* basura = string_new();
-	char* blockACopiar = string_new();
-	char** posicionesYCantidadDeBlockACopiar;
-	char** posicionesYCantidadDeBlockQueNoQueremosCopiar;
-
-	fblocks = fopen(montajeBlocks,"r");
-	fscanf(fblocks," %[^\n]",blockACopiar);
-	while(!feof(fblocks)){
-		posicionesYCantidadDeBlockACopiar = string_split(blockACopiar,"=");
-		posicionesYCantidadDeBlockQueNoQueremosCopiar = string_split(block->blockARenovar,"=");
-		if(strcmp(posicionesYCantidadDeBlockACopiar[0],posicionesYCantidadDeBlockQueNoQueremosCopiar[0]) == 0){
-			//Literal no tiene que hacer nada, asi no se copia a basura el que hay q renovar(que es el que hace superar el size)
-		}else{
-			string_append_with_format(&basura,"%s ",blockACopiar);
-		}
-		fscanf(fblocks," %[^\n]",blockACopiar);
-	}
-	fclose(fblocks);
-	copiaBlocks = string_split(basura," ");
-
-	free(basura);
-	free(blockACopiar);
-	free(posicionesYCantidadDeBlockACopiar);
-	free(posicionesYCantidadDeBlockQueNoQueremosCopiar);
-
-	return copiaBlocks;
-}
-
-// ESTO ERA TUYO GONZA NO SE SI LO USAMOS O NO AL FINAL----------------------------------------------------------------------------------
-
 //FUNCIONES AUXILIARES, MAS VALE QUE SE USAN PA, TE EMBELLECEN TODO EL CODIGO
 
 char* montarBlocks(char** arrayBloques, int i){
@@ -1179,20 +952,20 @@ void esperaOpen(char* montaje){
 int existePokemon(t_mensaje* mensaje){
 	FILE* fp;
 
-	char* montajePokemon= string_new();
+	char* montajePokemon = string_new();
 
 	string_append(&montajePokemon, mntPokemon);
 	string_append(&montajePokemon, mensaje->pokemon);
 
 	fp= fopen(montajePokemon, "r");
 	if(fp==NULL){
+		free(montajePokemon);
 		return 0;
 	}else{
 		fclose(fp);
+		free(montajePokemon);
 		return 1;
 	}
-
-	free(montajePokemon);
 
 }
 

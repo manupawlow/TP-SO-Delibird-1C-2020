@@ -48,7 +48,8 @@ void process_request(Colas *loquito) {
 			for(int i=0; i<list_size(loquito->SUSCRITOS_GET); i++)
 				enviar_mensaje_struct(buffer, list_get(loquito->SUSCRITOS_GET, i), GET_POKEMON);
 
-			//free(buffer);
+			free(buffer->stream);
+			free(buffer);
 
 			log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
