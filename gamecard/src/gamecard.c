@@ -1,14 +1,22 @@
 #include "gamecard.h"
-int main(int argc, char* argv[]) {
+int main(/*int argc, char* argv[]*/) {
 
-	ID_PROCESO = argv[1];
+	//ID_PROCESO = argv[1];
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config = config_create(conf);
 
-	fs(config,blockSize,cantBlocks);
+	char* montajeFS= config_get_string_value(config, "PUNTO_MONTAJE_TALLGRASS");
+	FILE* f= fopen(montajeFS, "r");
+
+	if(f==NULL){
+		fs(config,blockSize,cantBlocks);
+	}else{
+		fclose(f);
+	}
+	free(montajeFS);
 
 	ip = config_get_string_value(config,"IP_BROKER");
 	puerto = config_get_string_value(config,"PUERTO_BROKER");
@@ -204,7 +212,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 			arrayTodo=guardarDatosBins(mensaje);
 
-			char** datosSeparados= string_split(arrayTodo, "\n");
+			char** datosSeparados=string_split(arrayTodo, "\n");
 			int j=0;
 
 			while(datosSeparados!=NULL){
@@ -216,6 +224,13 @@ int socketCaugth = crear_conexion(ip, puerto);
 					existe=1;
 					if(atoi(posiciones[1])<2){
 						datosSeparados[j]= datosSeparados[j+1];
+
+						if(datosSeparados[0]==NULL){
+							// hay q clean el bloque y cambiar al meta sin bloques
+							char** listaNull = NULL;
+							escrituraDeMeta(f,mensaje,listaNull,montaje,"");
+						}
+
 					}else{
 						//falta free
 						char* nuevaLinea=string_new();
@@ -243,7 +258,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 //si no existe informa error
 			if(existe==0){
 				log_info(logger,"ERROR. No existe esa posicion.");
-//mandar a broker q no existe.
+				//manda a broker q no existe.
 				mensaje->resultado= 0;
 				mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
 				buffer = serializar_mensaje_struct(mensaje);
@@ -251,36 +266,39 @@ int socketCaugth = crear_conexion(ip, puerto);
 				free(buffer->stream);
 				free(buffer);
 			}else{
+				if(datosSeparados[0]!= NULL){
+					//escribir en los archivos
+					char* datosJuntos= string_new();
+					int i=0;
 
-//escribir en los archivos
-				char* datosJuntos= string_new();
-				int i=0;
+					while(datosSeparados[i]!= NULL){
+						string_append_with_format(&datosJuntos, "%s\n", datosSeparados[i]);
+						i++;
+					}
 
-				while(datosSeparados[i]!= NULL){
-					string_append_with_format(&datosJuntos, "%s\n", datosSeparados[i]);
-					i++;
+				//falta clean bit en los bloques viejos
+
+				off_t offsetVacio = primerBloqueDisponible();
+
+				char* montajeBlocks = string_new();
+				string_append(&montajeBlocks,mntBlocks);
+				string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
+				f = fopen(montajeBlocks,"w");
+				char **listaBloquesUsados = agregarBloquesAPartirDeString(datosJuntos,f,offsetVacio);
+
+
+				escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,datosJuntos);
+
+
+				freeDoblePuntero(listaBloquesUsados);
+				free(datosJuntos);
+				free(montajeBlocks);
+
+
+
+				//free(nuevaCant);
 				}
 
-			//falta clean bit en los bloques viejos
-
-			off_t offsetVacio = primerBloqueDisponible();
-
-			char* montajeBlocks = string_new();
-			string_append(&montajeBlocks,mntBlocks);
-			string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
-			f = fopen(montajeBlocks,"w");
-			char **listaBloquesUsados = agregarBloquesAPartirDeString(datosJuntos,f,offsetVacio);
-
-
-			escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,datosJuntos);
-
-			freeDoblePuntero(listaBloquesUsados);
-			free(datosJuntos);
-			free(montajeBlocks);
-			freeDoblePuntero(datosSeparados);
-			free(arrayTodo);
-			//free(montaje);
-			//free(nuevaCant);
 
 	//mandar CAUGTH
 			mensaje->resultado= 1;
@@ -290,6 +308,10 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(buffer->stream);
 			free(buffer);
 			}
+
+
+			freeDoblePuntero(datosSeparados);
+			free(arrayTodo);
 
 
 
@@ -308,8 +330,8 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 
 	}
-	//free(mensaje);
-
+	free(mensaje);
+	free(montaje);
 }
 
 
@@ -412,7 +434,11 @@ void funcionNew(int socket){
         conexionNew = reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
-    enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
+    //enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
+
+    //para pruebas con debug
+    enviar_mensaje("suscribime",conexionNew, SUS_NEW);
+
     log_info(logger,"Me suscribi a la cola NEW!");
 
 
@@ -430,7 +456,11 @@ void funcionCatch(int socket){
     }
 
 
-    enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
+    //enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
+
+    //para pruebas con debug
+    enviar_mensaje("suscribime",conexionCatch, SUS_CATCH);
+
     log_info(logger,"Me suscribi a la cola CATCH!");
 
 
@@ -447,7 +477,11 @@ void funcionGet(){
         conexionGet = reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
-	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
+//	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
+
+	//para pruebas con debug
+	enviar_mensaje("suscribime",conexionGet, SUS_GET);
+
 	log_info(logger,"Me suscribi a la cola GET!");
 
 
