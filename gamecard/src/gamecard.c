@@ -1,5 +1,7 @@
 #include "gamecard.h"
-int main() {
+int main(int argc, char* argv[]) {
+
+	ID_PROCESO = argv[1];
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
@@ -395,7 +397,7 @@ void funcionNew(int socket){
         conexionNew = reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
-    enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
+    enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
     log_info(logger,"Me suscribi a la cola NEW!");
 
 
@@ -413,7 +415,7 @@ void funcionCatch(int socket){
     }
 
 
-    enviar_mensaje("Suscribime",conexionCatch, SUS_CATCH);
+    enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
     log_info(logger,"Me suscribi a la cola CATCH!");
 
 
@@ -430,7 +432,7 @@ void funcionGet(){
         conexionGet = reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
-	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
+	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
 	log_info(logger,"Me suscribi a la cola GET!");
 
 
@@ -439,10 +441,14 @@ void funcionGet(){
 	}
 
 }
-void funcionACK(){
+void funcionACK(int id_mensaje){
 	int conexionRespuesta;
 	conexionRespuesta = crear_conexion(ip,puerto);
-	enviar_mensaje("Llego a Destino",conexionRespuesta,ACK);
+	char* ack = string_new();
+	string_append_with_format(&ack,"%s-",ID_PROCESO);
+	string_append_with_format(&ack,"%d",id_mensaje);
+	enviar_mensaje(ack,conexionRespuesta,ACK);
+	free(ack);
 }
 
 void process_request(int socket){
@@ -455,7 +461,7 @@ void process_request(int socket){
 	switch (cod_op){
 	case GET_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
@@ -466,7 +472,7 @@ void process_request(int socket){
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
@@ -477,7 +483,7 @@ void process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);
@@ -615,10 +621,12 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 	char* contadores = string_new();
 	string_append_with_format(&contadores,"%d",offset);
 	log_info(logger,contadores);
-	char* loQueNoEntraEnUnBloque = string_new();
+	char* loQueNoEntraEnUnBloque;
 	char* loQueEntraEnUnBloque = string_substring_until(escribirBloque,blockSize);
 	if(strlen(escribirBloque)>blockSize)
 		loQueNoEntraEnUnBloque = string_substring_from(escribirBloque,blockSize);
+	else
+		loQueNoEntraEnUnBloque = string_new();
 	int cantidadDeBloques = calcularCantidadDeBLoques(escribirBloque);
 	char* cantidadDeBloquesString = string_itoa(cantidadDeBloques);
 	log_info(logger,cantidadDeBloquesString);
@@ -626,13 +634,21 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 
 	fprintf(f,"%s",loQueEntraEnUnBloque);
 	fclose(f);
+	free(loQueEntraEnUnBloque);
+	char* copia = malloc(strlen(loQueNoEntraEnUnBloque)+1);
+	memcpy(copia,loQueNoEntraEnUnBloque,strlen(loQueNoEntraEnUnBloque)+1);
+	free(loQueNoEntraEnUnBloque);
 	bitarray_set_bit(bitmap,offset);
 
 	while(i != cantidadDeBloques){
 
-		loQueEntraEnUnBloque = string_substring_until(loQueNoEntraEnUnBloque,blockSize);
-		if(strlen(loQueNoEntraEnUnBloque)>blockSize)
-			loQueNoEntraEnUnBloque = string_substring_from(loQueNoEntraEnUnBloque,blockSize);
+		char * loQueEntraEnUnBloque = string_substring_until(copia,blockSize);
+		if(strlen(copia)>blockSize){
+			char* loQueNoEntraEnUnBloque = string_substring_from(copia,blockSize);
+			copia = realloc(copia,strlen(loQueNoEntraEnUnBloque)+1);
+			memcpy(copia,loQueNoEntraEnUnBloque,strlen(loQueNoEntraEnUnBloque)+1);
+			free(loQueNoEntraEnUnBloque);
+		}
 
 		desplazamiento = primerBloqueDisponible();
 		string_append_with_format(&contadores,",%d",desplazamiento);
@@ -644,6 +660,7 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 		f=fopen(blocks,"w");
 		fprintf(f,"%s",loQueEntraEnUnBloque);
 		fclose(f);
+		free(loQueEntraEnUnBloque);
 		bitarray_set_bit(bitmap,desplazamiento);
 
 		i++;
@@ -654,8 +671,7 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 	bloquesUsados = string_split(contadores,",");
 
 	free(contadores);
-	free(loQueEntraEnUnBloque);
-	free(loQueNoEntraEnUnBloque);
+	free(copia);
 	free(cantidadDeBloquesString);
 
 	return bloquesUsados;

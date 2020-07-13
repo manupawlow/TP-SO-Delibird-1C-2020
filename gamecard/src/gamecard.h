@@ -1,6 +1,7 @@
 #include "fs.h"
 t_log* logger;
 t_config* config;
+char* ID_PROCESO;
 
 pthread_mutex_t mxArchivo;
 
