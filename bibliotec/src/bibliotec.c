@@ -231,7 +231,7 @@ t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
 {
 		t_buffer* buffer = malloc(sizeof(t_buffer));
 
-		buffer->size = sizeof(uint8_t)*2 + sizeof(uint32_t)*5 + strlen(mensaje->pokemon)+1;
+		buffer->size = sizeof(uint32_t)*7 + strlen(mensaje->pokemon)+1;
 
 		void* stream = malloc(buffer->size);
 		int offset = 0;
@@ -240,10 +240,10 @@ t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
 		offset += sizeof(uint32_t);
 		memcpy(stream + offset, mensaje->pokemon, strlen(mensaje->pokemon)+1);
 		offset += strlen(mensaje->pokemon) + 1;
-		memcpy(stream + offset, &(mensaje->posx), sizeof(uint8_t));
-		offset += sizeof(uint8_t);
-		memcpy(stream + offset, &(mensaje->posy), sizeof(uint8_t));
-		offset += sizeof(uint8_t);
+		memcpy(stream + offset, &(mensaje->posx), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
+		memcpy(stream + offset, &(mensaje->posy), sizeof(uint32_t));
+		offset += sizeof(uint32_t);
 		memcpy(stream + offset, &(mensaje->cantidad), sizeof(uint32_t));
 		offset += sizeof(uint32_t);
 		memcpy(stream + offset, &(mensaje->id_mensaje), sizeof(uint32_t));
@@ -270,10 +270,10 @@ t_mensaje* deserializar_mensaje_struct(t_buffer* buffer)
 	mensaje->pokemon = malloc(mensaje->pokemon_length);
 	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length);
 	stream += mensaje->pokemon_length;
-	memcpy(&(mensaje->posx), stream, sizeof(uint8_t));
-	stream += sizeof(uint8_t);
-	memcpy(&(mensaje->posy), stream, sizeof(uint8_t));
-	stream += sizeof(uint8_t);
+	memcpy(&(mensaje->posx), stream, sizeof(uint32_t));
+	stream += sizeof(uint32_t);
+	memcpy(&(mensaje->posy), stream, sizeof(uint32_t));
+	stream += sizeof(uint32_t);
 	memcpy(&(mensaje->cantidad), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
 	memcpy(&(mensaje->id_mensaje), stream, sizeof(uint32_t));

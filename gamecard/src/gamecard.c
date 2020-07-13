@@ -6,7 +6,6 @@ int main() {
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config = config_create(conf);
 
-	//fs(config,block_size,blocks);
 	fs(config,blockSize,cantBlocks);
 
 	ip = config_get_string_value(config,"IP_BROKER");
@@ -22,10 +21,6 @@ int main() {
 
 
 	pthread_mutex_init(&mxArchivo, NULL);
-	//ip = config_get_string_value(config,"IP_GAMECARD");
-	//puerto = config_get_string_value(config,"PUERTO_GAMECARD");
-
-	//iniciar_servidor(ip,puerto);
 
 //HILOS DE CONEXIONES
 
@@ -38,13 +33,13 @@ int main() {
 	pthread_t conexionCatch;
 	pthread_create(&conexionCatch, NULL,(void*)funcionCatch, NULL);
 
+	pthread_t conexionGameboy;
+	pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
+
+	pthread_join(conexionGameboy,NULL);
 	pthread_join(conexionGet,NULL);
 	pthread_join(conexionNew,NULL);
 	pthread_join(conexionCatch,NULL);
-
-	/*pthread_t conexionGameboy;
-	pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
-	pthread_join(conexionGameboy,NULL);*/
 
 	pthread_exit(&conexionGet);
 
@@ -260,7 +255,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			char **listaBloquesUsados = agregarBloquesAPartirDeString(datosJuntos,f,offsetVacio);
 
 
-			escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje);
+			escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,datosJuntos);
 
 			freeDoblePuntero(listaBloquesUsados);
 			free(datosJuntos);
@@ -390,13 +385,14 @@ void conexion_gameboy(){
     	process_request(socket_cliente);
     }
 }
+
 void funcionNew(int socket){
 
     int conexionNew = crear_conexion(ip,puerto);
 
     if(conexionNew == -1){
     	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionNew= reintentar_conexion(ip,puerto,tiempoReconexion);
+        conexionNew = reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
     enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
@@ -413,7 +409,7 @@ void funcionCatch(int socket){
 
     if(conexionCatch == -1){
     	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionCatch= reintentar_conexion(ip,puerto,tiempoReconexion);
+        conexionCatch = reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
 
@@ -431,7 +427,7 @@ void funcionGet(){
 
 	if(conexionGet == -1){
 		log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-        conexionGet= reintentar_conexion(ip,puerto,tiempoReconexion);
+        conexionGet = reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
 	enviar_mensaje("Suscribime",conexionGet, SUS_GET);
@@ -600,22 +596,7 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	string_append(&montaje,"/Metadata.bin");
 
-	//escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje);
-
-	f = fopen(montaje,"w+");
-	escribirMeta(f,mensaje,listaBloquesUsados);
-	fprintf(f,"OPEN=Y");
-	fclose(f);
-	log_info(logger,"%d",tiempoDeRetardo);
-	log_info(logger,"Empiezo a esperar");
-	sleep(tiempoDeRetardo);
-	f=fopen(montaje,"w+");
-	escribirMeta(f,mensaje,listaBloquesUsados);
-	fprintf(f,"OPEN=N");
-	fclose(f);
-	log_info(logger,"Termino de esperar");
-
-	free(montaje);
+	escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,escribirBloque);
 
 	free(bloques);
 	free(escribirBloque);
@@ -722,31 +703,28 @@ void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){
 	sleep(tiempoDeRetardo);
 }
 
-void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje){
-	pthread_mutex_lock(&mxArchivo);
+void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* montaje,char* bloquesActualizados){
 	f = fopen(montaje,"w+");
-	escribirMeta(f,mensaje,listaBloquesUsados);
+	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
 	fprintf(f,"OPEN=Y");
 	fclose(f);
-	pthread_mutex_unlock(&mxArchivo);
 	log_info(logger,"%d",tiempoDeRetardo);
 	log_info(logger,"Empiezo a esperar");
 	sleep(tiempoDeRetardo);
-	pthread_mutex_lock(&mxArchivo);
 	f=fopen(montaje,"w+");
-	escribirMeta(f,mensaje,listaBloquesUsados);
+	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
 	fprintf(f,"OPEN=N");
 	fclose(f);
-	pthread_mutex_unlock(&mxArchivo);
 	log_info(logger,"Termino de esperar");
 
 	free(montaje);
 }
 
-void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista){
+void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista,char* bloquesActualizados){
 
 	char* blocks = string_new();
 	int i=0;
+	int lengthBlocks = string_length(bloquesActualizados);
 	string_append(&blocks,lista[i]);
 	i++;
 	while(lista[i] != NULL){
@@ -755,7 +733,7 @@ void escribirMeta(FILE* f,t_mensaje* mensaje,char** lista){
 	}
 
 	fprintf(f,"DIRECTORY=N\n");
-	fprintf(f,"SIZE=%d\n",blockSize*i);
+	fprintf(f,"SIZE=%d\n",lengthBlocks);
 	fprintf(f,"BLOCKS=[%s]\n",blocks);
 
 	free(blocks);
@@ -782,9 +760,9 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
     fblocks = fopen(montajeBlocks,"w");
     listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
-    pthread_mutex_unlock(&mxArchivo);
 
-    escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje);
+    escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje,bloquesActualizados);
+    pthread_mutex_unlock(&mxArchivo);
 
     free(datosBins);
     free(bloquesActualizados);

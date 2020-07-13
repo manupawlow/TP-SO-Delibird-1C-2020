@@ -57,8 +57,8 @@ typedef struct
 {
     uint32_t pokemon_length;
     char* pokemon;
-    uint8_t posx;
-    uint8_t posy;
+    uint32_t posx;
+    uint32_t posy;
 	uint32_t cantidad;
 	uint32_t id_mensaje;
 	uint32_t id_mensaje_correlativo;

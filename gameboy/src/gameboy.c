@@ -122,6 +122,8 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->id_mensaje = atoi(argv[7]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		}
 	}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
@@ -133,6 +135,8 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->posy = atoi(argv[5]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
 			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
@@ -159,6 +163,8 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->id_mensaje = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,CATCH_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
 			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
@@ -190,6 +196,8 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->id_mensaje = atoi(argv[4]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,GET_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 		} else if(strcmp(argv[1],"BROKER") == 0){
 			mensaje_struct->pokemon = (char *) realloc(mensaje_struct->pokemon, strlen(argv[3]) +1);
@@ -222,8 +230,8 @@ int main(int argc, char *argv[]) {
 	}
 	free(ips);
 	free(puertos);
-	free(mensaje_a_recibir->pokemon);
-	free(mensaje_a_recibir);
+	//free(mensaje_a_recibir->pokemon);
+	//free(mensaje_a_recibir);
 
 	terminar_programa(conexion,logger,config);
 
