@@ -1,22 +1,15 @@
 #include "gamecard.h"
-int main(/*int argc, char* argv[]*/) {
+int main(int argc, char* argv[]) {
 
-	//ID_PROCESO = argv[1];
+	ID_PROCESO = malloc(strlen(argv[1])+1);
+	ID_PROCESO = argv[1];
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config";
 
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config = config_create(conf);
 
-	char* montajeFS= config_get_string_value(config, "PUNTO_MONTAJE_TALLGRASS");
-	FILE* f= fopen(montajeFS, "r");
-
-	if(f==NULL){
-		fs(config,blockSize,cantBlocks);
-	}else{
-		fclose(f);
-	}
-	free(montajeFS);
+	fs(config,blockSize,cantBlocks);
 
 	ip = config_get_string_value(config,"IP_BROKER");
 	puerto = config_get_string_value(config,"PUERTO_BROKER");
@@ -55,6 +48,8 @@ int main(/*int argc, char* argv[]*/) {
 	pthread_exit(&conexionNew);
 	pthread_exit(&conexionCatch);
 	pthread_exit(&conexionGameboy);
+
+	pthread_exit(NULL);
 
 	free(mntPokemon);
 	free(mntBlocks);
@@ -434,10 +429,10 @@ void funcionNew(int socket){
         conexionNew = reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
-    //enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
+    enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
 
     //para pruebas con debug
-    enviar_mensaje("suscribime",conexionNew, SUS_NEW);
+    //enviar_mensaje("suscribime",conexionNew, SUS_NEW);
 
     log_info(logger,"Me suscribi a la cola NEW!");
 
@@ -456,10 +451,10 @@ void funcionCatch(int socket){
     }
 
 
-    //enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
+    enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
 
     //para pruebas con debug
-    enviar_mensaje("suscribime",conexionCatch, SUS_CATCH);
+    //enviar_mensaje("suscribime",conexionCatch, SUS_CATCH);
 
     log_info(logger,"Me suscribi a la cola CATCH!");
 
@@ -477,10 +472,10 @@ void funcionGet(){
         conexionGet = reintentar_conexion(ip,puerto,tiempoReconexion);
 	}
 
-//	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
+	enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
 
 	//para pruebas con debug
-	enviar_mensaje("suscribime",conexionGet, SUS_GET);
+	//enviar_mensaje("suscribime",conexionGet, SUS_GET);
 
 	log_info(logger,"Me suscribi a la cola GET!");
 
@@ -510,18 +505,15 @@ void process_request(int socket){
 	switch (cod_op){
 	case GET_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(mensaje->id_mensaje);
+		//funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
 		pthread_detach(solicitudGet);
-		//free(mensaje->pokemon);
-		//free(mensaje->resultado);
-		//free(mensaje);
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(mensaje->id_mensaje);
+		//funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
@@ -532,7 +524,7 @@ void process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK(mensaje->id_mensaje);
+		//funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);
@@ -625,7 +617,6 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 	char* y = string_itoa(mensaje->posy);
 	char* cant = string_itoa(mensaje->cantidad);
 
-	//pthread_mutex_lock(&mxArchivo);
 	offset = primerBloqueDisponible();
 
 	string_append(&bloques,mntBlocks);
@@ -645,7 +636,6 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 
 		listaBloquesUsados = agregarBloquesAPartirDeString(escribirBloque,f,offset);
 	}
-	//pthread_mutex_unlock(&mxArchivo);
 //Metadata
 
 	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
@@ -737,23 +727,6 @@ int calcularCantidadDeBLoques(char* escribirBloque){
 		cantidadDeBloques = cant;
 
 	return cantidadDeBloques;
-}
-
-int tamRestante(FILE* f){
-	int tam;
-
-	fseek(f,0L,SEEK_END);
-
-	tam = blockSize - ftell(f);
-
-	if(tam<0){
-		log_info(logger,"tamaño restante menor al blockSize, osea wtf?");
-		tam=0;
-	}
-
-	fseek(f,0L,SEEK_SET);
-
-	return tam;
 }
 
 void recrearBlock(FILE* fblocks,char** blocksRenovados,char* montajeBlocks){

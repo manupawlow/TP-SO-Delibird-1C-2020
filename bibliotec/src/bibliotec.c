@@ -293,15 +293,17 @@ void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 			t_paquete *paquete = malloc(sizeof(t_paquete));
 			paquete->codigo_operacion = codigo;
 			paquete->buffer = malloc(sizeof(t_buffer));
-			paquete->buffer->stream = mensaje;
-			paquete->buffer->size = strlen(mensaje) + 1 ;
+			paquete->buffer->size = strlen(mensaje) + 1;
+			paquete->buffer->stream = malloc(paquete->buffer->size);
+			memcpy(paquete->buffer->stream,mensaje,paquete->buffer->size);
 
 	//----------------ACA SE USA serializar_paquete----------------
 			int size_serializado;
-			void* serializado= serializar_paquete_cliente(paquete, &size_serializado);
+			void* serializado = serializar_paquete_cliente(paquete, &size_serializado);
 			send(socket_cliente,serializado,size_serializado,0);
 	//----------------libero la memoria del paquete mandado----------------
 			free(serializado);
+			free(paquete->buffer->stream);
 			free(paquete->buffer);
 			free(paquete);
 

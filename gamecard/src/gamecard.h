@@ -1,5 +1,4 @@
 #include "fs.h"
-t_log* logger;
 t_config* config;
 char* ID_PROCESO;
 
@@ -77,7 +76,6 @@ void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* 
 char* guardarDatosBins(t_mensaje* mensaje);
 
 //func auxiliares no borrar q muere el programa dale gracias
-int tamRestante(FILE* f);
 char* montarBlocks(char** arrayBloques, int i);
 char** agarrarBlocks(t_mensaje* mensaje);
 int existePokemon(t_mensaje* mensaje);

@@ -2,24 +2,52 @@
 
 void fs(t_config* config, int block_size, int blocks){
 
+	FILE* f;
 	char* mnt = string_new();
 	string_append(&mnt,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
-	mkdir(mnt,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-//----------------FILES-------------------------------------
-	crearFiles(mnt);
 
-//----------------METADATA-----------------------------------
-	crearMetadata(block_size,blocks,mnt);
-//----------------BLOQUES-----------------------------------
-	crearBlocks(blocks, mnt);
-//----------------BITMAP------------------------------------
-	char data[blocks];
+	f = fopen(mnt,"r");
 
-	for(int i=1; i< blocks+1;i++){
-		data[i]=0;
+	if(f==NULL){
+
+		mkdir(mnt,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	//----------------FILES-------------------------------------
+		crearFiles(mnt);
+	//----------------METADATA-----------------------------------
+		crearMetadata(block_size,blocks,mnt);
+	//----------------BLOQUES-----------------------------------
+		crearBlocks(blocks, mnt);
+	//----------------BITMAP------------------------------------
+		char data[blocks];
+
+		for(int i=1; i< blocks+1;i++){
+			data[i]=0;
+		}
+		bitmap = bitarray_create(data,sizeof(data));
+
+	}else{
+		fclose(f);
+		char data[blocks];
+		int length;
+		for(int i=1;i<blocks;i++){
+			char* mntBlocks = string_new();
+			string_append(&mntBlocks,mnt);
+			string_append(&mntBlocks,"/Blocks");
+			string_append_with_format(&mntBlocks,"/%d.bin",i);
+			f = fopen(mntBlocks,"r");
+			fseek(f,0L,SEEK_END);
+			length = ftell(f);
+			fclose(f);
+			if(length>0)
+				data[i] = 1;
+			else if(length==-1)
+				log_info(logger,"aiudaaaaaaaaaaaaaaaaaaa");
+			else if(length==0)
+				data[i] = 0;
+			free(mntBlocks);
+		}
+		bitmap = bitarray_create(data,sizeof(data));
 	}
-	bitmap= bitarray_create(data,sizeof(data));
-
 
 	free(mnt);
 }
