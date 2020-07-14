@@ -141,6 +141,7 @@ int reintentar_conexion(char* ip, char* puerto , int tiempo)
 	int conexion = crear_conexion(ip,puerto);
 
 	while(conexion == -1){
+		liberar_conexion(conexion);
 		sleep(tiempo);
 		conexion = crear_conexion(ip,puerto);
 	}
@@ -325,7 +326,7 @@ void enviar_mensaje_struct(t_buffer* buffer, int socket_cliente, op_code codigo)
 			offset += sizeof(uint32_t);
 			memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
 
-			send(socket_cliente, a_enviar, paquete->buffer->size + sizeof(op_code) + sizeof(uint32_t), 0);
+			send(socket_cliente, a_enviar, paquete->buffer->size + sizeof(op_code) + sizeof(uint32_t), MSG_NOSIGNAL);
 
 	//----------------libero la memoria del paquete mandado----------------
 			free(a_enviar);
