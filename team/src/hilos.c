@@ -101,56 +101,42 @@ void process_request(int socket_cliente){
 	switch (cod_op){
 	case APPEARED_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
-		llegada_pokemon(mensaje);
-		/*
-		mensaje = recibir_mensaje_struct(socket_cliente);
+
+		pthread_mutex_lock(&mx_llegada_pokemon);
+
 		Poketeam *pokemon = malloc(sizeof(Poketeam));
 		pokemon->pokemon = malloc(mensaje->pokemon_length);
 		pokemon->pos.x = mensaje->posx;
 		pokemon->pos.y = mensaje->posy;
 		memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
 
-		log_info(logger,"Llego pokemon %s con posicion x:%d y:%d a la cola Appeared!",
-				pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
+		llegada_pokemon(pokemon);
 
-		if(necesitaPokemon(mensaje->pokemon, objetivoGlobal)){
-			if(!pokemon_en_lista(mensaje->pokemon,pokemones_en_busqueda)){
-				menorDistancia(pokemon);
-				char *pendiente = malloc(strlen(pokemon->pokemon)+1);
-				memcpy(pendiente, pokemon->pokemon, strlen(pokemon->pokemon)+1);
-				list_add(pokemones_en_busqueda,pendiente);
-				free(pokemon->pokemon);
-				free(pokemon);
-			}
-			else{
-				list_add(pokemones_pendientes,pokemon);
-				log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
-			}
+		pthread_mutex_unlock(&mx_llegada_pokemon);
 
-		}else{
-			log_info(logger,"No se necesita el pokemon %s!", pokemon->pokemon);
-			free(pokemon->pokemon);
-			free(pokemon);
-		}
-
-		free(mensaje);*/
-
+		//free(mensaje->pokemon);
+		//free(mensaje);
 		break;
 
 	case LOCALIZED_POKEMON:
 
-		loca=recibirLocalized(socket_cliente);
+		loca =recibirLocalized(socket_cliente);
 
+		if(id_en_lista(mensaje->id_mensaje)){
+			llegada_pokemon(mensaje);
+
+
+
+		}
+		else
+			log_info(logger,"Id no correspondiente, descarto mensaje");
 
 		for(int i=0; i< list_size(loca); i++){
 			Poketeam *poke = list_get(loca,i);
-			log_info(logger,"Pokemon %s pos %d %d", poke->pokemon, poke ->pos.x, poke->pos.y );
+
 		}
 
-		//if(id_en_lista(mensaje->id_mensaje))
-			//llegada_pokemon(mensaje);
-		//else
-			//log_info(logger, "Descarto mensaje");
+
 
 		break;
 	case CAUGHT_POKEMON:
@@ -179,29 +165,23 @@ void process_request(int socket_cliente){
 	}
 }
 
-void llegada_pokemon(t_mensaje* mensaje){
-
-	Poketeam *pokemon = malloc(sizeof(Poketeam));
-	pokemon->pokemon = malloc(mensaje->pokemon_length);
-	pokemon->pos.x = mensaje->posx;
-	pokemon->pos.y = mensaje->posy;
-	memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
+void llegada_pokemon(Poketeam* pokemon){
 
 	log_info(logger,"Llego pokemon %s con posicion x:%d y:%d a la cola Appeared!",
 		pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 
-	if(necesitaPokemon(mensaje->pokemon, objetivoGlobal)){
-		if(!pokemon_en_lista(mensaje->pokemon,pokemones_en_busqueda)){
+	if(necesitaPokemon(pokemon->pokemon, objetivoGlobal)){
+		if(!pokemon_en_lista(pokemon->pokemon,pokemones_en_busqueda)){
 			menorDistancia(pokemon);
 			char *pendiente = malloc(strlen(pokemon->pokemon)+1);
 			memcpy(pendiente, pokemon->pokemon, strlen(pokemon->pokemon)+1);
 			list_add(pokemones_en_busqueda,pendiente);
-			free(pokemon->pokemon);
-			free(pokemon);
+
 			}
 		else{
 			list_add(pokemones_pendientes,pokemon);
 			log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
+
 			}
 
 	}else{
@@ -210,7 +190,6 @@ void llegada_pokemon(t_mensaje* mensaje){
 		free(pokemon);
 	}
 
-	free(mensaje);
 }
 
 void poner_en_exce(){
@@ -237,34 +216,12 @@ void realizar_tareas(Entrenador *entrenador){
 		pos.x= entrenador->posicion->x;
 		pos.y= entrenador->posicion->y;
 
-		int dis = distancia(entrenador->posicion_a_capturar, pos ); // *config->retardo_cpu;
+		int dis = distancia(entrenador->posicion_a_capturar, pos ); //*config->retardo_cpu;
 		log_info(logger,"Entrenador %d moviendose a x:%d y:%d, tiempo requerido %d segundos",
 				entrenador->entrenadorNumero, entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y, dis);
 
-		bool primeravez= true;
-
 		if(config->quantum >0){
-
-		while(dis > 0){
-			if(!primeravez)
-				sem_wait(&entrenador->sem_entrenador);
-
-			if(dis < config->quantum)
-				sleep(dis);
-			else
-				sleep(config->quantum);
-
-			dis -= config->quantum;
-			primeravez= false;
-
-			if(dis > 0){
-			list_add(ready,entrenador);
-			log_info(logger,"Entrenador %d paso a ready por finalizacion de quantum, distancia faltante %d",
-					entrenador->entrenadorNumero,dis);
-			sem_post(&semaforoExce);
-			pthread_mutex_unlock(&mxExce);
-			}
-		}
+			round_robin(entrenador, dis);
 		}else{
 			sleep(dis);
 		}
@@ -311,7 +268,7 @@ void realizar_tareas(Entrenador *entrenador){
 			eliminar_pokemon(entrenador->pokemon_a_caputar, pokemones_en_busqueda);
 
 		}
-		pthread_mutex_unlock(&mxExce);
+
 
 
 		if(entrenador->puede_capturar >0){
@@ -319,15 +276,33 @@ void realizar_tareas(Entrenador *entrenador){
 				list_add(block,entrenador);
 				entrenador->block_agarrar= true;
 			}else{
-				ponerEnReady(entrenador,list_get(pokemones_pendientes,0));
-				list_remove(pokemones_pendientes,0);
+
+				Poketeam *pokemon_mas_cerca= list_get(pokemones_pendientes,0);
+				Poketeam *pokemon;
+				int indice = 0;
+
+				log_info(logger,"Entrenador en posicion x=%d y=%d", entrenador->posicion->x, entrenador->posicion->y);
+
+				for(int i=1; i < list_size(pokemones_pendientes); i++){
+					pokemon = list_get(pokemones_pendientes,i);
+
+					if(distancia(entrenador->posicion, pokemon->pos) < distancia(entrenador->posicion, pokemon_mas_cerca->pos)){
+						pokemon_mas_cerca = pokemon;
+						indice = i;
+					}
+				}
+
+
+				ponerEnReady(entrenador,pokemon_mas_cerca);
+				list_remove(pokemones_pendientes,indice);
 			}
 
 		}
+
+		pthread_mutex_unlock(&mxExce);
 	}
 
 	if(puedeFinalizar(entrenador)){
-		log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 		sem_post(&semaforoDeadlock);
 	}
 	else{
@@ -365,6 +340,33 @@ void realizar_tareas(Entrenador *entrenador){
 	//free_entrenador(entrenador);
 	log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 
+}
+
+void round_robin(Entrenador *entrenador, int dis){
+
+	bool primeravez= true;
+
+	while(dis > 0){
+		if(!primeravez)
+			sem_wait(&entrenador->sem_entrenador);
+
+		if(dis < config->quantum)
+			sleep(dis);
+		else
+			sleep(config->quantum);
+
+		dis -= config->quantum;
+		primeravez= false;
+
+		if(dis > 0){
+		list_add(ready,entrenador);
+		log_info(logger,"Entrenador %d paso a ready por finalizacion de quantum, distancia faltante %d",
+		entrenador->entrenadorNumero,dis);
+		sem_post(&semaforoExce);
+		pthread_mutex_unlock(&mxExce);
+		}
+
+	}
 }
 
 void deadlock(){

@@ -47,12 +47,8 @@ int main(void){
 
     pthread_join(deadLock, NULL);
 
-    free(config->ip_broker);
-    free(config->log);
-    free(config->puerto_broker);
-    free(config);
     log_destroy(logger);
-    free(config_team);
+    config_destroy(config_team);
 
     pthread_mutex_destroy(&mxExce);
     sem_destroy(&semaforoExce);

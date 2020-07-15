@@ -51,6 +51,7 @@ void setearVariablesGlobales(){
 	sem_init(&semaforoIntercambio,0,0);
 	sem_init(&semaforoDeadlock,0,0);
 	pthread_mutex_init(&mxExce,NULL);
+	pthread_mutex_init(&mx_llegada_pokemon,NULL);
 }
 
 t_list *obtenerObjetivoGlobal(){
@@ -288,6 +289,10 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
     entrenador->block_agarrar= false;
 	list_add(ready,entrenador);
 	log_info(logger,"Entrenador %d en ready", entrenador->entrenadorNumero);
+
+	//free(pokemon->pokemon);
+	//free(pokemon);
+
 	sem_post(&semaforoExce);
 }
 
@@ -386,10 +391,10 @@ void menorDistancia (Poketeam *pokemon){
 
 	if(list_is_empty(new) && list_is_empty(blockAgarrar)){
 		list_add(pokemones_pendientes,pokemon);
-		log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
-		}
+		log_info(logger,"Se agrego pokemon %s a la lista de pokemones PENDIENTES", pokemon->pokemon);
 
-	else if(!list_is_empty(new) && !list_is_empty(blockAgarrar)){
+		}
+    else if(!list_is_empty(new) && !list_is_empty(blockAgarrar)){
 		indiceNew = indiceMasCercano(posicion,new);
 		entrenadorMasCercaNew = list_get(new,indiceNew);
 
@@ -428,6 +433,8 @@ int distancia(Posicion *posicion1, Posicion posicion2){
 }
 
 void moverse(Entrenador *entrenador){
+
+	//memcpy(entrenador->posicion, entrenador->posicion_a_capturar, sizeof(Posicion));
 	entrenador->posicion->x = entrenador->posicion_a_capturar->x;
 	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
 }

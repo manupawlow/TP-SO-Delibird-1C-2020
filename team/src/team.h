@@ -62,6 +62,7 @@ t_list *pokemones_pendientes;
 t_list *pokemones_en_busqueda;
 
 pthread_mutex_t mxExce;
+pthread_mutex_t mx_llegada_pokemon;
 sem_t semaforoExce;
 sem_t semaforoIntercambio;
 sem_t semaforoDeadlock;
