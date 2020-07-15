@@ -14,6 +14,13 @@ void cachear_mensaje_new(t_mensaje*, int);
 void cachear_mensaje_get(t_mensaje*, int);
 void cachear_mensaje_appeared_or_catch(t_mensaje*, int, char*);
 void cachear_mensaje_caught(t_mensaje*, int);
+void cachear_mensaje_localized(t_mensaje_get*, int);
+
+void almacenar_mensaje_localized(t_mensaje_get*, char*);
+void almacenar_particion_localized(t_mensaje_get*, char*, int);
+void almacenar_buddy_localized(t_mensaje_get*, char*, int);
+void almacenar_en_hijo_si_corresponde_localized(int, t_mensaje_get*, char*, int);
+
 
 int indice_particion_libre_para_almacenar(uint32_t);
 void delete_particion(int);
@@ -27,7 +34,7 @@ void compactar_memoria();
 void almacenar_mensaje(t_mensaje*, char*);
 void almacenar_particion(t_mensaje*, char*, int);
 void enviar_mensajes_en_memoria(Proceso*, char*);
-t_mensaje* leer_particion(Particion*);
+void* leer_particion(Particion*);
 void guardar_ACK(int, int);
 void agregar_enviados(t_mensaje*, t_list*);
 bool se_le_envio_el_mensaje(Proceso*, Particion*);
@@ -35,6 +42,7 @@ bool devolvio_ack(Proceso*, Particion*);
 int buscar_particion_por_id(int);
 int buscar_particion_por_id_mensaje(int);
 int buscar_proceso_en_enviados_por_id(int, t_list*);
+void agregar_enviados_localized(t_mensaje_get*, t_list*);
 
 //buddy
 int potencia_dos_mas_cercana(int);

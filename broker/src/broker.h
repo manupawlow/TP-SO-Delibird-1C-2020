@@ -43,7 +43,8 @@ typedef struct{
 	uint32_t offset_end;
 	uint64_t tiempo_lru;
 
-	uint8_t id_mensaje;
+	uint32_t id_mensaje;
+	uint32_t id_mensaje_correlativo;
 	char* cola;
 	t_list* suscriptores_enviados;
 	t_list* suscriptores_ack;
