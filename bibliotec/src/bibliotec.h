@@ -13,7 +13,7 @@
 #include <commons/temporal.h>
 #include<readline/readline.h>
 #include<math.h>
-#include<time.h>
+#include<sys/time.h>
 #include<semaphore.h>
 
 //CODIGO DE TIPOS DE MENSAJE

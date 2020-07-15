@@ -35,17 +35,17 @@ int main(int argc, char *argv[]) {
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
 		if(strcmp(argv[2],"NEW_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_NEW);
+			enviar_mensaje("99",conexion,SUS_NEW);
 		}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_APP);
+			enviar_mensaje("99",conexion,SUS_APP);
 		}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CATCH);
+			enviar_mensaje("99",conexion,SUS_CATCH);
 		}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CAUGHT);
+			enviar_mensaje("99",conexion,SUS_CAUGHT);
 		}else if(strcmp(argv[2],"GET_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_GET);
+			enviar_mensaje("99",conexion,SUS_GET);
 		}else if(strcmp(argv[2],"LOCALIZED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_LOC);
+			enviar_mensaje("99",conexion,SUS_LOC);
 		}
 
 		log_info(logger,"Suscripcion a cola %s por %d segundos",argv[2],argv[3]);

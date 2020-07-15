@@ -1,7 +1,17 @@
 #include "broker.h"
 #include "suscripciones.h"
 #include <signal.h>
-#include <time.h>
+
+
+
+uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIME.H>
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
+	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
+	uint64_t a = result;
+	return a;
+}
 
 int main(void) {
 
@@ -24,14 +34,21 @@ int main(void) {
 
 	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
-	contador_de_id = 0;
+	contador_de_id = 1;
+
 	pthread_mutex_init(&mx_id_mensaje, NULL);
+
+	pthread_mutex_init(&mx_lista_new, NULL);
+	pthread_mutex_init(&mx_lista_localized, NULL);
+	pthread_mutex_init(&mx_lista_get, NULL);
+	pthread_mutex_init(&mx_lista_appeared, NULL);
+	pthread_mutex_init(&mx_lista_catch, NULL);
+	pthread_mutex_init(&mx_lista_caught, NULL);
 
 	//INIT MEMORY
 
 		pthread_mutex_init(&mx_memoria, NULL);
 		pthread_mutex_init(&mx_mostrar, NULL);
-		pthread_mutex_init(&mx_lru, NULL);
 
 		frecuencia_compactacion = config_get_int_value(config,"FRECUENCIA_COMPACTACION");
 		tamanio_minimo = config_get_int_value(config,"TAMANO_MINIMO_PARTICION");
@@ -41,8 +58,7 @@ int main(void) {
 		algoritmo_reemplazo = config_get_string_value(config,"ALGORITMO_REEMPLAZO");
 
 		memoria = malloc(memory_size);
-		contador_id_particiones = 0;
-		tiempo_lru = 0;
+		contador_id_particiones = 1;
 		particiones = list_create();
 		if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 			particiones_libres = list_create();
@@ -68,6 +84,10 @@ int main(void) {
 			list_add(buddies, primer_buddy);
 		}
 
+		log_info(logger, "<BROKER CONFIGURATION> %s | %s | %s | %d | %d | %d ",
+			algoritmo_memoria, algoritmo_particion_libre, algoritmo_reemplazo, memory_size, tamanio_minimo, frecuencia_compactacion);
+
+
 
 	/* EJEMPLO PARA TESTEAR LA COMPACTACION
 	  t_mensaje *msg = malloc(sizeof(t_mensaje));
@@ -81,6 +101,7 @@ int main(void) {
 
 		log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
 			almacenar_particion(msg, "GET");
+
 				log_info(logger, "cantidad libres despues %d   cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
 
 				log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
@@ -109,13 +130,12 @@ int main(void) {
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
 	Colas *colas = malloc(sizeof(Colas));
+	colas->SUSCRITOS_NEW = list_create();
+	colas->SUSCRITOS_LOCALIZED = list_create();
 	colas->SUSCRITOS_GET = list_create();
-
-	colas->cant_suscritos_appeared = 0;
-	colas->cant_suscritos_localized = 0;
-	colas->cant_suscritos_caught =0;
-	colas->cant_suscritos_catch =0;
-	colas->cant_suscritos_new =0;
+	colas->SUSCRITOS_APPEARED = list_create();
+	colas->SUSCRITOS_CATCH = list_create();
+	colas->SUSCRITOS_CAUGHT = list_create();
 
 
     while(1){
@@ -137,11 +157,12 @@ int main(void) {
 
 
 
+
 void dump_cache(int n){
 
 	FILE* f;
 
-	int contador = 0;
+	int contador = 1;
 
 	f=fopen("dump.txt","w+");
 
@@ -157,15 +178,16 @@ void dump_cache(int n){
 	fprintf(f, "%s\n", dump);
 
 
+if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 
 	for(int i= 0; i<list_size(particiones);i++){
 	char* particion=string_new();
 	Particion* p= list_get(particiones,i);
 			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
 			string_append_with_format(&particion, "%#05X - ", p->offset_init);
-			string_append_with_format(&particion, "#%05X.", p->offset_end);
+			string_append_with_format(&particion, "%#05X.", p->offset_end);
 			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->size) );
-			string_append_with_format(&particion, "LRU: %s ", string_itoa(p->tiempo_lru));
+			string_append_with_format(&particion, "LRU: %" PRIu64 "", p->tiempo_lru);
 			string_append_with_format(&particion, "Cola: %s", p->cola);
 			string_append_with_format(&particion, "	 ID: %s", string_itoa(p->id_mensaje));
 			fprintf(f, "%s\n\n",particion );
@@ -184,6 +206,41 @@ void dump_cache(int n){
 		contador++;
 		free(particion);
 	}
+
+}
+
+if(strcmp(algoritmo_memoria, "BS") == 0){
+	for(int i= 0; i<list_size(buddies);i++){
+
+		Buddy* p= list_get(buddies,i);
+
+		if(!p->esta_libre && p->id_hijo1 == -1 && p->id_hijo2 == -1){
+			char* particion=string_new();
+			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
+			string_append_with_format(&particion, "%#05X - ", p->offset_init);
+			string_append_with_format(&particion, "#%05X.", p->offset_init + p->size - 1);
+			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->particion->size) );
+			string_append_with_format(&particion, "LRU: %" PRIu64 "", p->particion->tiempo_lru);
+			string_append_with_format(&particion, "Cola: %s", p->particion->cola);
+			string_append_with_format(&particion, "	 ID: %s", string_itoa(p->particion->id_mensaje));
+			fprintf(f, "%s\n\n",particion );
+			contador++;
+			free(particion);
+		}
+
+		if(p->esta_libre){
+			char* particion = string_new();
+			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
+			string_append_with_format(&particion, "%#05X - ", p->offset_init);
+			string_append_with_format(&particion, "%#05X.", p->offset_init + p->size - 1);
+			string_append_with_format(&particion, "	[L] Size: %sb ",string_itoa(p->size) );
+			fprintf(f, "%s\n",particion );
+			contador++;
+			free(particion);
+		}
+	}
+
+}
 
 
 	fprintf(f, "-----------------------------------------------------------------------------------------------------------------\n");

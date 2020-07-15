@@ -1,0 +1,15 @@
+22:20:32 **** Incremental Build of configuration Debug for project gameboy ****
+make all 
+Building file: ../src/gameboy.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/tp-2020-1c-NN/bibliotec/src" -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/gameboy.d" -MT"src/gameboy.o" -o "src/gameboy.o" "../src/gameboy.c"
+Finished building: ../src/gameboy.c
+ 
+Building target: gameboy
+Invoking: GCC C Linker
+gcc -L"/home/utnso/tp-2020-1c-NN/bibliotec/Debug" -o "gameboy"  ./src/gameboy.o   -lcommons -lbibliotec -lpthread
+Finished building target: gameboy
+ 
+
+22:20:34 Build Finished (took 1s.852ms)
+

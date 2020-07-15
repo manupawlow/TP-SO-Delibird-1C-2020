@@ -1,0 +1,19 @@
+01:21:39 **** Incremental Build of configuration Debug for project broker ****
+make all 
+Building file: ../src/suscripciones.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/tp-2020-1c-NN/bibliotec/src" -Ibibliotec -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/suscripciones.d" -MT"src/suscripciones.o" -o "src/suscripciones.o" "../src/suscripciones.c"
+../src/suscripciones.c: In function ‘process_request’:
+../src/suscripciones.c:116:4: warning: ‘mensaje’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+    almacenar_mensaje(mensaje, "LOCALIZED");
+    ^
+Finished building: ../src/suscripciones.c
+ 
+Building target: broker
+Invoking: GCC C Linker
+gcc -L"/home/utnso/tp-2020-1c-NN/bibliotec/Debug" -o "broker"  ./src/broker.o ./src/suscripciones.o   -lpthread -lbibliotec -lcommons
+Finished building target: broker
+ 
+
+01:21:57 Build Finished (took 18s.311ms)
+

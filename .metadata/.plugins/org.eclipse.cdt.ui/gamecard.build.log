@@ -1,0 +1,19 @@
+00:33:09 **** Incremental Build of configuration Debug for project gamecard ****
+make all 
+Building file: ../src/gamecard.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/tp-2020-1c-NN/bibliotec/src" -Ibibliotec -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/gamecard.d" -MT"src/gamecard.o" -o "src/gamecard.o" "../src/gamecard.c"
+../src/gamecard.c: In function ‘process_request’:
+../src/gamecard.c:508:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+Finished building: ../src/gamecard.c
+ 
+Building target: gamecard
+Invoking: GCC C Linker
+gcc -L/home/utnso/tp-2020-1c-NN/bibliotec/Debug -o "gamecard"  ./src/fs.o ./src/gamecard.o   -lpthread -lcommons -lbibliotec
+Finished building target: gamecard
+ 
+
+00:33:14 Build Finished (took 4s.444ms)
+
