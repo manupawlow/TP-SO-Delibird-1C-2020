@@ -3,6 +3,8 @@
 
 #include <bibliotec.h>
 
+char* ID_PROCESO;
+
 typedef struct{
 	char *ip_broker;
 	char *puerto_broker;
@@ -67,5 +69,8 @@ sem_t semaforoExce;
 sem_t semaforoIntercambio;
 sem_t semaforoDeadlock;
 
+
+void liberar_lista_de_listas(t_list* listaDeListas);
+void liberar_listas_config();
 
 #endif /* TEAM_H_ */

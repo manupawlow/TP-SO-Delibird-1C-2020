@@ -10,7 +10,7 @@ void conexion_appeared();
 void conexion_caugth();
 void conexion_gameboy();
 void realizar_tareas(Entrenador *entrenador);
-void process_request(int );
+int process_request(int );
 void poner_en_exce();
 void deadlock();
 void finalizar_si_corresponde(Entrenador *entrenador);

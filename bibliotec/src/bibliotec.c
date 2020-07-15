@@ -121,18 +121,19 @@ int crear_conexion(char *ip, char* puerto)
 	return socket_cliente;
 }
 
-int crear_conexion_broker(char *ip, char* puerto, t_log *logger, int reconexion, op_code codigo)
+void crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, t_log *logger, int reconexion, op_code codigo)
 {
-	int conexion = crear_conexion(ip,puerto);
 
 	if(conexion ==-1){
-			log_info(logger,"Reintenando reconectar cada %d segundos", reconexion);
-	        conexion= reintentar_conexion(ip,puerto,reconexion);
+		liberar_conexion(conexion);
+		log_info(logger,"Reintenando reconectar cada %d segundos", reconexion);
+	    conexion = reintentar_conexion(ip,puerto,reconexion);
 	}
 
-	enviar_mensaje("Suscribime",conexion, codigo);
+	 enviar_mensaje(ID_PROCESO,conexion, codigo);
 
-	return conexion;
+	 //para pruebas con debug
+	 //enviar_mensaje("Suscribime",conexion, codigo);
 
 }
 

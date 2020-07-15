@@ -43,38 +43,50 @@ t_list *crearEntrenadores(){
 
 void conexion_localized(){
 
-	int conexionLocalized =	crear_conexion_broker(ip,puerto,logger, config->reconexion, SUS_LOC);
-
-	log_info(logger,"Me suscribi a la cola Localized!");
+	int conexionLocalized = crear_conexion(ip,puerto);
 
 	while(1){
-		process_request(conexionLocalized);
 
+		crear_conexion_broker(ID_PROCESO,conexionLocalized,ip,puerto,logger, config->reconexion, SUS_LOC);
+
+		log_info(logger,"Me suscribi a la cola Localized!");
+
+		while(conexionLocalized != -1){
+			conexionLocalized = process_request(conexionLocalized);
+
+		}
 	}
 }
 
 void conexion_caugth(){
 
-	int conexionCaugth = crear_conexion_broker(ip,puerto,logger, config->reconexion, SUS_CAUGHT);
+	int conexionCaugth = crear_conexion(ip,puerto);
 
-	log_info(logger,"Me suscribi a la cola Caugth!");
+	while(1){
+		crear_conexion_broker(ID_PROCESO,conexionCaugth,ip,puerto,logger, config->reconexion, SUS_CAUGHT);
 
-	while(conexionCaugth != -1){
-		process_request(conexionCaugth);
+		log_info(logger,"Me suscribi a la cola Caugth!");
 
+		while(conexionCaugth != -1){
+			conexionCaugth = process_request(conexionCaugth);
+
+		}
 	}
 }
 
 void conexion_appeared(){
 
-	int conexionAppeared = crear_conexion_broker(ip,puerto,logger, config->reconexion, SUS_APP);
+	int conexionAppeared = crear_conexion(ip,puerto);
 
-	log_info(logger,"Me suscribi a la cola Appeared!");
+	while(1){
+		crear_conexion_broker(ID_PROCESO,conexionAppeared,ip,puerto,logger, config->reconexion, SUS_APP);
 
-	while(conexionAppeared != -1){
-		process_request(conexionAppeared);
+		log_info(logger,"Me suscribi a la cola Appeared!");
+
+		while(conexionAppeared != -1){
+			conexionAppeared = process_request(conexionAppeared);
+		}
 	}
-
 }
 
 void conexion_gameboy(){
@@ -90,7 +102,7 @@ void conexion_gameboy(){
 }
 
 
-void process_request(int socket_cliente){
+int process_request(int socket_cliente){
 	int cod_op;
 	Entrenador *entrenador;
 	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
@@ -116,27 +128,24 @@ void process_request(int socket_cliente){
 
 		//free(mensaje->pokemon);
 		//free(mensaje);
+		return socket_cliente;
 		break;
 
 	case LOCALIZED_POKEMON:
 
-		loca =recibirLocalized(socket_cliente);
+		loca = recibirLocalized(socket_cliente);
 
 		if(id_en_lista(mensaje->id_mensaje)){
 			llegada_pokemon(mensaje);
-
-
-
 		}
 		else
 			log_info(logger,"Id no correspondiente, descarto mensaje");
 
 		for(int i=0; i< list_size(loca); i++){
 			Poketeam *poke = list_get(loca,i);
-
 		}
 
-
+		return socket_cliente;
 
 		break;
 	case CAUGHT_POKEMON:
@@ -156,13 +165,16 @@ void process_request(int socket_cliente){
 		}
 
 		free(mensaje);
+		return socket_cliente;
 		break;
 
 	case -1:
+		liberar_conexion(socket_cliente);
 		socket_cliente = crear_conexion(ip,puerto);
+		return socket_cliente;
 		break;
-
 	}
+	return -1;
 }
 
 void llegada_pokemon(Poketeam* pokemon){
@@ -179,10 +191,16 @@ void llegada_pokemon(Poketeam* pokemon){
 
 			}
 		else{
-			list_add(pokemones_pendientes,pokemon);
+			Poketeam *pendiente = malloc(sizeof(Poketeam));
+			pendiente->pokemon = malloc(strlen(pokemon->pokemon)+1);
+			pendiente->pos = pokemon->pos;
+			memcpy(pendiente->pokemon, pokemon->pokemon, strlen(pokemon->pokemon)+1);
+			list_add(pokemones_pendientes,pendiente);
 			log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
 
 			}
+		free(pokemon->pokemon);
+		free(pokemon);
 
 	}else{
 		log_info(logger,"No se necesita el pokemon %s!", pokemon->pokemon);
@@ -337,7 +355,6 @@ void realizar_tareas(Entrenador *entrenador){
 		pthread_mutex_unlock(&mxExce);
 	}
 
-	//free_entrenador(entrenador);
 	log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 
 }

@@ -1,7 +1,7 @@
 #include "gamecard.h"
 int main(/*int argc, char* argv[]*/) {
 
-//	ID_PROCESO = malloc(strlen(argv[1])+1);
+	//ID_PROCESO = malloc(strlen(argv[1])+1);
 	//ID_PROCESO = argv[1];
 
 
@@ -114,8 +114,8 @@ void buscarPokemon(t_mensaje* mensaje){
 	    int socketLoc = crear_conexion(ip, puerto);
 
 	    if(socketLoc ==-1){
+	    	liberar_conexion(socketLoc);
 	    	log_info(logger,"No se pudo conectar con el broker.");
-
 	    }else{
 
 	    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
@@ -161,18 +161,24 @@ void buscarPokemon(t_mensaje* mensaje){
 
 		int socketLoc = crear_conexion(ip, puerto);
 
-    	t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
-    	mensajeGet->pokemon = mensaje->pokemon;
-    	mensajeGet->pokemon_length = mensaje->pokemon_length;
-    	mensajeGet->posiciones = string_new();
-    	mensajeGet->posiciones_length = sizeof(mensajeGet->posiciones);
-    	mensajeGet->id_mensaje = 0;
-		mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
-		mensajeGet->cantidad = 0;
-		buffer = serializar_mensaje_struct_get(mensajeGet);
-    	enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
-    	free(buffer->stream);
-    	free(buffer);
+		 if(socketLoc ==-1){
+		   	liberar_conexion(socketLoc);
+		   	log_info(logger,"No se pudo conectar con el broker.");
+		}else{
+
+			t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
+			mensajeGet->pokemon = mensaje->pokemon;
+			mensajeGet->pokemon_length = mensaje->pokemon_length;
+			mensajeGet->posiciones = string_new();
+			mensajeGet->posiciones_length = sizeof(mensajeGet->posiciones);
+			mensajeGet->id_mensaje = 0;
+			mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
+			mensajeGet->cantidad = 0;
+			buffer = serializar_mensaje_struct_get(mensajeGet);
+			enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
+			free(buffer->stream);
+			free(buffer);
+		}
 	}
 	free(mensaje);
 }
@@ -190,6 +196,7 @@ t_buffer* buffer;
 
 int socketCaugth = crear_conexion(ip, puerto);
 	if(socketCaugth ==-1){
+		liberar_conexion(socketCaugth);
 		log_info(logger,"No se pudo conectar con el broker");
 	}else{
 		if(existePokemon(mensaje)){
@@ -365,22 +372,13 @@ void funcionNew(int socket){
 
     int conexionNew = crear_conexion(ip,puerto);
     while(1){
-        if(conexionNew == -1){
-        	liberar_conexion(conexionNew);
-        	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-            conexionNew = reintentar_conexion(ip,puerto,tiempoReconexion);
-        }
 
-        //enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
-
-        //para pruebas con debug
-        enviar_mensaje("suscribime",conexionNew, SUS_NEW);
+    	crear_conexion_broker(ID_PROCESO,conexionNew,ip,puerto,logger, tiempoReconexion, SUS_NEW);
 
         log_info(logger,"Me suscribi a la cola NEW!");
 
-
         while(conexionNew != -1){
-        	conexionNew=process_request(conexionNew);
+        	conexionNew = process_request(conexionNew);
 
         }
     }
@@ -390,23 +388,13 @@ void funcionCatch(int socket){
 
     int conexionCatch =	crear_conexion(ip,puerto);
     while(1){
-        if(conexionCatch == -1){
-        	liberar_conexion(conexionCatch);
-        	log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-            conexionCatch = reintentar_conexion(ip,puerto,tiempoReconexion);
-        }
 
-
-        //enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
-
-        //para pruebas con debug
-        enviar_mensaje("suscribime",conexionCatch, SUS_CATCH);
+    	crear_conexion_broker(ID_PROCESO,conexionCatch,ip,puerto,logger, tiempoReconexion, SUS_CATCH);
 
         log_info(logger,"Me suscribi a la cola CATCH!");
 
-
         while(conexionCatch != -1){
-        	conexionCatch=process_request(conexionCatch);
+        	conexionCatch = process_request(conexionCatch);
 
         }
     }
@@ -415,22 +403,13 @@ void funcionCatch(int socket){
 void funcionGet(){
 	int conexionGet = crear_conexion(ip,puerto);
 	while(1){
-		if(conexionGet == -1){
-			liberar_conexion(conexionGet);
-			log_info(logger,"Reintenando reconectar cada %d segundos",tiempoReconexion);
-	        conexionGet = reintentar_conexion(ip,puerto,tiempoReconexion);
-		}
 
-		//enviar_mensaje(ID_PROCESO,conexionGet, SUS_GET);
-
-		//para pruebas con debug
-		enviar_mensaje("suscribime",conexionGet, SUS_GET);
+		crear_conexion_broker(ID_PROCESO,conexionGet,ip,puerto,logger, tiempoReconexion, SUS_GET);
 
 		log_info(logger,"Me suscribi a la cola GET!");
 
-
 		while(conexionGet != -1){
-			conexionGet=process_request(conexionGet);
+			conexionGet = process_request(conexionGet);
 		}
 
 	}
@@ -497,13 +476,14 @@ int process_request(int socket){
 		liberar_conexion(socket);
 		socket=crear_conexion(ip, puerto);
 		return socket;
-
 		break;
 	default:
 		log_info(logger,"Que paso rey, te caiste?");
 		exit(1);
+		return -1;
 		break;
 	}
+	return -1;
 }
 
 void nuevoPokemon(t_mensaje* mensaje){
@@ -531,6 +511,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 	int socketAppeared = crear_conexion(ip, puerto);
 
 	if(socketAppeared ==-1){
+		liberar_conexion(socketAppeared);
 		log_info(logger,"No se pudo conectar con el broker.");
 	}else{
 		mensaje->id_mensaje_correlativo = mensaje->id_mensaje;

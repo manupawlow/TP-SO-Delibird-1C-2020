@@ -63,6 +63,9 @@ t_list *obtenerObjetivoGlobal(){
      t_list *pokemonesUnificado = listaUnica(pokemonesEntrenadores);
 	 t_list *objetivoGlobal = filtrado(pokemonesUnificado,objetivoUnificado);
 
+	 list_destroy_and_destroy_elements(pokemonesUnificado, (void*) free_pokemon);
+	 list_destroy(objetivoUnificado);
+
 	 return objetivoGlobal;
 }
 
@@ -74,6 +77,7 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 	for(int i=0; i< list_size(objetivoGlobal); i++){
 		int conexionGet = crear_conexion(ip,puerto);
 		if(conexionGet == -1){
+			liberar_conexion(conexionGet);
 			log_info(logger,"No se pudo solicitar pokemon");
 		}else{
 			char *pokemon = list_get(objetivoGlobal,i);
@@ -90,6 +94,8 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 
 			buffer = serializar_mensaje_struct(mensaje);
 			enviar_mensaje_struct(buffer,conexionGet,GET_POKEMON);
+			free(buffer->stream);
+			free(buffer);
 
 			int cod_op;
 			recv(conexionGet, &cod_op, sizeof(op_code), MSG_WAITALL);
@@ -98,8 +104,10 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 			log_info(logger, "Se agrego el id %d", mensaje->id_mensaje);
 			close(conexionGet);
 
+			free(mensaje->pokemon);
 		}
 	}
+	free(mensaje);
 }
 
 void agregar_segun_objetivo(t_list *capturados, Entrenador *entrenador){
@@ -160,13 +168,15 @@ void recorrerLista(t_list *lista, t_log *logger){
 }
 
 t_list *listaUnica(t_list *listaDeListas){
-	int sizeListaDeListas= list_size(listaDeListas);
+	int sizeListaDeListas = list_size(listaDeListas);
 	t_list *listaUnica = list_create();
 	for (int i =0; i< sizeListaDeListas; i++){
 		t_list *lista = list_get(listaDeListas,i);
 		int size = list_size(lista);
 		for(int j=0; j< size ; j++){
-			char *pokemon= list_get(lista,j);
+			//char *pokemon = list_get(lista,j);
+			char *pokemon = malloc(strlen((char*)list_get(lista,j))+1);
+			memcpy(pokemon,list_get(lista,j),strlen((char*)list_get(lista,j))+1);
 			list_add(listaUnica, pokemon);
 		}
 	}
@@ -181,13 +191,13 @@ t_list* filtrado(t_list* capturados, t_list* objetivos){
 	if(capturados==NULL)
 		return aux;
 	else
-		auxCapturados= list_duplicate(capturados);
+		auxCapturados = list_duplicate(capturados);
 
 	for(int i=0; i<list_size(aux); i++){
-		char *objetivo= list_get(aux,i);
+		char *objetivo = list_get(aux,i);
 
 		for(int j=0; j<list_size(auxCapturados); j++){
-			char *capturado= list_get(auxCapturados,j);
+			char *capturado = list_get(auxCapturados,j);
 			if(strcmp(objetivo,capturado)==0){
 				list_remove(auxCapturados,j);
 				list_remove(aux,i);
@@ -196,6 +206,9 @@ t_list* filtrado(t_list* capturados, t_list* objetivos){
 			}
 		}
 	}
+
+	list_destroy_and_destroy_elements(auxCapturados, (void*) free_pokemon);
+
 	return aux;
 
 }
@@ -290,9 +303,6 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
 	list_add(ready,entrenador);
 	log_info(logger,"Entrenador %d en ready", entrenador->entrenadorNumero);
 
-	//free(pokemon->pokemon);
-	//free(pokemon);
-
 	sem_post(&semaforoExce);
 }
 
@@ -352,7 +362,7 @@ bool id_en_lista(int id_mensaje){
 		return id == id_mensaje;
 	}
 
-	return list_any_satisfy(id_localized, coincide);
+	return list_any_satisfy(id_localized,(void*) coincide);
 }
 
 bool bloqueado_por_agarrar(Entrenador *entrenador){
@@ -390,7 +400,11 @@ void menorDistancia (Poketeam *pokemon){
 	t_list *blockAgarrar = list_filter(block,(void*)bloqueado_por_agarrar);
 
 	if(list_is_empty(new) && list_is_empty(blockAgarrar)){
-		list_add(pokemones_pendientes,pokemon);
+		Poketeam *pendiente = malloc(sizeof(Poketeam));
+		pendiente->pokemon = malloc(strlen(pokemon->pokemon)+1);
+		pendiente->pos = pokemon->pos;
+		memcpy(pendiente->pokemon, pokemon->pokemon, strlen(pokemon->pokemon)+1);
+		list_add(pokemones_pendientes,pendiente);
 		log_info(logger,"Se agrego pokemon %s a la lista de pokemones PENDIENTES", pokemon->pokemon);
 
 		}
@@ -401,7 +415,7 @@ void menorDistancia (Poketeam *pokemon){
 		indiceblockAgarrar = indiceMasCercano(posicion,blockAgarrar);
 		entrenadorMasCercaBlock = list_get(blockAgarrar,indiceblockAgarrar);
 
-		if(distancia(entrenadorMasCercaBlock,posicion) < distancia(entrenadorMasCercaNew,posicion)){
+		if(distancia(entrenadorMasCercaBlock->posicion,posicion) < distancia(entrenadorMasCercaNew->posicion,posicion)){
 			ponerEnReady(entrenadorMasCercaBlock,pokemon);
 			remover_entrenador(entrenadorMasCercaBlock->entrenadorNumero, block);
 		}else{
@@ -468,11 +482,9 @@ t_list* recibirLocalized(int socket){
 	t_mensaje_get* mensaje = malloc(sizeof(t_mensaje_get));
     mensaje = recibir_mensaje_struct_get(socket);
 
-    char** arrayPos= string_split(mensaje->posiciones,".");
+    char** arrayPos = string_split(mensaje->posiciones,".");
 
-    t_list* listaPoke=list_create();
-
-    int cantidad = mensaje->cantidad;
+    t_list* listaPoke = list_create();
 
     int i=0;
     while(arrayPos[i]!=NULL){

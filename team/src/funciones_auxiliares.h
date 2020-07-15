@@ -26,6 +26,7 @@ t_list* listaPosiciones(t_config* config, char* cadena);
 void recorrerLista(t_list *lista, t_log *logger);
 void enviar_catch(Entrenador *entrenador, int conexion_catch);
 void eliminar_pendientes(char *pokemon);
+void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon);
 
 bool bloqueado_por_agarrar(Entrenador *entrenador);
 bool bloqueado_por_capturar(Entrenador *entrenador);

@@ -2,7 +2,10 @@
 #include "funciones_auxiliares.h"
 #include "hilos.h"
 
-int main(void){
+int main(int argc, char* argv[]){
+
+	ID_PROCESO = malloc(strlen(argv[1])+1);
+	ID_PROCESO = argv[1];
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 	t_config *config_team = config_create(conf);
@@ -49,10 +52,35 @@ int main(void){
 
     log_destroy(logger);
     config_destroy(config_team);
-
+    list_destroy_and_destroy_elements(objetivoGlobal, (void*) free);
     pthread_mutex_destroy(&mxExce);
     sem_destroy(&semaforoExce);
     sem_destroy(&semaforoIntercambio);
     sem_destroy(&semaforoDeadlock);
 
+    liberar_listas_config();
+
+    pthread_exit(&conexionLocalized);
+    pthread_exit(&conexionCaugth);
+    pthread_exit(&conexionAppeared);
+    pthread_exit(&conexionGameboy);
+    pthread_exit(&ponerEnEjecuccion);
+    pthread_exit(&deadLock);
+    pthread_exit(0);
+
+    free(ID_PROCESO);
+
+}
+
+void liberar_listas_config(){
+	liberar_lista_de_listas(config->objetivos_entrenadores);
+	liberar_lista_de_listas(config->pokemon_entrenadores);
+	list_destroy_and_destroy_elements(config->posiciones_entrenadores, (void*) free);
+}
+
+void liberar_lista_de_listas(t_list* listaDeListas){
+	int sizeListaDeListas = list_size(listaDeListas);
+	for (int i =0; i< sizeListaDeListas; i++){
+		list_destroy_and_destroy_elements(list_get(listaDeListas,i), (void*) free);
+	}
 }
