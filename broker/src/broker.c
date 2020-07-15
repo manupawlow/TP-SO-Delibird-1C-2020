@@ -34,8 +34,16 @@ int main(void) {
 
 	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
-	contador_de_id = 0;
+	contador_de_id = 1;
+
 	pthread_mutex_init(&mx_id_mensaje, NULL);
+
+	pthread_mutex_init(&mx_lista_new, NULL);
+	pthread_mutex_init(&mx_lista_localized, NULL);
+	pthread_mutex_init(&mx_lista_get, NULL);
+	pthread_mutex_init(&mx_lista_appeared, NULL);
+	pthread_mutex_init(&mx_lista_catch, NULL);
+	pthread_mutex_init(&mx_lista_caught, NULL);
 
 	//INIT MEMORY
 
@@ -50,7 +58,7 @@ int main(void) {
 		algoritmo_reemplazo = config_get_string_value(config,"ALGORITMO_REEMPLAZO");
 
 		memoria = malloc(memory_size);
-		contador_id_particiones = 0;
+		contador_id_particiones = 1;
 		particiones = list_create();
 		if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 			particiones_libres = list_create();
@@ -154,7 +162,7 @@ void dump_cache(int n){
 
 	FILE* f;
 
-	int contador = 0;
+	int contador = 1;
 
 	f=fopen("dump.txt","w+");
 
@@ -170,15 +178,16 @@ void dump_cache(int n){
 	fprintf(f, "%s\n", dump);
 
 
+if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 
 	for(int i= 0; i<list_size(particiones);i++){
 	char* particion=string_new();
 	Particion* p= list_get(particiones,i);
 			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
 			string_append_with_format(&particion, "%#05X - ", p->offset_init);
-			string_append_with_format(&particion, "#%05X.", p->offset_end);
+			string_append_with_format(&particion, "%#05X.", p->offset_end);
 			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->size) );
-			string_append_with_format(&particion, "LRU: %s ", string_itoa(p->tiempo_lru));
+			string_append_with_format(&particion, "LRU: %" PRIu64 "", p->tiempo_lru);
 			string_append_with_format(&particion, "Cola: %s", p->cola);
 			string_append_with_format(&particion, "	 ID: %s", string_itoa(p->id_mensaje));
 			fprintf(f, "%s\n\n",particion );
@@ -197,6 +206,41 @@ void dump_cache(int n){
 		contador++;
 		free(particion);
 	}
+
+}
+
+if(strcmp(algoritmo_memoria, "BS") == 0){
+	for(int i= 0; i<list_size(buddies);i++){
+
+		Buddy* p= list_get(buddies,i);
+
+		if(!p->esta_libre && p->id_hijo1 == -1 && p->id_hijo2 == -1){
+			char* particion=string_new();
+			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
+			string_append_with_format(&particion, "%#05X - ", p->offset_init);
+			string_append_with_format(&particion, "#%05X.", p->offset_init + p->size - 1);
+			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->particion->size) );
+			string_append_with_format(&particion, "LRU: %" PRIu64 "", p->particion->tiempo_lru);
+			string_append_with_format(&particion, "Cola: %s", p->particion->cola);
+			string_append_with_format(&particion, "	 ID: %s", string_itoa(p->particion->id_mensaje));
+			fprintf(f, "%s\n\n",particion );
+			contador++;
+			free(particion);
+		}
+
+		if(p->esta_libre){
+			char* particion = string_new();
+			string_append_with_format(&particion, "Particion %s: ",string_itoa(contador));
+			string_append_with_format(&particion, "%#05X - ", p->offset_init);
+			string_append_with_format(&particion, "%#05X.", p->offset_init + p->size - 1);
+			string_append_with_format(&particion, "	[L] Size: %sb ",string_itoa(p->size) );
+			fprintf(f, "%s\n",particion );
+			contador++;
+			free(particion);
+		}
+	}
+
+}
 
 
 	fprintf(f, "-----------------------------------------------------------------------------------------------------------------\n");

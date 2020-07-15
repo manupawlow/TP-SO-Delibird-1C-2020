@@ -28,12 +28,13 @@ void almacenar_mensaje(t_mensaje*, char*);
 void almacenar_particion(t_mensaje*, char*, int);
 void enviar_mensajes_en_memoria(Proceso*, char*);
 t_mensaje* leer_particion(Particion*);
-void guardar_ACK(int, t_mensaje*);
+void guardar_ACK(int, int);
 void agregar_enviados(t_mensaje*, t_list*);
 bool se_le_envio_el_mensaje(Proceso*, Particion*);
 bool devolvio_ack(Proceso*, Particion*);
 int buscar_particion_por_id(int);
 int buscar_particion_por_id_mensaje(int);
+int buscar_proceso_en_enviados_por_id(int, t_list*);
 
 //buddy
 int potencia_dos_mas_cercana(int);

@@ -35,17 +35,17 @@ int main(int argc, char *argv[]) {
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
 		if(strcmp(argv[2],"NEW_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_NEW);
+			enviar_mensaje("99",conexion,SUS_NEW);
 		}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_APP);
+			enviar_mensaje("99",conexion,SUS_APP);
 		}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CATCH);
+			enviar_mensaje("99",conexion,SUS_CATCH);
 		}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CAUGHT);
+			enviar_mensaje("99",conexion,SUS_CAUGHT);
 		}else if(strcmp(argv[2],"GET_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_GET);
+			enviar_mensaje("99",conexion,SUS_GET);
 		}else if(strcmp(argv[2],"LOCALIZED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_LOC);
+			enviar_mensaje("99",conexion,SUS_LOC);
 		}
 
 		log_info(logger,"Suscripcion a cola %s por %d segundos",argv[2],argv[3]);
@@ -88,6 +88,7 @@ int main(int argc, char *argv[]) {
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
 		mensaje_struct->pokemon = string_new();
+		string_append(&mensaje_struct->pokemon, "p");
 		mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 		mensaje_struct->resultado = 0;
 		mensaje_struct->posx = 0;
@@ -180,6 +181,8 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->resultado = 1;
 		buffer = serializar_mensaje_struct(mensaje_struct);
 		enviar_mensaje_struct(buffer,conexion,CAUGHT_POKEMON);
+		free(buffer->stream);
+		free(buffer);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 	}
 	else if(strcmp(argv[2],"GET_POKEMON") == 0){
@@ -222,8 +225,6 @@ int main(int argc, char *argv[]) {
 	}
 	free(ips);
 	free(puertos);
-	free(mensaje_a_recibir->pokemon);
-	free(mensaje_a_recibir);
 
 	terminar_programa(conexion,logger,config);
 

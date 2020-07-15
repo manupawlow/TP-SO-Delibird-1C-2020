@@ -209,9 +209,9 @@ t_mensaje_get* deserializar_mensaje_struct_get(t_buffer* buffer)
 
 	memcpy(&(mensaje->pokemon_length), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
-	mensaje->pokemon = malloc(mensaje->pokemon_length);
-	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length);
-	stream += mensaje->pokemon_length;
+	mensaje->pokemon = malloc(mensaje->pokemon_length + 1);
+	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length + 1);
+	stream += mensaje->pokemon_length + 1;
 	memcpy(&(mensaje->cantidad), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
 	memcpy(&(mensaje->id_mensaje), stream, sizeof(uint32_t));
@@ -231,14 +231,14 @@ t_buffer* serializar_mensaje_struct(t_mensaje* mensaje)
 {
 		t_buffer* buffer = malloc(sizeof(t_buffer));
 
-		buffer->size = sizeof(uint8_t)*2 + sizeof(uint32_t)*5 + strlen(mensaje->pokemon)+1;
+		buffer->size = sizeof(uint8_t)*2 + sizeof(uint32_t)*5 + strlen(mensaje->pokemon) + 1;
 
 		void* stream = malloc(buffer->size);
 		int offset = 0;
 
 		memcpy(stream + offset, &(mensaje->pokemon_length), sizeof(uint32_t));
 		offset += sizeof(uint32_t);
-		memcpy(stream + offset, mensaje->pokemon, strlen(mensaje->pokemon)+1);
+		memcpy(stream + offset, mensaje->pokemon, strlen(mensaje->pokemon) + 1);
 		offset += strlen(mensaje->pokemon) + 1;
 		memcpy(stream + offset, &(mensaje->posx), sizeof(uint8_t));
 		offset += sizeof(uint8_t);
@@ -267,9 +267,9 @@ t_mensaje* deserializar_mensaje_struct(t_buffer* buffer)
 
 	memcpy(&(mensaje->pokemon_length), stream, sizeof(uint32_t));
 	stream += sizeof(uint32_t);
-	mensaje->pokemon = malloc(mensaje->pokemon_length);
-	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length);
-	stream += mensaje->pokemon_length;
+	mensaje->pokemon = malloc(mensaje->pokemon_length + 1);
+	memcpy(mensaje->pokemon, stream, mensaje->pokemon_length + 1);
+	stream += mensaje->pokemon_length + 1;
 	memcpy(&(mensaje->posx), stream, sizeof(uint8_t));
 	stream += sizeof(uint8_t);
 	memcpy(&(mensaje->posy), stream, sizeof(uint8_t));
@@ -323,7 +323,7 @@ void enviar_mensaje_struct(t_buffer* buffer, int socket_cliente, op_code codigo)
 			offset += sizeof(uint32_t);
 			memcpy(a_enviar + offset, paquete->buffer->stream, paquete->buffer->size);
 
-			send(socket_cliente, a_enviar, paquete->buffer->size + sizeof(op_code) + sizeof(uint32_t), 0);
+			send(socket_cliente, a_enviar, paquete->buffer->size + sizeof(op_code) + sizeof(uint32_t), MSG_NOSIGNAL);
 
 	//----------------libero la memoria del paquete mandado----------------
 			free(a_enviar);

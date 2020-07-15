@@ -404,7 +404,7 @@ void funcionNew(int socket){
         conexionNew= reintentar_conexion(ip,puerto,tiempoReconexion);
     }
 
-    enviar_mensaje("Suscribime",conexionNew, SUS_NEW);
+    enviar_mensaje(ID_PROCESO,conexionNew, SUS_NEW);
     log_info(logger,"Me suscribi a la cola NEW!");
 
 
@@ -422,7 +422,7 @@ void funcionCatch(int socket){
     }
 
 
-    enviar_mensaje("Suscribime",conexionCatch, SUS_CATCH);
+    enviar_mensaje(ID_PROCESO,conexionCatch, SUS_CATCH);
     log_info(logger,"Me suscribi a la cola CATCH!");
 
 
@@ -448,10 +448,14 @@ void funcionGet(){
 	}
 
 }
-void funcionACK(){
+void funcionACK(int id_mensaje){
 	int conexionRespuesta;
 	conexionRespuesta = crear_conexion(ip,puerto);
-	enviar_mensaje("Llego a Destino",conexionRespuesta,ACK);
+	char* ack =string_new();
+	string_append_with_format(&ack, "%s-", ID_PROCESO);
+	string_append_with_format(&ack, "%d", id_mensaje);
+	enviar_mensaje(ack,conexionRespuesta,ACK);
+	free(ack);
 }
 
 void process_request(int socket){
@@ -464,7 +468,7 @@ void process_request(int socket){
 	switch (cod_op){
 	case GET_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
@@ -475,7 +479,7 @@ void process_request(int socket){
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
@@ -486,7 +490,7 @@ void process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		funcionACK();
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon,(gamecard*) mensaje);

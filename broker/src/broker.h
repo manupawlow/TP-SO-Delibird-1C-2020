@@ -3,6 +3,7 @@
 #define BROKER_H_
 
 #include <bibliotec.h>
+#include<inttypes.h>
 
 typedef struct {
 
@@ -21,6 +22,13 @@ typedef struct {
 	t_list* SUSCRITOS_CAUGHT;
 
 }Colas;
+
+pthread_mutex_t mx_lista_new;
+pthread_mutex_t mx_lista_localized;
+pthread_mutex_t mx_lista_get;
+pthread_mutex_t mx_lista_appeared;
+pthread_mutex_t mx_lista_catch;
+pthread_mutex_t mx_lista_caught;
 
 t_log* logger;
 t_config* config;
@@ -80,6 +88,7 @@ pthread_mutex_t mx_memoria;
 pthread_mutex_t mx_mostrar;
 
 pthread_mutex_t mx_lru;
+
 
 int frecuencia_compactacion;
 int tamanio_minimo;

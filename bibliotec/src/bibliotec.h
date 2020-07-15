@@ -16,6 +16,7 @@
 #include<sys/time.h>
 #include<semaphore.h>
 
+
 //CODIGO DE TIPOS DE MENSAJE
 typedef enum
 {
@@ -57,11 +58,11 @@ typedef struct
 {
     uint32_t pokemon_length;
     char* pokemon;
-    uint8_t posx;
-    uint8_t posy;
+    uint32_t posx;
+    uint32_t posy;
 	uint32_t cantidad;
-	uint32_t id_mensaje;
-	uint32_t id_mensaje_correlativo;
+	uint8_t id_mensaje;
+	uint8_t id_mensaje_correlativo;
 	uint32_t resultado;
 } t_mensaje;
 
