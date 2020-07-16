@@ -1,6 +1,17 @@
 #include <bibliotec.h>
+	t_log* logger;
+
+void recibir_mensaje_de_broker(int socket){
+	t_mensaje* mensaje = recibir_mensaje_struct(socket);
+	log_info(logger, "Recibi mensaje %d!", mensaje->id_mensaje);
+	free(mensaje);
+}
 
 int main(int argc, char *argv[]) {
+
+	/*argv[1] = "SUSCRIPTOR";
+	argv[2] = "CAUGHT_POKEMON";
+	argv[3] = "20";*/
 
 	char *ip;
 	char *puerto;
@@ -13,7 +24,6 @@ int main(int argc, char *argv[]) {
 	t_mensaje* mensaje_struct = malloc(sizeof(t_mensaje));
 	t_buffer* buffer;
 
-	t_log* logger;
 	t_config* config;
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gameboy/src/gameboy.config";
@@ -48,28 +58,17 @@ int main(int argc, char *argv[]) {
 			enviar_mensaje("99",conexion,SUS_LOC);
 		}
 
-		log_info(logger,"Suscripcion a cola %s por %d segundos",argv[2],argv[3]);
+		log_info(logger,"Suscripcion a cola %s por %s segundos",argv[2],argv[3]);
 
-		//temporal_get_string_time() devuelve el tiempo en hh:mm:ss:mmmm (es un char*)
+		uint64_t time = timestamp();
+		uint64_t final_time = time + atoi(argv[3]) * 1000;
 
-		int segundosPermitidos = atoi(argv[3]);
-		char ** tiempo = string_split(temporal_get_string_time(),":");
-		int horas = atoi(tiempo[0]);
-		int minutos = atoi(tiempo[1]);
-		int segundos = atoi(tiempo[2]);
-		int segundosFinal = segundos + horas*60*60 + minutos*60 + segundosPermitidos;
-
-		while(segundos < segundosFinal){
-
-			mensaje_struct = recibir_mensaje_struct(conexion);
-
-			tiempo = string_split(temporal_get_string_time(),":");
-			horas = atoi(tiempo[0]);
-			minutos = atoi(tiempo[1]);
-			segundos = atoi(tiempo[2]);
-			segundos = segundos + horas*60*60 + minutos*60;
+		while(time < final_time){
+			time = timestamp();
+			pthread_t hilo;
+			pthread_create(&hilo, NULL,(void*) recibir_mensaje_struct, (void*)conexion);
 		}
-		freeDoblePuntero(tiempo);
+		log_info(logger, "THE END");
 
 	}else{
 

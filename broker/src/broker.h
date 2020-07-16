@@ -74,6 +74,12 @@ typedef struct{
 	int socket;
 }Proceso;
 
+typedef struct{
+	uint32_t x;
+	uint32_t y;
+}Coordenadas;
+
+
 uint32_t contador_id_particiones;
 uint32_t contador_id_buddy;
 

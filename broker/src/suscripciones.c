@@ -36,8 +36,6 @@ void process_request(Colas *loquito) {
 
 			actualizar_lista_suscritos(loquito->SUSCRITOS_GET, nuevo_proceso);
 
-			log_info(logger, "Cantidad suscritos get: %d", list_size(loquito->SUSCRITOS_GET));
-
 			indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_GET);//el nombre de la funcion esta mal :(
 			proceso = list_get(loquito->SUSCRITOS_GET, indice);
 
@@ -149,12 +147,16 @@ void process_request(Colas *loquito) {
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola CATCH el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
-			actualizar_lista_suscritos(loquito->SUSCRITOS_CATCH, nuevo_proceso);
+			if(id != 99){
+				actualizar_lista_suscritos(loquito->SUSCRITOS_CATCH, nuevo_proceso);
 
-			indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_CATCH);
-			proceso = list_get(loquito->SUSCRITOS_CATCH, indice);
+				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_CATCH);
+				proceso = list_get(loquito->SUSCRITOS_CATCH, indice);
 
-			enviar_mensajes_en_memoria(proceso, "CATCH");
+				enviar_mensajes_en_memoria(proceso, "CATCH");
+			}else{
+				enviar_mensajes_en_memoria(nuevo_proceso, "CATCH");
+			}
 
 			free(mensajeACK);
 
@@ -1221,29 +1223,30 @@ if(strcmp(p->cola, "LOCALIZED") == 0 ){
 	mensaje->pokemon = realloc(mensaje->pokemon, mensaje->pokemon_length + 1);
 	memcpy(mensaje->pokemon, memoria + p->offset_init + sizeof(uint32_t), mensaje->pokemon_length); //POKEMON
 	memcpy(mensaje->pokemon + mensaje->pokemon_length, barra_cero, 1); // (agrego el \0)
-	memcpy(&mensaje->cantidad, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // cantidad
+	memcpy(&mensaje->cantidad, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // CANTIDAD
 
 
 	char* posiciones = string_new();
 	int i = 0;
 	int offset_init = p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length + sizeof(uint32_t);
+	Coordenadas* coordenadas = malloc(sizeof(Coordenadas));
+
 	while( i < mensaje->cantidad){
 
-		int x;
-		int y;
 
-		memcpy(&x, memoria + offset_init, sizeof(uint32_t)); // POS X
+		memcpy(&coordenadas->x, memoria + offset_init, sizeof(uint32_t)); // POS X
 		offset_init += sizeof(uint32_t);
-		memcpy(&y, memoria + offset_init, sizeof(uint32_t)); // POS Y
+		memcpy(&coordenadas->y, memoria + offset_init, sizeof(uint32_t)); // POS Y
 		offset_init += sizeof(uint32_t);
 
 		if(i==0){
-			string_append_with_format(&posiciones, "%d", x );
-			string_append_with_format(&posiciones, "-%d", y );
+			string_append_with_format(&posiciones, "%d", coordenadas->x );
+			string_append_with_format(&posiciones, "-%d", coordenadas->y );
 		}else{
-			string_append_with_format(&posiciones, ".%d", x );
-			string_append_with_format(&posiciones, "-%d", y );
+			string_append_with_format(&posiciones, ".%d", coordenadas->x );
+			string_append_with_format(&posiciones, "-%d", coordenadas->y );
 		}
+		i++;
 	}//TODO REVISAR, QUE PASA CUANDO LLEGA UNA SOLA POSICION
 
 	mensaje->posiciones_length = strlen(posiciones) + 1;
@@ -1472,12 +1475,12 @@ void cachear_mensaje_new(t_mensaje *msg, int indice_libre){ //uint32 largo, nomb
 	new_particion->id_mensaje_correlativo = msg->id_mensaje_correlativo;
 //Termina de crear la particion
 
-	int longitud = msg->pokemon_length - 1;
+	msg->pokemon_length -=1;
 
-	memcpy(memoria + offset_init, &longitud, sizeof(uint32_t)); // LENGTH
+	memcpy(memoria + offset_init, &msg->pokemon_length, sizeof(uint32_t)); // LENGTH
 	offset_init += sizeof(uint32_t);
-	memcpy(memoria + offset_init, msg->pokemon, longitud); // NOMBRE
-	offset_init += longitud;
+	memcpy(memoria + offset_init, msg->pokemon, msg->pokemon_length); // NOMBRE
+	offset_init += msg->pokemon_length;
 	memcpy(memoria + offset_init, &msg->posx, sizeof(uint32_t)); // POS X
 	offset_init += sizeof(uint32_t);
 	memcpy(memoria + offset_init, &msg->posy, sizeof(uint32_t)); // POS Y
@@ -1485,6 +1488,7 @@ void cachear_mensaje_new(t_mensaje *msg, int indice_libre){ //uint32 largo, nomb
 	memcpy(memoria + offset_init, &msg->cantidad, sizeof(uint32_t)); // CANTIDAD
 	offset_init += sizeof(uint32_t);
 
+	msg->pokemon_length += 1;
 
 	if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 		ParticionLibre *libre = list_get(particiones_libres, indice_libre);
@@ -1552,11 +1556,13 @@ void cachear_mensaje_get(t_mensaje *msg, int indice_libre){
 	new_particion->id_mensaje_correlativo = msg->id_mensaje_correlativo;
 //Termina de crear la particion
 
-	int longitud = msg->pokemon_length - 1;
-	memcpy(memoria + offset_init, &longitud, sizeof(uint32_t));
-	offset_init += sizeof(uint32_t);
-	memcpy(memoria + offset_init, msg->pokemon, longitud);
+	msg->pokemon_length -= 1;
 
+	memcpy(memoria + offset_init, &msg->pokemon_length, sizeof(uint32_t));
+	offset_init += sizeof(uint32_t);
+	memcpy(memoria + offset_init, msg->pokemon, msg->pokemon_length);
+
+	msg->pokemon_length += 1;
 
 	if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 		ParticionLibre *libre = list_get(particiones_libres, indice_libre);
@@ -1620,14 +1626,16 @@ new_particion->id_mensaje_correlativo = msg->id_mensaje_correlativo;
 //Termina de crear la particion
 
 
-int longitud = msg->pokemon_length - 1;
+msg->pokemon_length -= 1;
 
-memcpy(memoria + offset_init, &longitud, sizeof(uint32_t)); // LENGTH
+memcpy(memoria + offset_init, &msg->pokemon_length, sizeof(uint32_t)); // LENGTH
 offset_init += sizeof(uint32_t);
-memcpy(memoria + offset_init, msg->pokemon, longitud); // NOMBRE
-offset_init += longitud;
+memcpy(memoria + offset_init, msg->pokemon, msg->pokemon_length); // NOMBRE
+offset_init += msg->pokemon_length;
 memcpy(memoria + offset_init, &msg->cantidad, sizeof(uint32_t)); // CANTIDAD
 offset_init += sizeof(uint32_t);
+
+msg->pokemon_length += 1;
 
 int i = 0;
 char** aux = string_split(msg->posiciones, ".");
@@ -1700,7 +1708,7 @@ void cachear_mensaje_appeared_or_catch(t_mensaje *msg, int indice_libre, char* c
 		new_particion->cola = "APPEARED";
 	new_particion->id_mensaje = msg->id_mensaje;
 	new_particion->offset_init = offset_init;
-	new_particion->size = sizeof(uint32_t) + msg->pokemon_length + 2 * sizeof(uint32_t);
+	new_particion->size = sizeof(uint32_t) + msg->pokemon_length - 1 + 2 * sizeof(uint32_t);
 	new_particion->suscriptores_ack = list_create();
 	new_particion->suscriptores_enviados = list_create();
 	if(new_particion->size < tamanio_minimo)
@@ -1713,15 +1721,18 @@ void cachear_mensaje_appeared_or_catch(t_mensaje *msg, int indice_libre, char* c
 	new_particion->id_mensaje_correlativo = msg->id_mensaje_correlativo;
 //Termina de crear la particion
 
-	int longitud = msg->pokemon_length - 1;
-	memcpy(memoria + offset_init, &longitud, sizeof(uint32_t)); // LENGTH
+	msg->pokemon_length -= 1;
+
+	memcpy(memoria + offset_init, &msg->pokemon_length, sizeof(uint32_t)); // LENGTH
 	offset_init += sizeof(uint32_t);
-	memcpy(memoria + offset_init, msg->pokemon, longitud); // NOMBRE
-	offset_init += longitud;
+	memcpy(memoria + offset_init, msg->pokemon, msg->pokemon_length); // NOMBRE
+	offset_init += msg->pokemon_length;
 	memcpy(memoria + offset_init, &msg->posx, sizeof(uint32_t)); // POS X
 	offset_init += sizeof(uint32_t);
 	memcpy(memoria + offset_init, &msg->posy, sizeof(uint32_t)); // POS Y
 	offset_init += sizeof(uint32_t);
+
+	msg->pokemon_length += 1;
 
 
 	if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){

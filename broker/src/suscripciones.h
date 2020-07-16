@@ -57,7 +57,7 @@ void consolidar_buddies(Buddy*);
 int tiene_hijos_libres_con_espacio(Buddy*, int);
 int buscar_buddy_por_id_particion(int);
 
-uint64_t timestamp();
+//uint64_t timestamp();
 void dump_cache(int);
 void mostrar();
 

@@ -3,7 +3,7 @@
 #include <signal.h>
 
 
-
+/*
 uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIME.H>
 	struct timeval tv;
 	gettimeofday(&tv,NULL);
@@ -11,7 +11,7 @@ uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIM
 	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
 	uint64_t a = result;
 	return a;
-}
+}*/
 
 int main(void) {
 
@@ -88,44 +88,6 @@ int main(void) {
 			algoritmo_memoria, algoritmo_particion_libre, algoritmo_reemplazo, memory_size, tamanio_minimo, frecuencia_compactacion);
 
 
-
-	/* EJEMPLO PARA TESTEAR LA COMPACTACION
-	  t_mensaje *msg = malloc(sizeof(t_mensaje));
-	msg->pokemon = malloc(sizeof(char));
-	msg->pokemon = "h";
-
-	ParticionLibre* l1 = list_get(particiones_libres, 0 );
-	log_info(logger, "cantidad libres antes %d  cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
-	almacenar_particion(msg, "GET");
-		log_info(logger, "cantidad libres despues %d   cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
-
-		log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
-			almacenar_particion(msg, "GET");
-
-				log_info(logger, "cantidad libres despues %d   cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
-
-				log_info(logger, "cantidad libres antes %d  cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
-				msg->pokemon = "m";
-				almacenar_particion(msg, "GET");
-						log_info(logger, "cantidad libres despues %d   cantidad particiones %d size libre %d offset %d", list_size(particiones_libres), list_size(particiones), l1->size, l1->offset_init);
-
-						msg->pokemon = "hahahahah";
-						almacenar_particion(msg, "GET");
-			log_info(logger, "cantidad libres despues %d   cantidad particiones %d ", list_size(particiones_libres), list_size(particiones));
-
-
-
-			msg_get* mostrar = malloc(sizeof(msg_get));
-						mostrar->nombre_pokemon = malloc(sizeof(char));
-						Particion *p = list_get(particiones, 0);
-									memcpy(&mostrar->longitud_nombre, memoria + p->offset_init, sizeof(uint32_t));
-									memcpy(mostrar->nombre_pokemon, memoria + p->offset_init + sizeof(uint32_t), mostrar->longitud_nombre);
-
-							log_info(logger,"nombre pokemon( %s )  longitud(%d)", mostrar->nombre_pokemon, mostrar->longitud_nombre);
-*/
-
-
-
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
 
@@ -145,10 +107,10 @@ int main(void) {
     	log_info(logger,"socketero: %d", socketero[i]);
     	i++;
 
-    	/*pthread_t cliente_thread;
-    	pthread_create(&cliente_thread, NULL,(void*) process_request,colas);*///TODO
+    	pthread_t cliente_thread;
+    	pthread_create(&cliente_thread, NULL,(void*) process_request,colas);//TODO
 
-    	process_request(colas);
+    	//process_request(colas);
     }
 
 

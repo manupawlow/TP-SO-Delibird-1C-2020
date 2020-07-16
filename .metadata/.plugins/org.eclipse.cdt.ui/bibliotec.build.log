@@ -1,4 +1,4 @@
-22:48:14 **** Incremental Build of configuration Debug for project bibliotec ****
+23:20:13 **** Incremental Build of configuration Debug for project bibliotec ****
 make all 
 Building file: ../src/bibliotec.c
 Invoking: GCC C Compiler
@@ -11,5 +11,5 @@ gcc -shared -o "libbibliotec.so"  ./src/bibliotec.o   -lpthread
 Finished building target: libbibliotec.so
  
 
-22:48:17 Build Finished (took 3s.265ms)
+23:20:20 Build Finished (took 7s.461ms)
 

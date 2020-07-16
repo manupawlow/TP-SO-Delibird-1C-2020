@@ -76,6 +76,7 @@ typedef struct
 	char* posiciones;
 }t_mensaje_get;
 
+uint64_t timestamp();
 
 void* recibir_buffer(int*, int);
 int iniciar_servidor(char*, char*);

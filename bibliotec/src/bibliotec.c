@@ -3,6 +3,16 @@
 //t_queue *GET_POKEMON = create_queue();
 //t_queue *LOCALIZED = create_queue();
 
+
+uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIME.H>
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
+	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
+	uint64_t a = result;
+	return a;
+}
+
 int iniciar_servidor(char* ip, char* puerto)
 {
 	int socket_servidor;
