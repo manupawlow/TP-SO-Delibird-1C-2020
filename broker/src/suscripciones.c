@@ -1144,11 +1144,28 @@ int buscar_buddy_por_id_particion(int id_particion){
 
 // ENVIO DE MENSAJES
 
-void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
+int mensaje_mas_antiguo_mayor_a_n(int n){ //RETORNA EL i DE LA PARTICION CON EL ID_MANSAJE MAS CHICO
+	int i_fifo = 0;
+	for(int i=0; i<list_size(particiones); i++){
+		Particion* p = list_get(particiones, i);
+		Particion* fifo = list_get(particiones, i_fifo);
+		if(p->id_mensaje >= n && p->id_mensaje < fifo->id_mensaje){
+			i_fifo = i;
+		}
+	}
 
+	return i_fifo;
+}
+
+void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
+	int n = 0;
 	for(int i=0; i<list_size(particiones); i++){
 
-		Particion* p = list_get(particiones, i);
+		int indice = mensaje_mas_antiguo_mayor_a_n(n);
+
+		Particion* p = list_get(particiones, indice);
+
+		n = p->id_mensaje;
 
 		if(strcmp(p->cola, cola) == 0)
 
