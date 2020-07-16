@@ -1,8 +1,8 @@
 #include "gamecard.h"
-int main(/*int argc, char* argv[]*/) {
+int main(int argc, char* argv[]) {
 
-	/*ID_PROCESO = malloc(strlen(argv[1])+1);
-	ID_PROCESO = argv[1];*/
+	ID_PROCESO = malloc(strlen(argv[1])+1);
+	ID_PROCESO = argv[1];
 
 
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);

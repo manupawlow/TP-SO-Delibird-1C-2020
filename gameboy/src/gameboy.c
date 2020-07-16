@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
 			mensaje_struct->posy = atoi(argv[5]);
-			mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
+			//mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);

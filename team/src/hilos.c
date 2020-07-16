@@ -136,7 +136,7 @@ int process_request(int socket_cliente){
 
 		mensajeGet = recibir_mensaje_struct_get(socket_cliente);
 
-		if(id_en_lista(mensajeGet->id_mensaje_correlativo)){
+		if(id_en_lista(mensajeGet->id_mensaje_correlativo) && mensajeGet->cantidad !=0){
 			loca = recibirLocalized(mensajeGet);
 		    llegada_localized(loca);
 		}
@@ -437,7 +437,7 @@ void deadlock(){
 
 					break;
 				}
-				free(pokemon_intercambio);
+			//	free(pokemon_intercambio);
 			if(intercambio)
 			break;
 			}
@@ -453,7 +453,7 @@ void deadlock(){
 			list_destroy(blockDeadlock);
 			blockDeadlock = list_filter(block, (void*) bloqueado_por_deadlock);
 		}
-		free(pokemon);
+		//free(pokemon);
 	}
 	list_destroy(blockDeadlock);//agregado
 
