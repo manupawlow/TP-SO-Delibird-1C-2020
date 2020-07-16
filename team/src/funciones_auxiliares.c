@@ -146,8 +146,8 @@ void agregar_segun_faltantes(char* pokemon, Entrenador *entrenador){
 			list_add(entrenador->pokemones_capturados, pokemon);
 			intercambio = false;
 			for(int j=0; j<list_size(entrenador->pokemones_faltantes);j++){
-				//char *eleminar = list_get(entrenador->pokemones_faltantes,j);
-				if((strcmp(pokemon,pokemon_objetivo)) == 0)
+				char *eleminar = list_get(entrenador->pokemones_faltantes,j);
+				if((strcmp(pokemon,eleminar)) == 0)
 					list_remove(entrenador->pokemones_faltantes,j);
 			}
 
@@ -349,8 +349,8 @@ void eliminar_pokemon(char *pokemon, t_list *lista){
 		return (strcmp(busqueda,pokemon) == 0);
 	}
 
-	list_remove_and_destroy_by_condition(lista, (void*) coincide, (void*) free_pokemon);//agregado
-	//list_remove_by_condition(lista, (void*) coincide);
+	//list_remove_and_destroy_by_condition(lista, (void*) coincide, (void*) free_pokemon);//agregado
+	list_remove_by_condition(lista, (void*) coincide);
 }
 
 void eliminar_pendientes(char *pokemon){
@@ -460,7 +460,8 @@ void moverse(Entrenador *entrenador){
 	//Posicion* posicion = malloc(sizeof(Posicion));
 	//memcpy(posicion, entrenador->posicion_a_capturar, sizeof(Posicion));
 	//free(entrenador->posicion);
-	entrenador->posicion = entrenador->posicion_a_capturar;
+	entrenador->posicion->x = entrenador->posicion_a_capturar->x;
+	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
 }
 
 
