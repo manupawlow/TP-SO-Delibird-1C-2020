@@ -1,6 +1,20 @@
-01:52:50 **** Incremental Build of configuration Debug for project broker ****
+12:56:23 **** Incremental Build of configuration Debug for project broker ****
 make all 
-make: Nothing to be done for 'all'.
+Building file: ../src/broker.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/tp-2020-1c-NN/bibliotec/src" -Ibibliotec -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/broker.d" -MT"src/broker.o" -o "src/broker.o" "../src/broker.c"
+Finished building: ../src/broker.c
+ 
+Building file: ../src/suscripciones.c
+Invoking: GCC C Compiler
+gcc -I"/home/utnso/tp-2020-1c-NN/bibliotec/src" -Ibibliotec -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"src/suscripciones.d" -MT"src/suscripciones.o" -o "src/suscripciones.o" "../src/suscripciones.c"
+Finished building: ../src/suscripciones.c
+ 
+Building target: broker
+Invoking: GCC C Linker
+gcc -L"/home/utnso/tp-2020-1c-NN/bibliotec/Debug" -o "broker"  ./src/broker.o ./src/suscripciones.o   -lpthread -lbibliotec -lcommons
+Finished building target: broker
+ 
 
-01:52:54 Build Finished (took 3s.978ms)
+12:56:32 Build Finished (took 8s.123ms)
 

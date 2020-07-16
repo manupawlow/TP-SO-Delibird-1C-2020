@@ -1321,7 +1321,7 @@ pthread_mutex_unlock(&mx_memoria);
 	if(strcmp(p->cola,"CAUGHT") == 0){
 		memcpy(&mensaje->resultado, memoria + p->offset_init, sizeof(uint32_t));//RESPUESTA
 
-		memcpy(mensaje->pokemon, barra_cero, 1); // (agrego el \0 para que este inicializada la variable a la hora de enviarla)
+		memcpy(mensaje->pokemon, barra_cero, 1); // (agrego el \0)
 		mensaje->pokemon_length = 0;
 		mensaje->cantidad = 0;
 		mensaje->posx = 0;

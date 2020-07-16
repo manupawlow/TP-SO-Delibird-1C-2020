@@ -113,7 +113,7 @@ int main(void) {
     	//process_request(colas);
     }
 
-    terminar_programa(socket_servidor, logger, config);
+    terminar_programa(logger, config);
 
 
 	return EXIT_SUCCESS;

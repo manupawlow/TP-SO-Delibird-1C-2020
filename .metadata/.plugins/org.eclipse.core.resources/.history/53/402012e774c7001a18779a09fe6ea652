@@ -276,7 +276,7 @@ void process_request(Colas *loquito) {
 
 			enviar_mensajes_en_memoria(proceso, "NEW");
 			}else
-				enviar_mensajes_en_memoria(nuevo_proceso, "NEW");
+				enviaar_mensajes_en_memoria(nuevo_proceso, "NEW");
 
 
 			free(mensajeACK);
@@ -337,7 +337,7 @@ void process_request(Colas *loquito) {
 
 				enviar_mensajes_en_memoria(nuevo_proceso, "APPEARED");
 			}else
-				enviar_mensajes_en_memoria(nuevo_proceso, "APPEARED");
+				enviar_mmensajes_en_memoria(nuevo_proceso, "APPEARED");
 
 
 			pthread_mutex_unlock(&mx_lista_appeared);
@@ -1237,6 +1237,7 @@ if(strcmp(p->cola, "LOCALIZED") == 0 ){
 	memcpy(mensaje->pokemon + mensaje->pokemon_length, barra_cero, 1); // (agrego el \0)
 	memcpy(&mensaje->cantidad, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // CANTIDAD
 
+
 	char* posiciones = string_new();
 	int i = 0;
 	int offset_init = p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length + sizeof(uint32_t);
@@ -1258,9 +1259,7 @@ if(strcmp(p->cola, "LOCALIZED") == 0 ){
 			string_append_with_format(&posiciones, "-%d", coordenadas->y );
 		}
 		i++;
-	}
-
-	free(coordenadas);
+	}//TODO REVISAR, QUE PASA CUANDO LLEGA UNA SOLA POSICION
 
 	mensaje->posiciones_length = strlen(posiciones) + 1;
 	mensaje->posiciones = malloc(mensaje->posiciones_length);
@@ -1285,11 +1284,6 @@ pthread_mutex_unlock(&mx_memoria);
 		memcpy(mensaje->pokemon, memoria + p->offset_init + sizeof(uint32_t), mensaje->pokemon_length); // POKEMON
 		memcpy(mensaje->pokemon + mensaje->pokemon_length, barra_cero, 1); // (agrego el \0)
 		mensaje->pokemon_length += 1;
-
-		mensaje->cantidad = 0;
-		mensaje->posx = 0;
-		mensaje->posy = 0;
-		mensaje->resultado = 0;
 	}
 
 	if(strcmp(p->cola, "NEW") == 0){
@@ -1301,8 +1295,6 @@ pthread_mutex_unlock(&mx_memoria);
 		memcpy(&mensaje->posy, memoria + p->offset_init + 2 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // POS Y
 		memcpy(&mensaje->cantidad, memoria + p->offset_init + 3 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); //CANTIDAD
 		mensaje->pokemon_length += 1;
-
-		mensaje->resultado = 0;
 	}
 
 	if(strcmp(p->cola, "APPEARED") == 0 || strcmp(p->cola, "CATCH") == 0){
@@ -1313,20 +1305,10 @@ pthread_mutex_unlock(&mx_memoria);
 		memcpy(&mensaje->posx, memoria + p->offset_init + sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); //POS X
 		memcpy(&mensaje->posy, memoria + p->offset_init + 2 * sizeof(uint32_t) + mensaje->pokemon_length, sizeof(uint32_t)); // POS Y
 		mensaje->pokemon_length += 1;
-
-		mensaje->cantidad = 0;
-		mensaje->resultado = 0;
 	}
 
-	if(strcmp(p->cola,"CAUGHT") == 0){
+	if(strcmp(p->cola,"CAUGHT") == 0)
 		memcpy(&mensaje->resultado, memoria + p->offset_init, sizeof(uint32_t));//RESPUESTA
-
-		memcpy(mensaje->pokemon, barra_cero, 1); // (agrego el \0 para que este inicializada la variable a la hora de enviarla)
-		mensaje->pokemon_length = 0;
-		mensaje->cantidad = 0;
-		mensaje->posx = 0;
-		mensaje->posy = 0;
-	}
 
 pthread_mutex_unlock(&mx_memoria);
 

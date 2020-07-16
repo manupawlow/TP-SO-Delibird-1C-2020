@@ -65,9 +65,8 @@ int main(int argc, char *argv[]) {
 
 		while(time < final_time){
 			time = timestamp();
-			//pthread_t hilo;
-			//pthread_create(&hilo, NULL,(void*) recibir_mensaje_struct, (void*)conexion);
-			recibir_mensaje_struct(conexion);
+			pthread_t hilo;
+			pthread_create(&hilo, NULL,(void*) recibir_mensaje_struct, (void*)conexion);
 		}
 		log_info(logger, "THE END");
 
@@ -107,10 +106,9 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->cantidad = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,NEW_POKEMON);
-			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
 			mensaje_a_recibir = recibir_mensaje_struct(conexion);
-			log_info(logger, "Recibi el ack del mensaje %d!!!", mensaje_a_recibir->id_mensaje);
+			log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
 			free(buffer->stream);
 			free(buffer);
 			free(mensaje_a_recibir->pokemon);

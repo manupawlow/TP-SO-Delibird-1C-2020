@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 
 		while(time < final_time){
 			time = timestamp();
-			//pthread_t hilo;
+			pthread_t hilo;
 			//pthread_create(&hilo, NULL,(void*) recibir_mensaje_struct, (void*)conexion);
 			recibir_mensaje_struct(conexion);
 		}

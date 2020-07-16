@@ -113,8 +113,6 @@ int main(void) {
     	//process_request(colas);
     }
 
-    terminar_programa(socket_servidor, logger, config);
-
 
 	return EXIT_SUCCESS;
 }
@@ -140,7 +138,6 @@ void dump_cache(int n){
 	char* dump = string_new();
 	string_append_with_format(&dump, "Dump: %s ",output);
 	fprintf(f, "%s\n", dump);
-	free(dump);
 
 
 if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
@@ -153,8 +150,8 @@ if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){
 			string_append_with_format(&particion, "%#05X.", p->offset_end);
 			string_append_with_format(&particion, "	[X] Size: %sb ",string_itoa(p->size) );
 			string_append_with_format(&particion, "LRU: %" PRIu64 " ", p->tiempo_lru);
-			string_append_with_format(&particion, "Cola: %s ", p->cola);
-			string_append_with_format(&particion, "ID: %s", string_itoa(p->id_mensaje));
+			string_append_with_format(&particion, "Cola: %s", p->cola);
+			string_append_with_format(&particion, "	 ID: %s", string_itoa(p->id_mensaje));
 			fprintf(f, "%s\n\n",particion );
 			contador++;
 			free(particion);
@@ -187,8 +184,8 @@ if(strcmp(algoritmo_memoria, "BS") == 0){
 			string_append_with_format(&particion, "#%05X.", p->offset_init + p->size - 1);
 			string_append_with_format(&particion, "	[X] Size: %db ",p->particion->size );
 			string_append_with_format(&particion, "LRU: %" PRIu64 " ", p->particion->tiempo_lru);
-			string_append_with_format(&particion, "Cola: %s ", p->particion->cola);
-			string_append_with_format(&particion, "ID: %d", p->particion->id_mensaje);
+			string_append_with_format(&particion, "Cola: %s", p->particion->cola);
+			string_append_with_format(&particion, "	 ID: %d", p->particion->id_mensaje);
 			fprintf(f, "%s\n\n",particion );
 			contador++;
 			free(particion);
