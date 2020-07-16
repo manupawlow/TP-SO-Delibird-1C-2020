@@ -3,28 +3,13 @@
 #define BROKER_H_
 
 #include <bibliotec.h>
+#include<inttypes.h>
 
 typedef struct {
+
 	int socket_cliente;
 
-	t_list* SUSCRITOS_GET;
-
-	int SUSCRITOS_LOCALIZED[10];
-	int cant_suscritos_localized;
-
-	int SUSCRITOS_CATCH[10];
-	int cant_suscritos_catch;
-
-	int SUSCRITOS_CAUGHT[10];
-	int cant_suscritos_caught;
-
-	int SUSCRITOS_NEW[10];
-	int cant_suscritos_new;
-
-	int SUSCRITOS_APPEARED[10];
-	int cant_suscritos_appeared;
-
-	/*	t_list* SUSCRITOS_NEW;
+	t_list* SUSCRITOS_NEW;
 
 	t_list* SUSCRITOS_LOCALIZED;
 
@@ -34,8 +19,16 @@ typedef struct {
 
 	t_list* SUSCRITOS_CATCH;
 
-	t_list* SUSCRITOS_CAUGHT;*/
+	t_list* SUSCRITOS_CAUGHT;
+
 }Colas;
+
+pthread_mutex_t mx_lista_new;
+pthread_mutex_t mx_lista_localized;
+pthread_mutex_t mx_lista_get;
+pthread_mutex_t mx_lista_appeared;
+pthread_mutex_t mx_lista_catch;
+pthread_mutex_t mx_lista_caught;
 
 t_log* logger;
 t_config* config;
@@ -48,9 +41,10 @@ typedef struct{
 	uint32_t size;
 	uint32_t offset_init;
 	uint32_t offset_end;
-	uint32_t tiempo_lru;
+	uint64_t tiempo_lru;
 
-	uint8_t id_mensaje;
+	uint32_t id_mensaje;
+	uint32_t id_mensaje_correlativo;
 	char* cola;
 	t_list* suscriptores_enviados;
 	t_list* suscriptores_ack;
@@ -75,9 +69,19 @@ typedef struct{
 	uint32_t id_hijo2;
 }Buddy;
 
+typedef struct{
+	int id_proceso;
+	int socket;
+}Proceso;
+
+typedef struct{
+	uint32_t x;
+	uint32_t y;
+}Coordenadas;
+
+
 uint32_t contador_id_particiones;
 uint32_t contador_id_buddy;
-uint32_t tiempo_lru;
 
 t_list *particiones;
 t_list *particiones_libres;
@@ -91,6 +95,7 @@ pthread_mutex_t mx_memoria;
 pthread_mutex_t mx_mostrar;
 
 pthread_mutex_t mx_lru;
+
 
 int frecuencia_compactacion;
 int tamanio_minimo;

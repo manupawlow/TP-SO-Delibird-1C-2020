@@ -13,7 +13,7 @@
 #include <commons/temporal.h>
 #include<readline/readline.h>
 #include<math.h>
-#include<time.h>
+#include<sys/time.h>
 #include<semaphore.h>
 
 //CODIGO DE TIPOS DE MENSAJE
@@ -108,5 +108,7 @@ void freeDoblePuntero(char** doblePuntero);
 t_buffer* serializar_mensaje_struct_get(t_mensaje_get* mensaje);
 t_mensaje_get* deserializar_mensaje_struct_get(t_buffer* buffer);
 t_mensaje_get* recibir_mensaje_struct_get(int );
+
+uint64_t timestamp();
 
 void terminar_programa(int , t_log* , t_config* );

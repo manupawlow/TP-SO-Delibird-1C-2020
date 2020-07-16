@@ -3,6 +3,15 @@
 //t_queue *GET_POKEMON = create_queue();
 //t_queue *LOCALIZED = create_queue();
 
+uint64_t timestamp(void){
+	struct timeval tv;
+	gettimeofday(&tv,NULL);
+	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
+	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
+	uint64_t a = result;
+	return a;
+}
+
 int iniciar_servidor(char* ip, char* puerto)
 {
 	int socket_servidor;
@@ -130,10 +139,10 @@ void crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, 
 	    conexion = reintentar_conexion(ip,puerto,reconexion);
 	}
 
-	 //enviar_mensaje(ID_PROCESO,conexion, codigo);
+	 enviar_mensaje(ID_PROCESO,conexion, codigo);
 
 	 //para pruebas con debug
-	 enviar_mensaje("Suscribime",conexion, codigo);
+	 //enviar_mensaje("Suscribime",conexion, codigo);
 
 }
 
