@@ -6,24 +6,24 @@ t_list *crearEntrenadores(){
 	t_list *pokemonesObjetivos = config ->objetivos_entrenadores;
 	t_list *entrenadores = list_create();
 
-	Posicion *base = malloc(sizeof(Posicion));
-	base->x=0;
-	base->y=0;
+	//agregado
 
 	for(int i=0; i< list_size(posiciones); i++){
 		Entrenador *entrenador = malloc(sizeof(Entrenador));
 		entrenador->entrenadorNumero = i + 1;
 		entrenador->pokemones_objetivos= list_get(pokemonesObjetivos,i);
 
-		entrenador->pokemones_capturados= list_create();
+		entrenador->pokemones_capturados = list_create();
 		entrenador->pokemones_a_intercambiar = list_create();
 		if(list_get(pokemonesCapturados,i)!= NULL){
 			agregar_segun_objetivo( list_get(pokemonesCapturados,i), entrenador);
 		}
 
-		entrenador->pokemones_faltantes= filtrado(list_get(pokemonesCapturados,i),list_get(pokemonesObjetivos,i));
-		entrenador->posicion=list_get(posiciones,i);
-		entrenador->posicion_a_capturar= base;
+		entrenador->pokemones_faltantes = filtrado(list_get(pokemonesCapturados,i),list_get(pokemonesObjetivos,i));
+		entrenador->posicion = list_get(posiciones,i);
+		entrenador->posicion_a_capturar = malloc(sizeof(Posicion));
+		entrenador->posicion_a_capturar->x = 0;
+		entrenador->posicion_a_capturar->y = 0;
 		entrenador->idCatch=0;
 		entrenador->puede_capturar = list_size(entrenador->pokemones_objetivos) - list_size(entrenador->pokemones_capturados) - list_size(entrenador->pokemones_a_intercambiar);
 
@@ -105,7 +105,8 @@ void conexion_gameboy(){
 int process_request(int socket_cliente){
 	int cod_op;
 	Entrenador *entrenador;
-	t_mensaje* mensaje = malloc(sizeof(t_mensaje));
+	t_mensaje* mensaje;//agregado
+	t_mensaje_get* mensajeGet;
 	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 				cod_op = -1;
 	t_list * loca;
@@ -126,24 +127,21 @@ int process_request(int socket_cliente){
 
 		pthread_mutex_unlock(&mx_llegada_pokemon);
 
-		//free(mensaje->pokemon);
-		//free(mensaje);
+		free(mensaje->pokemon);//agregado
+		free(mensaje);//agregado
 		return socket_cliente;
 		break;
 
 	case LOCALIZED_POKEMON:
 
-		loca = recibirLocalized(socket_cliente);
+		mensajeGet = recibir_mensaje_struct_get(socket_cliente);
 
-		if(id_en_lista(mensaje->id_mensaje)){
-			llegada_pokemon(mensaje);
+		if(id_en_lista(mensajeGet->id_mensaje_correlativo)){
+			loca = recibirLocalized(mensajeGet);
+		    llegada_localized(loca);
 		}
 		else
-			log_info(logger,"Id no correspondiente, descarto mensaje");
-
-		for(int i=0; i< list_size(loca); i++){
-			Poketeam *poke = list_get(loca,i);
-		}
+		    log_info(logger,"Id no correspondiente, descarto mensaje %d",mensajeGet->id_mensaje_correlativo);
 
 		return socket_cliente;
 
@@ -163,8 +161,8 @@ int process_request(int socket_cliente){
 			list_add(ready,entrenador);
 			sem_post(&semaforoExce);
 		}
-
-		free(mensaje);
+		free(mensaje->pokemon);//agregado
+		free(mensaje);//agregado
 		return socket_cliente;
 		break;
 
@@ -292,10 +290,10 @@ void realizar_tareas(Entrenador *entrenador){
 		if(entrenador->puede_capturar >0){
 			if(list_is_empty(pokemones_pendientes)){
 				list_add(block,entrenador);
-				entrenador->block_agarrar= true;
+				entrenador->block_agarrar = true;
 			}else{
 
-				Poketeam *pokemon_mas_cerca= list_get(pokemones_pendientes,0);
+				Poketeam *pokemon_mas_cerca = list_get(pokemones_pendientes,0);
 				Poketeam *pokemon;
 				int indice = 0;
 
@@ -312,7 +310,7 @@ void realizar_tareas(Entrenador *entrenador){
 
 
 				ponerEnReady(entrenador,pokemon_mas_cerca);
-				list_remove(pokemones_pendientes,indice);
+				list_remove_and_destroy_element(pokemones_pendientes,indice,(void*)free);//agregado
 			}
 
 		}
@@ -356,6 +354,11 @@ void realizar_tareas(Entrenador *entrenador){
 	}
 
 	log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
+	list_destroy_and_destroy_elements(entrenador->pokemones_faltantes,free);//agregado
+	list_destroy_and_destroy_elements(entrenador->pokemones_a_intercambiar,free);//agregado
+	list_destroy_and_destroy_elements(entrenador->pokemones_capturados, (void*) free);//agregado
+	//free(entrenador->posicion_a_capturar);//mirar
+	//free(entrenador);//mirar
 
 }
 
@@ -392,22 +395,24 @@ void deadlock(){
 		sem_wait(&semaforoDeadlock);
 
 	log_info(logger, "Inicio algoritmo deteccion de deadlock");
-	t_list *blockDeadlock= list_filter(block, (void*) bloqueado_por_deadlock);
-	bool intercambio= false;
+	t_list *blockDeadlock = list_filter(block, (void*) bloqueado_por_deadlock);
+	bool intercambio = false;
 
 	while(list_size(blockDeadlock)>1){
-		Entrenador *entrenador= list_get(blockDeadlock,0);
+		Entrenador *entrenador = list_get(blockDeadlock,0);
 		Entrenador *entrenador_intercambio;
-		intercambio= false;
-		char *pokemon = list_get(entrenador->pokemones_faltantes,0);
-		char *mierda = list_get(entrenador->pokemones_a_intercambiar,0);
-		//log_info(logger,"%s", mierda);
+		intercambio = false;
+		char *pokemon = malloc(strlen((char*)list_get(entrenador->pokemones_faltantes,0))+1);
+		memcpy(pokemon,list_get(entrenador->pokemones_faltantes,0),strlen((char*)list_get(entrenador->pokemones_faltantes,0))+1);
+		char *mierda = malloc(strlen((char*)list_get(entrenador->pokemones_a_intercambiar,0))+1);
+		memcpy(mierda,list_get(entrenador->pokemones_a_intercambiar,0),strlen((char*)list_get(entrenador->pokemones_a_intercambiar,0))+1);
 
 		for(int i=1; i<list_size(blockDeadlock); i++){
-			entrenador_intercambio= list_get(blockDeadlock,i);
+			entrenador_intercambio = list_get(blockDeadlock,i);
 
 			for(int j=0; j<list_size(entrenador_intercambio->pokemones_a_intercambiar); j++){
-				char *pokemon_intercambio = list_get(entrenador_intercambio->pokemones_a_intercambiar,j);
+				char *pokemon_intercambio = malloc(strlen((char*)list_get(entrenador_intercambio->pokemones_a_intercambiar,j))+1);
+				memcpy(pokemon_intercambio,list_get(entrenador_intercambio->pokemones_a_intercambiar,j),strlen((char*)list_get(entrenador_intercambio->pokemones_a_intercambiar,j))+1);
 
 				if(strcmp(pokemon,pokemon_intercambio)==0){
 
@@ -423,17 +428,16 @@ void deadlock(){
 					//memcpy(entrenador->pokemon_a_caputar, pokemon_intercambio ,strlen(pokemon_intercambio)+1);
 
 				    //memcpy(entrenador->posicion_a_capturar, entrenador_intercambio->posicion, sizeof(Posicion));
-					entrenador->posicion_a_capturar->x= entrenador_intercambio->posicion->x;
-					entrenador->posicion_a_capturar->y= entrenador_intercambio->posicion->y;
+					entrenador->posicion_a_capturar = entrenador_intercambio->posicion;
 
-					list_remove(entrenador_intercambio->pokemones_a_intercambiar,j);
+					list_remove_and_destroy_element(entrenador_intercambio->pokemones_a_intercambiar,j,free);
 
 					agregar_segun_faltantes(mierda,entrenador_intercambio);
 					intercambio=true;
 
 					break;
 				}
-
+				free(pokemon_intercambio);
 			if(intercambio)
 			break;
 			}
@@ -442,14 +446,16 @@ void deadlock(){
 
 		if(intercambio){
 			remover_entrenador(entrenador->entrenadorNumero,block);
-			entrenador->block_deadlock=false;
+			entrenador->block_deadlock = false;
 			list_add(ready,entrenador);
 			sem_post(&semaforoExce);
 			finalizar_si_corresponde(entrenador_intercambio);
-			blockDeadlock= list_filter(block, (void*) bloqueado_por_deadlock);
+			list_destroy(blockDeadlock);
+			blockDeadlock = list_filter(block, (void*) bloqueado_por_deadlock);
 		}
-
+		free(pokemon);
 	}
+	list_destroy(blockDeadlock);//agregado
 
    log_info(logger, "Finalizacion algoritmo deteccion de deadlock");
 
@@ -463,5 +469,63 @@ void finalizar_si_corresponde(Entrenador *entrenador){
 		log_info(logger,"Finalizo entrenador %d", entrenador->entrenadorNumero);
 		//free_entrenador(entrenador);
 	}
+
+}
+
+void llegada_localized(t_list* localized){
+    int indiceMenor;
+    int menor = 100000;
+    t_list* distancias = list_create();
+    int distan;
+    //Entrenador entrenadores;
+    t_list* pokemones = list_create();
+
+    t_list* blockAgarrar = list_filter(block,(void*)bloqueado_por_agarrar);
+
+    t_list* listaTodos = list_duplicate(blockAgarrar);
+
+    t_list* listaNew = list_duplicate(new);
+
+    for(int i=0;i< list_size(listaNew);i++){
+        list_add(listaTodos,list_get(listaNew,i));
+    }
+    if(list_is_empty(listaTodos)){
+    	for(int i = 0;i<list_size(localized);i++){
+    		list_add(pokemones_pendientes,list_get(localized,i));
+    	}
+    }
+    else{
+
+        for(int i = 0;i<list_size(localized);i++){
+            Poketeam* pokemon = list_get(localized, i);
+            list_add(pokemones,pokemon);
+
+            Entrenador* entrenador;
+
+            int indiceNew;
+
+            indiceNew = indiceMasCercano(pokemon->pos,listaTodos);
+            entrenador = list_get(listaTodos,indiceNew);
+            distan = distancia(entrenador->posicion,pokemon->pos);
+            list_add(distancias,(void *)distan);
+            //entrenadores[i]= entrenador;
+
+            if(menor >(int) list_get(distancias,i)){
+                menor =(int) list_get(distancias,i);
+                indiceMenor = i;
+            }
+
+        }
+
+        llegada_pokemon(list_get(pokemones,indiceMenor));
+
+        int i=0;
+        while(list_get(pokemones,i)!=NULL){
+            if(i!=indiceMenor)
+                list_add(pokemones_pendientes, list_get(pokemones,i));
+
+            i++;
+        }
+    }
 
 }

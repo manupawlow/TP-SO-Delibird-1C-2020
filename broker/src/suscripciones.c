@@ -1320,7 +1320,7 @@ void cachear_mensaje_caught(t_mensaje *msg, int indice_libre){ //uint32 respuest
 //Termina de crear la particion
 
 
-	memcpy(memoria + offset_init, &msg->pokemon_length, sizeof(uint32_t)); // RESPUESTA
+	memcpy(memoria + offset_init, &msg->resultado, sizeof(uint32_t)); // RESPUESTA
 	offset_init += sizeof(uint32_t);
 
 	if(strcmp(algoritmo_memoria, "PARTICIONES") == 0){

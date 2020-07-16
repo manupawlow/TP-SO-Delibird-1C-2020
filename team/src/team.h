@@ -69,7 +69,7 @@ sem_t semaforoExce;
 sem_t semaforoIntercambio;
 sem_t semaforoDeadlock;
 
-
+void free_poketeam(Poketeam* pokemon);
 void liberar_lista_de_listas(t_list* listaDeListas);
 void liberar_listas_config();
 

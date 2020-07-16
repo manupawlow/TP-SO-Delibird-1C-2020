@@ -1,8 +1,8 @@
 #include "gamecard.h"
-int main(/*int argc, char* argv[]*/) {
+int main(int argc, char* argv[]) {
 
-	//ID_PROCESO = malloc(strlen(argv[1])+1);
-	//ID_PROCESO = argv[1];
+	ID_PROCESO = malloc(strlen(argv[1])+1);
+	ID_PROCESO = argv[1];
 
 
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
@@ -188,7 +188,11 @@ void buscarPokemon(t_mensaje* mensaje){
 //PARA EL CATCH
 void agarrarPokemon(t_mensaje* mensaje){
 
-char* montaje= montarPoke(mensaje);
+char* montaje = montarPoke(mensaje);
+
+log_info(logger,"%s",mensaje->pokemon);
+log_info(logger,"%d",mensaje->posx);
+log_info(logger,"%d",mensaje->posy);
 
 string_append(&montaje,"/Metadata.bin" );
 t_buffer* buffer;
@@ -312,50 +316,6 @@ int socketCaugth = crear_conexion(ip, puerto);
 }
 
 
-void borrarDatosBlock(t_mensaje* mensaje){
-	char** arrayBloques= agarrarBlocks(mensaje);
-	FILE*f;
-
-	char* bloque= string_new();
-	string_append(&bloque,montajeBlock);
-	string_append_with_format(&bloque,"/%s.bin",arrayBloques[0]);
-
-	f=fopen(bloque,"w");
-	fclose(f);
-	free(bloque);
-	freeDoblePuntero(arrayBloques);
-}
-
-//-----------------------------------------nuevo-----------------------------------------------------
-void escrituraMetaBlanco( t_mensaje* mensaje, char* montaje){
-	FILE* f;
-	f=fopen(montaje,"w+");
-	escribirMetaBlanco(f,mensaje);
-	fprintf(f,"OPEN=Y");
-	fclose(f);
-	log_info(logger,"%d",tiempoDeRetardo);
-	log_info(logger,"Empiezo a esperar");
-	sleep(tiempoDeRetardo);
-	f=fopen(montaje,"w+");
-	escribirMetaBlanco(f,mensaje);
-	fprintf(f,"OPEN=N");
-	fclose(f);
-	log_info(logger,"Termino de esperar");
-
-	free(montaje);
-}
-
-
-
-void escribirMetaBlanco(FILE*f,t_mensaje* mensaje){
-	fprintf(f,"DIRECTORY=N\n");
-	fprintf(f,"SIZE=0\n");
-	fprintf(f,"BLOCKS=[]\n");
-}
-
-//----------------------------------------------------------------------------------------------------
-
-
 void conexion_gameboy(){
 	char *ip = "127.0.0.3";
 	char *puerto = "5001";
@@ -437,7 +397,7 @@ int process_request(int socket){
 	switch (cod_op){
 	case GET_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		//funcionACK(mensaje->id_mensaje);
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
@@ -446,7 +406,7 @@ int process_request(int socket){
 		break;
 	case NEW_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		//funcionACK(mensaje->id_mensaje);
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
@@ -458,7 +418,12 @@ int process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 		mensaje = recibir_mensaje_struct(socket);
-		//funcionACK(mensaje->id_mensaje);
+
+		log_info(logger,"%s",mensaje->pokemon);
+		log_info(logger,"%d",mensaje->posx);
+		log_info(logger,"%d",mensaje->posy);
+
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon, mensaje);

@@ -31,8 +31,10 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon);
 bool bloqueado_por_agarrar(Entrenador *entrenador);
 bool bloqueado_por_capturar(Entrenador *entrenador);
 bool bloqueado_por_deadlock(Entrenador *entrenador);
+int indiceMasCercano(Posicion posicion, t_list *lista);
+bool id_en_lista(int id_mensaje);
 
-t_list* recibirLocalized(int socket);
+t_list* recibirLocalized(t_mensaje_get* mensaje);
 
 void free_entrenador(Entrenador *entrenador);
 

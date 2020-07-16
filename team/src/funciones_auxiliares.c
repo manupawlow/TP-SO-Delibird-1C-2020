@@ -114,11 +114,12 @@ void agregar_segun_objetivo(t_list *capturados, Entrenador *entrenador){
 	t_list *objetivo = entrenador->pokemones_objetivos;
 
 	for(int i=0; i<list_size(capturados); i++){
-		char *pokemon= list_get(capturados,i);
+		char *pokemon = malloc(strlen((char*)list_get(capturados,i))+1);
+		memcpy(pokemon,list_get(capturados,i),strlen((char*)list_get(capturados,i))+1);
 		bool intercambio = true;
 
 		for(int j=0; j<list_size(objetivo); j++){
-			char *pokemon_objetivo= list_get(objetivo,j);
+			char *pokemon_objetivo = list_get(objetivo,j);
 
 			if((strcmp(pokemon,pokemon_objetivo)) == 0){
 				list_add(entrenador->pokemones_capturados, pokemon);
@@ -139,11 +140,11 @@ void agregar_segun_faltantes(char* pokemon, Entrenador *entrenador){
 	bool intercambio= true;
 
 	for(int i=0; i<list_size(faltantes); i++){
-		char *pokemon_objetivo= list_get(faltantes,i);
+		char *pokemon_objetivo = list_get(faltantes,i);
 
 		if((strcmp(pokemon,pokemon_objetivo)) == 0){
 			list_add(entrenador->pokemones_capturados, pokemon);
-			intercambio= false;
+			intercambio = false;
 			for(int j=0; j<list_size(entrenador->pokemones_faltantes);j++){
 				//char *eleminar = list_get(entrenador->pokemones_faltantes,j);
 				if((strcmp(pokemon,pokemon_objetivo)) == 0)
@@ -174,7 +175,6 @@ t_list *listaUnica(t_list *listaDeListas){
 		t_list *lista = list_get(listaDeListas,i);
 		int size = list_size(lista);
 		for(int j=0; j< size ; j++){
-			//char *pokemon = list_get(lista,j);
 			char *pokemon = malloc(strlen((char*)list_get(lista,j))+1);
 			memcpy(pokemon,list_get(lista,j),strlen((char*)list_get(lista,j))+1);
 			list_add(listaUnica, pokemon);
@@ -284,10 +284,15 @@ int indiceMasCercano(Posicion posicion, t_list *lista){
 
 bool puedeFinalizar(Entrenador *entrenador){
 	t_list *finalizar;
+	int booleano;//agregado
 
 	finalizar = filtrado(entrenador->pokemones_capturados, entrenador->pokemones_objetivos);
 
-	return list_is_empty(finalizar);
+	booleano = list_is_empty(finalizar);//agregado
+
+	list_destroy(finalizar);//agregado
+
+	return booleano;//agregado
 }
 
 void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
@@ -295,7 +300,7 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
 	entrenador->pokemon_a_caputar = malloc(strlen(pokemon->pokemon)+1);
 	memcpy(entrenador->pokemon_a_caputar,pokemon->pokemon,strlen(pokemon->pokemon)+1);
 
-	entrenador->posicion_a_capturar = malloc(sizeof(Posicion));
+	//agregado
 	entrenador->posicion_a_capturar->x = pokemon->pos.x;
     entrenador->posicion_a_capturar->y = pokemon->pos.y;
 
@@ -311,6 +316,11 @@ void remover_entrenador(int entrenadorNumero, t_list *lista){
 	bool remover(Entrenador *entrenador){
 		return entrenador->entrenadorNumero == entrenadorNumero;
 	}
+	/*void free_especialito(Entrenador* entrenador){
+		free(entrenador->pokemon_a_caputar);
+		free(entrenador->posicion_a_capturar);
+		free(entrenador);
+	}*/
 
 	list_remove_by_condition(lista, (void*) remover);
 }
@@ -339,8 +349,8 @@ void eliminar_pokemon(char *pokemon, t_list *lista){
 		return (strcmp(busqueda,pokemon) == 0);
 	}
 
-	//list_remove_and_destroy_by_condition(lista, (void*) coincide, (void*) free_pokemon);
-	list_remove_by_condition(lista, (void*) coincide);
+	list_remove_and_destroy_by_condition(lista, (void*) coincide, (void*) free_pokemon);//agregado
+	//list_remove_by_condition(lista, (void*) coincide);
 }
 
 void eliminar_pendientes(char *pokemon){
@@ -351,8 +361,8 @@ void eliminar_pendientes(char *pokemon){
 
 
 	if(!pokemon_en_lista(pokemon,objetivoGlobal))
-		list_remove_by_condition(pokemones_pendientes, (void*) coincide);
-		//list_remove_and_destroy_by_condition(pokemones_pendientes, (void*) coincide, (void*) free_pokemon);
+		//list_remove_by_condition(pokemones_pendientes, (void*) coincide);
+		list_remove_and_destroy_by_condition(pokemones_pendientes, (void*) coincide, (void*) free_poketeam);//agregado
 
 }
 
@@ -437,7 +447,7 @@ void menorDistancia (Poketeam *pokemon){
 		ponerEnReady(entrenadorMasCercaNew,pokemon);
 		remover_entrenador(entrenadorMasCercaNew->entrenadorNumero, new);
 	}
-
+	list_destroy(blockAgarrar);//agregado
 }
 
 int distancia(Posicion *posicion1, Posicion posicion2){
@@ -447,10 +457,10 @@ int distancia(Posicion *posicion1, Posicion posicion2){
 }
 
 void moverse(Entrenador *entrenador){
-
-	//memcpy(entrenador->posicion, entrenador->posicion_a_capturar, sizeof(Posicion));
-	entrenador->posicion->x = entrenador->posicion_a_capturar->x;
-	entrenador->posicion->y = entrenador->posicion_a_capturar->y;
+	//Posicion* posicion = malloc(sizeof(Posicion));
+	//memcpy(posicion, entrenador->posicion_a_capturar, sizeof(Posicion));
+	//free(entrenador->posicion);
+	entrenador->posicion = entrenador->posicion_a_capturar;
 }
 
 
@@ -470,18 +480,19 @@ void enviar_catch(Entrenador *entrenador, int conexion_catch){
 
 	buffer = serializar_mensaje_struct(mensaje);
 	enviar_mensaje_struct(buffer,conexion_catch,CATCH_POKEMON);
+	free(buffer->stream);//agregado
+	free(buffer);//agregado
 	int cod_op;
 	recv(conexion_catch, &cod_op, sizeof(op_code), MSG_WAITALL);
 	mensaje = recibir_mensaje_struct(conexion_catch);
 	entrenador->idCatch = mensaje->id_mensaje;
 	log_info(logger,"Id:%d", mensaje->id_mensaje);
+	free(mensaje->pokemon);//agregado
+	free(mensaje);//agregado
 	close(conexion_catch);
 }
 
-t_list* recibirLocalized(int socket){
-	t_mensaje_get* mensaje = malloc(sizeof(t_mensaje_get));
-    mensaje = recibir_mensaje_struct_get(socket);
-
+t_list* recibirLocalized(t_mensaje_get* mensaje){
     char** arrayPos = string_split(mensaje->posiciones,".");
 
     t_list* listaPoke = list_create();
@@ -489,19 +500,19 @@ t_list* recibirLocalized(int socket){
     int i=0;
     while(arrayPos[i]!=NULL){
 
-    	char** posiciones= string_split(arrayPos[i],"-");
+        char** posiciones= string_split(arrayPos[i],"-");
 
-    	Poketeam* pokemon = malloc(sizeof(Poketeam));
-    	pokemon->pokemon = malloc(mensaje->pokemon_length);
-    	memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
-    	pokemon->pos.x= atoi(posiciones[0]);
-    	pokemon->pos.y= atoi(posiciones[1]);
+        Poketeam* pokemon = malloc(sizeof(Poketeam));
+        pokemon->pokemon = malloc(mensaje->pokemon_length);
+        memcpy(pokemon->pokemon,mensaje->pokemon,mensaje->pokemon_length);
+        pokemon->pos.x= atoi(posiciones[0]);
+        pokemon->pos.y= atoi(posiciones[1]);
 
-    	list_add(listaPoke, pokemon);
+        list_add(listaPoke, pokemon);
 
-    	//free(pokemon);
-    	freeDoblePuntero(posiciones);
-    	i++;
+        //free(pokemon);
+        freeDoblePuntero(posiciones);
+        i++;
     }
 
     return listaPoke;

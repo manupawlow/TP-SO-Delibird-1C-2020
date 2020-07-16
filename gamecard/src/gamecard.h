@@ -42,9 +42,6 @@ char** agarrarBlocks(t_mensaje* mensaje);
 int existePokemon(t_mensaje* mensaje);
 char* montarPoke(t_mensaje* mensaje);
 void esperaOpen(char* montaje);
-void borrarDatosBlock(t_mensaje* mensaje);
-void escrituraMetaBlanco( t_mensaje* mensaje, char* montaje);
-void escribirMetaBlanco(FILE*f,t_mensaje* mensaje);
 
 int process_request(int socket_cliente);
 void conexion_gameboy();

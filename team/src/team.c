@@ -5,7 +5,7 @@
 int main(int argc, char* argv[]){
 
 	ID_PROCESO = malloc(strlen(argv[1])+1);
-	ID_PROCESO = argv[1];
+	strcpy(ID_PROCESO,argv[1]);
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 	t_config *config_team = config_create(conf);
@@ -60,16 +60,13 @@ int main(int argc, char* argv[]){
 
     liberar_listas_config();
 
-    pthread_exit(&conexionLocalized);
-    pthread_exit(&conexionCaugth);
-    pthread_exit(&conexionAppeared);
-    pthread_exit(&conexionGameboy);
-    pthread_exit(&ponerEnEjecuccion);
-    pthread_exit(&deadLock);
-    pthread_exit(0);
-
     free(ID_PROCESO);
 
+}
+
+void free_poketeam(Poketeam* pokemon){
+	free(pokemon->pokemon);
+	free(pokemon);
 }
 
 void liberar_listas_config(){

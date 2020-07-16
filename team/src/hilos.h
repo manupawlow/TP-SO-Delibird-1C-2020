@@ -16,5 +16,6 @@ void deadlock();
 void finalizar_si_corresponde(Entrenador *entrenador);
 void llegada_pokemon(Poketeam *pokemon);
 void round_robin(Entrenador *entrenador, int cpu);
+void llegada_localized(t_list* localized);
 
 #endif /* HILOS_H_ */
