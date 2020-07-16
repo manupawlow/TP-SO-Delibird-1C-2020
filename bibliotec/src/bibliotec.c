@@ -130,10 +130,10 @@ void crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, 
 	    conexion = reintentar_conexion(ip,puerto,reconexion);
 	}
 
-	 enviar_mensaje(ID_PROCESO,conexion, codigo);
+	 //enviar_mensaje(ID_PROCESO,conexion, codigo);
 
 	 //para pruebas con debug
-	 //enviar_mensaje("Suscribime",conexion, codigo);
+	 enviar_mensaje("Suscribime",conexion, codigo);
 
 }
 

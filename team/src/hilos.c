@@ -357,8 +357,8 @@ void realizar_tareas(Entrenador *entrenador){
 	list_destroy_and_destroy_elements(entrenador->pokemones_faltantes,free);//agregado
 	list_destroy_and_destroy_elements(entrenador->pokemones_a_intercambiar,free);//agregado
 	list_destroy_and_destroy_elements(entrenador->pokemones_capturados, (void*) free);//agregado
-	//free(entrenador->posicion_a_capturar);//mirar
-	//free(entrenador);//mirar
+	free(entrenador->posicion_a_capturar);//mirar
+	free(entrenador);//mirar
 
 }
 

@@ -472,8 +472,8 @@ void enviar_catch(Entrenador *entrenador, int conexion_catch){
 	memcpy(mensaje->pokemon,entrenador->pokemon_a_caputar,strlen(entrenador->pokemon_a_caputar)+1);
 	mensaje->pokemon_length = strlen(entrenador->pokemon_a_caputar)+1;
 	mensaje->resultado = 0;
-	mensaje->posx = 0;
-	mensaje->posy = 0;
+	mensaje->posx = entrenador->posicion_a_capturar->x;
+	mensaje->posy = entrenador->posicion_a_capturar->y;
 	mensaje->cantidad = 0;
 	mensaje->id_mensaje = 0;
 	mensaje->id_mensaje_correlativo = 0;

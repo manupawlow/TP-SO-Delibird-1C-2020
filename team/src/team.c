@@ -2,10 +2,10 @@
 #include "funciones_auxiliares.h"
 #include "hilos.h"
 
-int main(int argc, char* argv[]){
+int main(/*int argc, char* argv[]*/){
 
-	ID_PROCESO = malloc(strlen(argv[1])+1);
-	strcpy(ID_PROCESO,argv[1]);
+	/*ID_PROCESO = malloc(strlen(argv[1])+1);
+	strcpy(ID_PROCESO,argv[1]);*/
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 	t_config *config_team = config_create(conf);
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
 
     liberar_listas_config();
 
-    free(ID_PROCESO);
+    //free(ID_PROCESO);
 
 }
 
