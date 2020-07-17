@@ -17,6 +17,10 @@ void recibir_y_mostrar(int conexion){
 int main(int argc, char *argv[]) {
 
 
+	argv[1]="SUSCRIPTOR";
+	argv[2]="NEW_POKEMON";
+	argv[3]="10";
+
 	char *ip;
 	char *puerto;
 	int conexion;
@@ -69,29 +73,15 @@ int main(int argc, char *argv[]) {
 		int segundosPermitidos = atoi(argv[3]);
 		uint64_t time = timestamp();
 		uint64_t final_time = time + segundosPermitidos * 1000;
-
+		pthread_t hilo;
 		while(time < final_time){
+
+			pthread_create(&hilo,NULL,(void*)recibir_y_mostrar,(void*) conexion);
 			time = timestamp();
-			recibir_y_mostrar(conexion);
 		}
-/*		char ** tiempo = string_split(temporal_get_string_time(),":");
-		int horas = atoi(tiempo[0]);
-		int minutos = atoi(tiempo[1]);
-		int segundos = atoi(tiempo[2]);
-		int segundosFinal = segundos + horas*60*60 + minutos*60 + segundosPermitidos;
+		log_info(logger,"sali.");
+		exit(1);
 
-		while(segundos < segundosFinal){
-
-			mensaje_struct = recibir_mensaje_struct(conexion);
-
-			tiempo = string_split(temporal_get_string_time(),":");
-			horas = atoi(tiempo[0]);
-			minutos = atoi(tiempo[1]);
-			segundos = atoi(tiempo[2]);
-			segundos = segundos + horas*60*60 + minutos*60;
-		}
-		freeDoblePuntero(tiempo);
-*/
 	}else{
 
 		string_append_with_format(&ips,"%s_%s","IP",argv[1]);
