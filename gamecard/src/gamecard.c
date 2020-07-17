@@ -117,7 +117,6 @@ void buscarPokemon(t_mensaje* mensaje){
 	    int socketLoc = crear_conexion(ip, puerto);
 
 	    if(socketLoc ==-1){
-	    	liberar_conexion(socketLoc);
 	    	log_info(logger,"No se pudo conectar con el broker.");
 	    }else{
 
@@ -166,7 +165,6 @@ void buscarPokemon(t_mensaje* mensaje){
 		int socketLoc = crear_conexion(ip, puerto);
 
 		 if(socketLoc ==-1){
-		   	liberar_conexion(socketLoc);
 		   	log_info(logger,"No se pudo conectar con el broker.");
 		}else{
 
@@ -202,7 +200,6 @@ t_buffer* buffer;
 
 int socketCaugth = crear_conexion(ip, puerto);
 	if(socketCaugth ==-1){
-		liberar_conexion(socketCaugth);
 		log_info(logger,"No se pudo conectar con el broker");
 	}else{
 		if(existePokemon(mensaje)){
@@ -451,13 +448,13 @@ int process_request(int socket){
 		break;
 	case -1:
 		log_info(logger,"Codigo de operacion invalido, iniciando servidor gamecard");
-		liberar_conexion(socket);
+
 		socket = crear_conexion(ip, puerto);
 		return socket;
 		break;
 	default:
 		log_info(logger,"Que paso rey, te caiste? O quiza...");
-		liberar_conexion(socket);
+
 		socket = crear_conexion(ip, puerto);
 		return socket;
 		break;
@@ -492,7 +489,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 	int socketAppeared = crear_conexion(ip, puerto);
 
 	if(socketAppeared ==-1){
-		liberar_conexion(socketAppeared);
+
 		log_info(logger,"No se pudo conectar con el broker.");
 	}else{
 		mensaje->id_mensaje_correlativo = mensaje->id_mensaje;
