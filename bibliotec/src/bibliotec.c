@@ -140,10 +140,10 @@ int crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, t
 	}
 
 	 enviar_mensaje(ID_PROCESO,conexion, codigo);
-
+	 return conexion;
 	 //para pruebas con debug
 	 //enviar_mensaje("Suscribime",conexion, codigo);
-	 return conexion;
+
 }
 
 int reintentar_conexion(char* ip, char* puerto , int tiempo)
@@ -311,7 +311,7 @@ void enviar_mensaje(char* mensaje, int socket_cliente, op_code codigo)
 	//----------------ACA SE USA serializar_paquete----------------
 			int size_serializado;
 			void* serializado = serializar_paquete_cliente(paquete, &size_serializado);
-			send(socket_cliente,serializado,size_serializado,0);
+			send(socket_cliente,serializado,size_serializado,MSG_NOSIGNAL);
 	//----------------libero la memoria del paquete mandado----------------
 			free(serializado);
 			free(paquete->buffer->stream);

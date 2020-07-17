@@ -107,8 +107,9 @@ int process_request(int socket_cliente){
 	Entrenador *entrenador;
 	t_mensaje* mensaje;//agregado
 	t_mensaje_get* mensajeGet;
-	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
-				cod_op = -1;
+	int recibidor=recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL);
+	if(recibidor == -1 || recibidor == 0)
+		cod_op = -1;
 	t_list * loca;
 
 	switch (cod_op){

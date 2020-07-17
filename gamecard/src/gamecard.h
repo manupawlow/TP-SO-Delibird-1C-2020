@@ -46,7 +46,6 @@ int existePokemon(t_mensaje* mensaje);
 char* montarPoke(t_mensaje* mensaje);
 void esperaOpen(char* montaje);
 
-
 int process_request(int socket_cliente);
 void conexion_gameboy();
 

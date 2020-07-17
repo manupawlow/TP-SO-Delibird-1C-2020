@@ -4,6 +4,7 @@ int main(int argc, char* argv[]) {
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	ID_PROCESO = argv[1];
 
+
 system("clear");
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config = config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config");
@@ -326,10 +327,11 @@ void conexion_gameboy(){
 	char *puerto = "5001";
 	int socket_gamecard = iniciar_servidor(ip,puerto);
 
-    while(1){
-    	int socket_cliente = esperar_cliente(socket_gamecard);
-
-    	process_request(socket_cliente);
+	while(1){
+		int socket_cliente = esperar_cliente(socket_gamecard);
+		while(socket_cliente==-1)
+			socket_cliente = esperar_cliente(socket_gamecard);
+		socket_cliente=process_request(socket_cliente);
     }
 }
 
@@ -339,6 +341,7 @@ void funcionNew(int socket){
     while(1){
 
     	conexionNew = crear_conexion_broker(ID_PROCESO,conexionNew,ip,puerto,logger, tiempoReconexion, SUS_NEW);
+
 
         log_info(logger,"Me suscribi a la cola NEW!");
 
@@ -374,6 +377,7 @@ void funcionGet(){
 		log_info(logger,"Me suscribi a la cola GET!");
 
 		while(conexionGet != -1){
+
 			conexionGet = process_request(conexionGet);
 		}
 
@@ -390,14 +394,16 @@ void funcionACK(int id_mensaje){
 	string_append_with_format(&ack,"%d",id_mensaje);
 	enviar_mensaje(ack,conexionRespuesta,ACK);
 	free(ack);
+	liberar_conexion(conexionRespuesta);
 }
 
 int process_request(int socket){
 	int cod_op;
 	t_mensaje* mensaje;
+	int recibidor = recv(socket, &cod_op, sizeof(op_code), MSG_WAITALL);
 
-	if(recv(socket, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
-			cod_op = -1;
+	if(recibidor == -1 || recibidor==0)
+		cod_op = -1;
 
 	switch (cod_op){
 	case GET_POKEMON:
@@ -426,6 +432,7 @@ int process_request(int socket){
 		return socket;
 		break;
 	case CATCH_POKEMON:
+
 		log_info(logger,"Mensaje CATCH.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
@@ -490,6 +497,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 	}else{
 		mensaje->id_mensaje_correlativo = mensaje->id_mensaje;
 		buffer = serializar_mensaje_struct(mensaje);
+		log_info(logger,"%d",socketAppeared);
 		enviar_mensaje_struct(buffer, socketAppeared,APPEARED_POKEMON);
 		free(buffer->stream);
 		free(buffer);
@@ -969,4 +977,5 @@ t_config* config=config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.
     config_destroy(config);
 
 }
+
 

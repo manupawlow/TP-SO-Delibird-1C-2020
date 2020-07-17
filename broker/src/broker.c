@@ -99,7 +99,8 @@ int main(void) {
 
         	pthread_t cliente_thread;
         	pthread_create(&cliente_thread, NULL,(void*) process_request,(void*)socket_cliente);
-    	}
+
+        }
     }
 
 
