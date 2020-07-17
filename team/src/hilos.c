@@ -36,6 +36,9 @@ t_list *crearEntrenadores(){
 		pthread_t hiloEntrenador;
 		pthread_create(&hiloEntrenador,NULL,(void *) realizar_tareas,entrenador);
 		list_add(entrenadores,entrenador);
+
+		log_info(logger, "Entrenador %d en posicion x:%d y:%d", entrenador->entrenadorNumero, entrenador->posicion->x, entrenador->posicion->y);
+
 	}
 
 	return entrenadores;
@@ -138,20 +141,28 @@ int process_request(int socket_cliente){
 
 	case LOCALIZED_POKEMON:
 
+		pthread_mutex_lock(&mx_llegada_localized);
+
 		mensajeGet = recibir_mensaje_struct_get(socket_cliente);
 
 		if(id_en_lista(mensajeGet->id_mensaje_correlativo) && mensajeGet->cantidad !=0){
 			loca = recibirLocalized(mensajeGet);
-			for(int i=0;i<list_size(loca);i++){
-				Poketeam* pokemon = list_get(loca,i);
+
+			t_list *locaa = list_duplicate(loca);
+			for(int i=0;i<list_size(locaa);i++){
+				Poketeam* pokemon = list_get(locaa,i);
 				log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 			}
-		    llegada_localized(loca);
+		    llegada_localized(locaa);
 		}
 		else
 		    log_info(logger,"Id no correspondiente, descarto mensaje %d",mensajeGet->id_mensaje_correlativo);
 
+		pthread_mutex_unlock(&mx_llegada_localized);
+
 		return socket_cliente;
+
+
 
 		break;
 	case CAUGHT_POKEMON:
@@ -178,7 +189,6 @@ int process_request(int socket_cliente){
 		break;
 
 	case -1:
-		liberar_conexion(socket_cliente);
 		socket_cliente = crear_conexion(ip,puerto);
 		return socket_cliente;
 		break;
@@ -205,13 +215,13 @@ void llegada_pokemon(Poketeam* pokemon){
 			log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
 
 			}
-		free(pokemon->pokemon);
-		free(pokemon);
+		//free(pokemon->pokemon);
+		//free(pokemon);
 
 	}else{
 		log_info(logger,"No se necesita el pokemon %s!", pokemon->pokemon);
-		free(pokemon->pokemon);
-		free(pokemon);
+		//free(pokemon->pokemon);
+		//free(pokemon);
 	}
 
 }
@@ -241,8 +251,10 @@ void realizar_tareas(Entrenador *entrenador){
 		pos.y= entrenador->posicion->y;
 
 		int dis = distancia(entrenador->posicion_a_capturar, pos ); //*config->retardo_cpu;
-		log_info(logger,"Entrenador %d moviendose a x:%d y:%d, tiempo requerido %d segundos",
-				entrenador->entrenadorNumero, entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y, dis);
+		log_info(logger,"Entrenador %d moviendose a %s x:%d y:%d, distancia: %d",
+				entrenador->entrenadorNumero,entrenador->pokemon_a_caputar,entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y, dis);
+
+		aumentar_ciclos(entrenador, dis);
 
 		if(config->quantum >0){
 			round_robin(entrenador, dis);
@@ -256,12 +268,16 @@ void realizar_tareas(Entrenador *entrenador){
 
 		//Si falla conexion con el broker el entrenador agarra el pokemon
 		if(catch < 0){
-			log_info(logger,"No pude enviar mensaje catch al broker, por default agarro pokemon");
+			log_info(logger,"Fallo conexion broker, no se pudo enviar mensaje Catch %s, por default se agarrara el pokemon", entrenador->pokemon_a_caputar);;
 			entrenador->puede_agarrar = 1;
 		}
 		//Si la conexion no falla pasa el entrenador pasa a block
 		else{
 			enviar_catch(entrenador, catch);
+			sleep(config->retardo_cpu);
+			aumentar_ciclos(entrenador, config->retardo_cpu);
+
+
 			entrenador->block_capturar= true;
 			list_add(block,entrenador);
 			log_info(logger,"Entrenador %d en block a la espera de caugth",entrenador->entrenadorNumero);
@@ -299,6 +315,8 @@ void realizar_tareas(Entrenador *entrenador){
 			if(list_is_empty(pokemones_pendientes)){
 				list_add(block,entrenador);
 				entrenador->block_agarrar = true;
+				log_info(logger,"Entrenador %d en block, no hay pokemones para ir a buscar", entrenador->entrenadorNumero);
+
 			}else{
 
 				Poketeam *pokemon_mas_cerca = list_get(pokemones_pendientes,0);
@@ -332,6 +350,7 @@ void realizar_tareas(Entrenador *entrenador){
 	else{
 		list_add(block,entrenador);
 		entrenador->block_deadlock = true;
+		log_info(logger,"Entrenador %d en block, no puede capturar mas pokemones", entrenador->entrenadorNumero);
 		sem_post(&semaforoDeadlock);
 	}
 
@@ -342,11 +361,16 @@ void realizar_tareas(Entrenador *entrenador){
 
 		int dis_x= abs(entrenador->posicion_a_capturar->x - entrenador->posicion->x);
 		int dis_y= abs(entrenador->posicion_a_capturar->y - entrenador->posicion->y);
-		int moverse = (dis_x + dis_y); //* config->retardo_cpu;
+		int dis = (dis_x + dis_y); //* config->retardo_cpu;
 
-		log_info(logger,"Tiempo %d segundos:", moverse);
+		log_info(logger,"Distancia entre entrenadores:%d", dis);
 
-		sleep(moverse);
+		aumentar_ciclos(entrenador, dis);
+
+		if(config->quantum > 0)
+			round_robin(entrenador,dis);
+		else
+			sleep(dis);
 
 		agregar_segun_faltantes(entrenador->pokemon_a_caputar, entrenador);
 
@@ -484,15 +508,12 @@ void finalizar_si_corresponde(Entrenador *entrenador){
 void llegada_localized(t_list* localized){
     int indiceMenor;
     int menor = 100000;
-    t_list* distancias = list_create();
     int distan;
-    //Entrenador entrenadores;
+
+    t_list* distancias = list_create();
     t_list* pokemones = list_create();
-
     t_list* blockAgarrar = list_filter(block,(void*)bloqueado_por_agarrar);
-
     t_list* listaTodos = list_duplicate(blockAgarrar);
-
     t_list* listaNew = list_duplicate(new);
 
     for(int i=0;i< list_size(listaNew);i++){
@@ -507,6 +528,10 @@ void llegada_localized(t_list* localized){
 
         for(int i = 0;i<list_size(localized);i++){
             Poketeam* pokemon = list_get(localized, i);
+
+            log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
+
+
             list_add(pokemones,pokemon);
 
             Entrenador* entrenador;
@@ -531,13 +556,22 @@ void llegada_localized(t_list* localized){
         log_info(logger,"Llego pokemon %s x:%d y:%d a la cola lozalized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
         int i=0;
         while(list_get(pokemones,i)!=NULL){
-            if(i!=indiceMenor)
+            if(i!=indiceMenor){
                 list_add(pokemones_pendientes, list_get(pokemones,i));
             	Poketeam* pokemon = list_get(pokemones,i);
             	log_info(logger,"Se agrego el pokemon %s x:%d y:%d a lista pendientes",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 
+            }
             i++;
         }
     }
 
+}
+
+void aumentar_ciclos(Entrenador *entrenador, int cant){
+	ciclos_totales_cpu += cant;
+	int ciclos_entrenador = (int) list_get(ciclos_por_entrenador, entrenador->entrenadorNumero-1);
+	list_remove(ciclos_por_entrenador, entrenador->entrenadorNumero - 1);
+	ciclos_entrenador += cant;
+	list_add_in_index(ciclos_por_entrenador,entrenador->entrenadorNumero -1,(void*)ciclos_entrenador);
 }

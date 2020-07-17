@@ -50,6 +50,10 @@ typedef struct{
 char* ip;
 char* puerto;
 int cantEntrenadores;
+
+int ciclos_totales_cpu;
+t_list *ciclos_por_entrenador;
+
 t_log* logger;
 Config_Team *config;
 
@@ -65,6 +69,8 @@ t_list *pokemones_en_busqueda;
 
 pthread_mutex_t mxExce;
 pthread_mutex_t mx_llegada_pokemon;
+pthread_mutex_t mx_llegada_localized;
+
 sem_t semaforoExce;
 sem_t semaforoIntercambio;
 sem_t semaforoDeadlock;

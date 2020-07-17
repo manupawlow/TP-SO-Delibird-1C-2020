@@ -29,7 +29,6 @@
 								<option id="gnu.c.compiler.exe.debug.option.debugging.level.479308303" name="Debug Level" superClass="gnu.c.compiler.exe.debug.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.33771590" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/bibliotec/src}&quot;"/>
-									<listOptionValue builtIn="false" value="bibliotec"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.785267575" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
 							</tool>

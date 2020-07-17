@@ -3,7 +3,7 @@
 #include "hilos.h"
 
 int main(int argc, char* argv[]){
-
+	argv[1] =  "4";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	strcpy(ID_PROCESO,argv[1]);
 
@@ -11,17 +11,14 @@ int main(int argc, char* argv[]){
 	t_config *config_team = config_create(conf);
 	config = construirConfigTeam(config_team);
 	logger = log_create(config->log, "Team", 1, LOG_LEVEL_INFO);
-	setearVariablesGlobales();
 
 	//Crear hilo por cada entrenadores y definir objetivo global
-
-	log_info(logger,"Cantidad de entrenadores %d", cantEntrenadores);
 	new = crearEntrenadores(config_team);
+	setearVariablesGlobales();
 
 	log_info(logger,"Objetivo Global:");
 	objetivoGlobal = obtenerObjetivoGlobal(config_team);
 	recorrerLista(objetivoGlobal,logger);
-
 	//Conectarse al broker
 
 	pthread_t conexionLocalized;
@@ -30,8 +27,8 @@ int main(int argc, char* argv[]){
     pthread_t conexionCaugth;
     pthread_create(&conexionCaugth, NULL, (void*) conexion_caugth, NULL);
 
-   // pthread_t conexionAppeared;
-   // pthread_create(&conexionAppeared, NULL,(void*) conexion_appeared ,NULL);
+    //pthread_t conexionAppeared;
+    //pthread_create(&conexionAppeared, NULL,(void*) conexion_appeared ,NULL);
 
     //Escuchar gameboy
 
@@ -50,9 +47,18 @@ int main(int argc, char* argv[]){
 
     pthread_join(deadLock, NULL);
 
+
+    log_info(logger, "Ciculos totales CPU: %d", ciclos_totales_cpu);
+
+    for(int i=0; i<list_size(ciclos_por_entrenador);i++){
+    	log_info(logger,"Ciclos CPU entrenador %d: %d", i+1, (int) list_get(ciclos_por_entrenador,i));
+    }
+
+
     log_destroy(logger);
     config_destroy(config_team);
     list_destroy_and_destroy_elements(objetivoGlobal, (void*) free);
+    //list_destroy(ciclos_totales_cpu);
     pthread_mutex_destroy(&mxExce);
     sem_destroy(&semaforoExce);
     sem_destroy(&semaforoIntercambio);

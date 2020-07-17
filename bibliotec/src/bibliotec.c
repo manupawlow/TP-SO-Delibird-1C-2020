@@ -39,6 +39,15 @@ int iniciar_servidor(char* ip, char* puerto)
         break;
     }
 
+
+    int yes=1;
+
+    if (setsockopt(socket_servidor,SOL_SOCKET,SO_REUSEADDR,&yes,sizeof yes) == -1) {
+        perror("setsockopt");
+        exit(1);
+    }
+
+
 	listen(socket_servidor, SOMAXCONN);
     freeaddrinfo(servinfo);
 
@@ -122,8 +131,10 @@ int crear_conexion(char *ip, char* puerto)
 
 	int socket_cliente = socket(server_info->ai_family, server_info->ai_socktype, server_info->ai_protocol);
 
-	if(connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen) == -1)
+	if(connect(socket_cliente, server_info->ai_addr, server_info->ai_addrlen) == -1){
+		freeaddrinfo(server_info);
 		return -1;
+	}
 
 	freeaddrinfo(server_info);
 
@@ -134,7 +145,6 @@ int crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, t
 {
 
 	if(conexion ==-1){
-		liberar_conexion(conexion);
 		log_info(logger,"Reintenando reconectar cada %d segundos", reconexion);
 	    conexion = reintentar_conexion(ip,puerto,reconexion);
 	}
@@ -151,7 +161,6 @@ int reintentar_conexion(char* ip, char* puerto , int tiempo)
 	int conexion = crear_conexion(ip,puerto);
 
 	while(conexion == -1){
-		liberar_conexion(conexion);
 		sleep(tiempo);
 		conexion = crear_conexion(ip,puerto);
 	}

@@ -37,8 +37,9 @@ void free_entrenador(Entrenador *entrenador){
 void setearVariablesGlobales(){
 	ip= config->ip_broker;
 	puerto= config->puerto_broker;
+	cantEntrenadores = list_size(new);
+	ciclos_totales_cpu = 0;
 
-	cantEntrenadores = list_size(config->posiciones_entrenadores);
 	id_localized = list_create();
 
 	ready= list_create();
@@ -47,11 +48,18 @@ void setearVariablesGlobales(){
 	pokemones_en_busqueda = list_create();
 	pokemones_pendientes = list_create();
 
+	ciclos_por_entrenador = list_create();
+	int ciclos= 0;
+	for(int i=0; i<list_size(new); i++){
+		list_add(ciclos_por_entrenador, (void*) ciclos);
+	}
+
 	sem_init(&semaforoExce,0,0);
 	sem_init(&semaforoIntercambio,0,0);
 	sem_init(&semaforoDeadlock,0,0);
 	pthread_mutex_init(&mxExce,NULL);
 	pthread_mutex_init(&mx_llegada_pokemon,NULL);
+	pthread_mutex_init(&mx_llegada_localized,NULL);
 }
 
 t_list *obtenerObjetivoGlobal(){
@@ -76,11 +84,11 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 
 	for(int i=0; i< list_size(objetivoGlobal); i++){
 		int conexionGet = crear_conexion(ip,puerto);
+		char *pokemon = list_get(objetivoGlobal,i);
+
 		if(conexionGet == -1){
-			liberar_conexion(conexionGet);
-			log_info(logger,"No se pudo solicitar pokemon");
+			log_info(logger,"Fallo conexion broker, no se pudo enviar mensaje Get %s", pokemon);
 		}else{
-			char *pokemon = list_get(objetivoGlobal,i);
 
 			mensaje->pokemon = malloc(strlen(pokemon)+1);
 			memcpy(mensaje->pokemon,pokemon,strlen(pokemon)+1);
@@ -306,7 +314,7 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
 
     entrenador->block_agarrar= false;
 	list_add(ready,entrenador);
-	log_info(logger,"Entrenador %d en ready", entrenador->entrenadorNumero);
+	log_info(logger,"Entrenador %d en ready por ser el mas cercano a %s", entrenador->entrenadorNumero, entrenador->pokemon_a_caputar);
 
 	sem_post(&semaforoExce);
 }
