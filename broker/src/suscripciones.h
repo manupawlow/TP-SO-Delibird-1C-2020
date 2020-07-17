@@ -5,7 +5,7 @@
 
 //MENSAJES
 void enviar_a_todos(int suscritos[], int cant, char* msg,int size, int cod_op);
-void process_request(Colas *colas);
+void process_request(int socket_cliente);
 uint32_t asignar_id();
 void actualizar_lista_suscritos(t_list*, Proceso*);
 

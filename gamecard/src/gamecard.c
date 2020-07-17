@@ -4,11 +4,12 @@ int main(int argc, char* argv[]) {
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	ID_PROCESO = argv[1];
 
-
+system("clear");
 	logger = log_create("/home/utnso/log_gamecard.txt", "Gamecard", 1, LOG_LEVEL_INFO);
 	config = config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config");
 
 	fs(config,blockSize,cantBlocks);
+
 
 	ip = config_get_string_value(config,"IP_BROKER");
 	puerto = config_get_string_value(config,"PUERTO_BROKER");
@@ -27,6 +28,7 @@ int main(int argc, char* argv[]) {
 	tiempoDeReintento = config_get_int_value(config,"TIEMPO_DE_REINTENTO_OPERACION");
 
 	tiempoDeRetardo = config_get_int_value(config,"TIEMPO_RETARDO_OPERACION");
+
 
 	log_info(logger,"Lei la IP %s y puerto %s", ip, puerto);
 
@@ -155,6 +157,7 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	free(posiciones);
 	    	free(buffer->stream);
 	    	free(buffer);
+	    	log_info(logger, "Pokemon encontrado. Mandando mensaje LOCALIZED.");
 	    }
 	    free(montaje);
 	}else{
@@ -178,9 +181,11 @@ void buscarPokemon(t_mensaje* mensaje){
 			enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
 			free(buffer->stream);
 			free(buffer);
+	    	log_info(logger, "Pokemon NO encontrado. Mandando mensaje LOCALIZED vacio.");
 		}
 	}
 	free(mensaje);
+	log_info(logger,"Finaliza busqueda de pokemon.\n\n");
 }
 
 
@@ -189,10 +194,6 @@ void buscarPokemon(t_mensaje* mensaje){
 void agarrarPokemon(t_mensaje* mensaje){
 
 char* montaje = montarPoke(mensaje);
-
-log_info(logger,"%s",mensaje->pokemon);
-log_info(logger,"%d",mensaje->posx);
-log_info(logger,"%d",mensaje->posy);
 
 string_append(&montaje,"/Metadata.bin" );
 t_buffer* buffer;
@@ -204,7 +205,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 		log_info(logger,"No se pudo conectar con el broker");
 	}else{
 		if(existePokemon(mensaje)){
-
+			log_info(logger,"Pokemon encontrado! Analizando posiciones...");
 			char* x=string_itoa(mensaje->posx);
 			char* y=string_itoa(mensaje->posy);
 			int existePos=0;
@@ -217,7 +218,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			esperaOpen(montaje);
 			pthread_mutex_lock(&mxArchivo);
 			char* arrayTodo=guardarDatosBins(mensaje);
-
+			log_info(logger,"Actualmente en los bloques hay: %s", arrayTodo);
 			char** arrayBloques=agarrarBlocks(mensaje);
 
 			char** datosSeparados=string_split(arrayTodo, "\n");
@@ -273,6 +274,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 				free(montaje);
 				free(datosNuevos);
 			}else{
+				log_info(logger,"Posicion encontrada!");
 					off_t offsetVacio = primerBloqueDisponible();
 
 					FILE* f;
@@ -286,6 +288,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 					if(ultimoPoke==1 && ultimoPokePos==1)
 						bitarray_clean_bit(bitmap,atoi(arrayBloques[0]) );
+					escribirBitmap();
 					pthread_mutex_unlock(&mxArchivo);
 
 					freeDoblePuntero(listaBloquesUsados);
@@ -298,6 +301,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 					enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
 					free(buffer->stream);
 					free(buffer);
+					log_info(logger,"Pokemon capturado!");
 				}
 			freeDoblePuntero(arrayBloques);
 			freeDoblePuntero(datosSeparados);
@@ -313,6 +317,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(montaje);
 		}
 	}
+	log_info(logger,"Finalizo la busqueda y captura de pokemon.\n\n");
 }
 
 
@@ -396,18 +401,22 @@ int process_request(int socket){
 
 	switch (cod_op){
 	case GET_POKEMON:
+		log_info(logger,"Mensaje GET.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
+		log_info(logger,"Iniciando busqueda de %s.",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
 		pthread_detach(solicitudGet);
 		return socket;
 		break;
 	case NEW_POKEMON:
+		log_info(logger,"Mensaje NEW.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
+		log_info(logger,"Creando nuevo %s...",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
 		pthread_detach(solicitudNew);
@@ -417,14 +426,11 @@ int process_request(int socket){
 		return socket;
 		break;
 	case CATCH_POKEMON:
+		log_info(logger,"Mensaje CATCH.\n");
 		mensaje = recibir_mensaje_struct(socket);
-
-		log_info(logger,"%s",mensaje->pokemon);
-		log_info(logger,"%d",mensaje->posx);
-		log_info(logger,"%d",mensaje->posy);
-
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi mensaje de contenido pokemon %s y envie confirmacion de su recepcion",mensaje->pokemon);
+		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
+		log_info(logger,"Buscando %s para agarrar...",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon, mensaje);
 		pthread_detach(solicitud);
@@ -461,10 +467,12 @@ void nuevoPokemon(t_mensaje* mensaje){
 
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
+		log_info(logger, "NUEVO Pokemon, creando directorio y metadata.");
 		asignarBloqueYcrearMeta(mensaje,montaje);
 	}
 	pthread_mutex_unlock(&mxArchivo);
 	if(f!=NULL){
+		log_info(logger,"%s ya existente!",mensaje->pokemon);
 			fclose(f);
 			string_append(&montaje,"/Metadata.bin");
 			f = fopen(montaje,"r");
@@ -485,6 +493,7 @@ void nuevoPokemon(t_mensaje* mensaje){
 		free(buffer->stream);
 		free(buffer);
 	}
+	log_info(logger,"Pokemon añadido al File System.\n\n");
 }
 
 //-------------------------------------------------------------------------------------
@@ -524,7 +533,7 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 
 	string_append(&bloques,montajeBlock);
 	string_append_with_format(&bloques,"/%d.bin",offset);
-	log_info(logger,"El offset es %d",offset);
+	//log_info(logger,"El offset es %d",offset);
 
 	f=fopen(bloques,"w");
 
@@ -544,7 +553,10 @@ void asignarBloqueYcrearMeta(t_mensaje* mensaje,char* montaje){
 	mkdir(montaje,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	string_append(&montaje,"/Metadata.bin");
 
+
 	escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,escribirBloque);
+
+	escribirBitmap();
 
 	free(bloques);
 	free(escribirBloque);
@@ -561,7 +573,7 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 	off_t desplazamiento = 0;
 	char** bloquesUsados;
 	char* contadores = string_new();
-	log_info(logger,contadores);
+	//log_info(logger,contadores);
 	char* loQueNoEntraEnUnBloque;
 	char* loQueEntraEnUnBloque = string_substring_until(escribirBloque,blockSize);
 	if(strlen(escribirBloque)>blockSize)
@@ -570,7 +582,7 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 		loQueNoEntraEnUnBloque = string_new();
 	int cantidadDeBloques = calcularCantidadDeBLoques(escribirBloque);
 	char* cantidadDeBloquesString = string_itoa(cantidadDeBloques);
-	log_info(logger,cantidadDeBloquesString);
+	//log_info(logger,cantidadDeBloquesString);
 	if(cantidadDeBloques==0){
 		cantidadDeBloques++;
 	}else{
@@ -598,10 +610,13 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 
 		desplazamiento = primerBloqueDisponible();
 		string_append_with_format(&contadores,",%d",desplazamiento);
-		log_info(logger,contadores);
+		//log_info(logger,contadores);
 		char* blocks = string_new();
 		string_append(&blocks,montajeBlock);
 		string_append_with_format(&blocks,"/%d.bin",desplazamiento);
+
+
+		log_info(logger,"Escribiendo en bloque: %d.", desplazamiento);
 
 		f=fopen(blocks,"w");
 		fprintf(f,"%s",loQueEntraEnUnBloque);
@@ -613,7 +628,6 @@ char** agregarBloquesAPartirDeString(char* escribirBloque,FILE* f,off_t offset){
 
 		free(blocks);
 	}
-
 	bloquesUsados = string_split(contadores,",");
 
 	free(contadores);
@@ -653,8 +667,7 @@ void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* 
 	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
 	fprintf(f,"OPEN=Y");
 	fclose(f);
-	log_info(logger,"%d",tiempoDeRetardo);
-	log_info(logger,"Empiezo a esperar");
+	log_info(logger,"Empiezo a esperar %d segundos.",tiempoDeRetardo);
 	sleep(tiempoDeRetardo);
 	f=fopen(montaje,"w+");
 	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
@@ -699,6 +712,10 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     pthread_mutex_lock(&mxArchivo);
     datosBins = guardarDatosBins(mensaje);
 
+    log_info(logger,"Actualmente en los bloques hay: %s", datosBins);
+
+
+    log_info(logger,"Verifiando posiciones.");
     bloquesActualizados = verificarCoincidenciasYsumarCantidad(datosBins,mensaje);
 
     off_t offsetVacio = primerBloqueDisponible();
@@ -708,8 +725,9 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
     fblocks = fopen(montajeBlocks,"w");
     listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
-
+    log_info(logger,"Reescribiendo bloques y metadata.");
     escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje,bloquesActualizados);
+    escribirBitmap();
     pthread_mutex_unlock(&mxArchivo);
 
     free(datosBins);
@@ -800,7 +818,7 @@ char* guardarDatosBins(t_mensaje* mensaje){
 
     		bitarray_clean_bit(bitmap, offset);
 
-    		log_info(logger,datosBins);
+    		//log_info(logger,datosBins);
     	}
     	i++;
     	free(montajeBlocks);
@@ -865,7 +883,7 @@ void esperaOpen(char* montaje){
 	//reintento volver a abrir
 	while(strcmp(valorOpen,"Y") == 0){
 		log_info(logger,"Estoy esperando");
-		log_info(logger,"%s",valorOpen);
+		//log_info(logger,"%s",valorOpen);
 		sleep(tiempoDeReintento);
 
 		config_destroy(configBloques);
@@ -893,6 +911,33 @@ int existePokemon(t_mensaje* mensaje){
 		free(montajePoke);
 		return 1;
 	}
+
+}
+
+void escribirBitmap(){
+
+    char* datosBitmap= string_new();
+t_config* config=config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config");
+
+    for(off_t i=1; i<cantBlocks+1;i++){
+        if(bitarray_test_bit(bitmap, i))
+            string_append(&datosBitmap, "1");
+        else
+            string_append(&datosBitmap, "0");
+    }
+
+    FILE* f;
+    char* mnt = string_new();
+    string_append(&mnt,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
+    string_append(&mnt, "/Metadata/Bitmap.bin");
+
+    f=fopen(mnt,"w+");
+
+    fprintf(f,"%s", datosBitmap);
+    fclose(f);
+    free(datosBitmap);
+    free(mnt);
+    config_destroy(config);
 
 }
 

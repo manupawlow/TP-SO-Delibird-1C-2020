@@ -2,7 +2,7 @@
 #include "suscripciones.h"
 
 
-void process_request(Colas *loquito) {
+void process_request(int socket_cliente) {
     int cod_op;
 	t_mensaje* mensaje;
 	t_mensaje_get* mensajeGet;
@@ -13,7 +13,7 @@ void process_request(Colas *loquito) {
 	int id;
 	int indice;
 
-	if(recv(loquito->socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
+	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
 
 		switch (cod_op) {
@@ -24,20 +24,20 @@ void process_request(Colas *loquito) {
 			pthread_mutex_lock(&mx_lista_get);
 
 			//LLEGA UN NUEVO PROCESO, ME FIJO SI ES UNO QUE SE CAYO Y SE RECONECTO A TRAVES DEL ID QUE ME MANDAN
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola GET el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_GET, nuevo_proceso);
+				actualizar_lista_suscritos(SUSCRITOS_GET, nuevo_proceso);
 
-				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_GET);//el nombre de la funcion esta mal :(
-				proceso = list_get(loquito->SUSCRITOS_GET, indice);
+				indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_GET);//el nombre de la funcion esta mal :(
+				proceso = list_get(SUSCRITOS_GET, indice);
 
 				enviar_mensajes_en_memoria(proceso, "GET");
 			}else
@@ -51,22 +51,22 @@ void process_request(Colas *loquito) {
 		case GET_POKEMON:
 			pthread_mutex_lock(&mx_lista_get);
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 
 			mensaje->id_mensaje = asignar_id();
 
 			almacenar_mensaje(mensaje, "GET");
 
-			agregar_enviados(mensaje, loquito->SUSCRITOS_GET);
+			agregar_enviados(mensaje, SUSCRITOS_GET);
 
 			mostrar();
 
 			buffer = serializar_mensaje_struct(mensaje);
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, GET_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, GET_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_GET); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_GET, i);
+			for(int i=0; i<list_size(SUSCRITOS_GET); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_GET, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, GET_POKEMON);
 			}
 
@@ -84,20 +84,20 @@ void process_request(Colas *loquito) {
 		case SUS_LOC:
 			pthread_mutex_lock(&mx_lista_localized);
 			//Suscribir a la cola Localized
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola LOCALIZED el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_LOCALIZED, nuevo_proceso);
+				actualizar_lista_suscritos(SUSCRITOS_LOCALIZED, nuevo_proceso);
 
-				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_LOCALIZED);
-				proceso = list_get(loquito->SUSCRITOS_LOCALIZED, indice);
+				indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_LOCALIZED);
+				proceso = list_get(SUSCRITOS_LOCALIZED, indice);
 
 				enviar_mensajes_en_memoria(proceso, "LOCALIZED");
 			}else
@@ -111,22 +111,22 @@ void process_request(Colas *loquito) {
 			pthread_mutex_lock(&mx_lista_localized);
 			//Agrega el mensaje a la cola localized
 
-			mensajeGet = recibir_mensaje_struct_get(loquito->socket_cliente);
+			mensajeGet = recibir_mensaje_struct_get(socket_cliente);
 
 			mensajeGet->id_mensaje = asignar_id();
 
 			almacenar_mensaje_localized(mensajeGet, "LOCALIZED");
 
-			agregar_enviados_localized(mensajeGet, loquito->SUSCRITOS_LOCALIZED);
+			agregar_enviados_localized(mensajeGet, SUSCRITOS_LOCALIZED);
 
 			mostrar();
 
 			buffer = serializar_mensaje_struct_get(mensajeGet);
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, LOCALIZED_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, LOCALIZED_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_LOCALIZED); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_LOCALIZED, i);
+			for(int i=0; i<list_size(SUSCRITOS_LOCALIZED); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_LOCALIZED, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, LOCALIZED_POKEMON);
 			}
 
@@ -142,20 +142,20 @@ void process_request(Colas *loquito) {
 		case SUS_CATCH:
 			pthread_mutex_lock(&mx_lista_catch);
 			//Suscribir a la cola catch
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola CATCH el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_CATCH, nuevo_proceso);
+				actualizar_lista_suscritos(SUSCRITOS_CATCH, nuevo_proceso);
 
-				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_CATCH);
-				proceso = list_get(loquito->SUSCRITOS_CATCH, indice);
+				indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_CATCH);
+				proceso = list_get(SUSCRITOS_CATCH, indice);
 
 				enviar_mensajes_en_memoria(proceso, "CATCH");
 			}else
@@ -170,23 +170,23 @@ void process_request(Colas *loquito) {
 			pthread_mutex_lock(&mx_lista_catch);
 			//Agrega el mensaje a la cola catch
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 
 			mensaje->id_mensaje = asignar_id();
 
 			almacenar_mensaje(mensaje, "CATCH");
 
-			agregar_enviados(mensaje, loquito->SUSCRITOS_CATCH);
+			agregar_enviados(mensaje, SUSCRITOS_CATCH);
 
 			mostrar();
 
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, CATCH_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, CATCH_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_CATCH); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_CATCH, i);
+			for(int i=0; i<list_size(SUSCRITOS_CATCH); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_CATCH, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, CATCH_POKEMON);
 			}
 			free(buffer->stream);
@@ -201,19 +201,19 @@ void process_request(Colas *loquito) {
 		case SUS_CAUGHT:
 			pthread_mutex_lock(&mx_lista_caught);
 			//Suscribir a la cola caught
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola CAUGHT el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_CAUGHT, nuevo_proceso);
-				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_CAUGHT);
-				proceso = list_get(loquito->SUSCRITOS_CAUGHT, indice);
+				actualizar_lista_suscritos(SUSCRITOS_CAUGHT, nuevo_proceso);
+				indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_CAUGHT);
+				proceso = list_get(SUSCRITOS_CAUGHT, indice);
 
 				enviar_mensajes_en_memoria(proceso, "CAUGHT");
 			}else
@@ -229,22 +229,22 @@ void process_request(Colas *loquito) {
 			pthread_mutex_lock(&mx_lista_caught);
 			//Agrega el mensaje a la cola caugth
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 
 			mensaje->id_mensaje = asignar_id();
 
 			almacenar_mensaje(mensaje, "CAUGHT");
-			agregar_enviados(mensaje, loquito->SUSCRITOS_CAUGHT);
+			agregar_enviados(mensaje, SUSCRITOS_CAUGHT);
 
 			mostrar();
 
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, CAUGHT_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, CAUGHT_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_CAUGHT); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_CAUGHT, i);
+			for(int i=0; i<list_size(SUSCRITOS_CAUGHT); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_CAUGHT, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, CAUGHT_POKEMON);
 			}
 
@@ -260,19 +260,19 @@ void process_request(Colas *loquito) {
 		case SUS_NEW:
 			pthread_mutex_lock(&mx_lista_new);
 			//Suscribir a la cola new
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola NEW el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_NEW, nuevo_proceso);
-			indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_NEW);
-			proceso = list_get(loquito->SUSCRITOS_NEW, indice);
+				actualizar_lista_suscritos(SUSCRITOS_NEW, nuevo_proceso);
+			indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_NEW);
+			proceso = list_get(SUSCRITOS_NEW, indice);
 
 			enviar_mensajes_en_memoria(proceso, "NEW");
 			}else
@@ -288,22 +288,22 @@ void process_request(Colas *loquito) {
 			pthread_mutex_lock(&mx_lista_new);
 			//Agrega el mensaje a la cola new
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 
 			mensaje->id_mensaje = asignar_id();
 
 			almacenar_mensaje(mensaje, "NEW");
-			agregar_enviados(mensaje, (void*) loquito->SUSCRITOS_NEW);
+			agregar_enviados(mensaje, (void*) SUSCRITOS_NEW);
 
 			mostrar();//
 
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, NEW_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, NEW_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_NEW); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_NEW, i);
+			for(int i=0; i<list_size(SUSCRITOS_NEW); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_NEW, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, NEW_POKEMON);
 			}
 
@@ -320,20 +320,20 @@ void process_request(Colas *loquito) {
 		case SUS_APP:
 			pthread_mutex_lock(&mx_lista_appeared);
 			//Suscribir a la cola appeared
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 
 			nuevo_proceso = malloc(sizeof(Proceso));
 			nuevo_proceso->id_proceso = atoi(mensajeACK);
 			id = nuevo_proceso->id_proceso;
-			nuevo_proceso->socket = loquito->socket_cliente;
+			nuevo_proceso->socket = socket_cliente;
 
 
 			log_info(logger, "<SUSCRIPCION> Se suscribio a la cola APPEARED el proceso con id %d con socket %d ", nuevo_proceso->id_proceso, nuevo_proceso->socket);
 
 			if(id != 99){
-				actualizar_lista_suscritos(loquito->SUSCRITOS_APPEARED, nuevo_proceso);
-				indice = buscar_proceso_en_enviados_por_id(id, loquito->SUSCRITOS_APPEARED);
-				proceso = list_get(loquito->SUSCRITOS_APPEARED, indice);
+				actualizar_lista_suscritos(SUSCRITOS_APPEARED, nuevo_proceso);
+				indice = buscar_proceso_en_enviados_por_id(id, SUSCRITOS_APPEARED);
+				proceso = list_get(SUSCRITOS_APPEARED, indice);
 
 				enviar_mensajes_en_memoria(nuevo_proceso, "APPEARED");
 			}else
@@ -349,23 +349,23 @@ void process_request(Colas *loquito) {
 		case APPEARED_POKEMON:
 			pthread_mutex_lock(&mx_lista_appeared);
 
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 
 			mensaje->id_mensaje = asignar_id();
 
 			almacenar_mensaje(mensaje, "APPEARED");
 
-			agregar_enviados(mensaje, loquito->SUSCRITOS_APPEARED);
+			agregar_enviados(mensaje, SUSCRITOS_APPEARED);
 
 			mostrar();
 
 			buffer = serializar_mensaje_struct(mensaje);
 
 			//Notifico el id del mensaje
-			enviar_mensaje_struct(buffer, loquito->socket_cliente, APPEARED_POKEMON);
+			enviar_mensaje_struct(buffer, socket_cliente, APPEARED_POKEMON);
 
-			for(int i=0; i<list_size(loquito->SUSCRITOS_APPEARED); i++){
-				Proceso* suscripto = list_get(loquito->SUSCRITOS_APPEARED, i);
+			for(int i=0; i<list_size(SUSCRITOS_APPEARED); i++){
+				Proceso* suscripto = list_get(SUSCRITOS_APPEARED, i);
 				enviar_mensaje_struct(buffer, suscripto->socket, APPEARED_POKEMON);
 			}
 
@@ -379,7 +379,7 @@ void process_request(Colas *loquito) {
 //----------------------------------------------------------------
 //--------------------ACK-----------------------------------------
 		case ACK:
-			mensajeACK = recibir_mensaje(loquito->socket_cliente);
+			mensajeACK = recibir_mensaje(socket_cliente);
 			char** ids = string_split(mensajeACK, "-");
 			int id_proceso = atoi(ids[0]);
 			int id_mensaje = atoi(ids[1]);
@@ -390,7 +390,7 @@ void process_request(Colas *loquito) {
 			break;
 //-----------------------------------------------------------------
 		case SUSCRIBIR:
-			mensaje = recibir_mensaje_struct(loquito->socket_cliente);
+			mensaje = recibir_mensaje_struct(socket_cliente);
 			log_info(logger,"%d",mensaje->posx);
 			log_info(logger,"%d",mensaje->posy);
 			log_info(logger,"%s",mensaje->pokemon);

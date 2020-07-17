@@ -1,6 +1,21 @@
 #include <bibliotec.h>
+	t_log* logger;
+
+void recibir_y_mostrar(int conexion){
+	int cod_op;
+	recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+	t_mensaje* mensaje= recibir_mensaje_struct(conexion);
+	log_info(logger,"Recibi el mensaje %d", mensaje->id_mensaje);
+	free(mensaje->pokemon);
+	free(mensaje);
+}
+
+
+
+
 
 int main(int argc, char *argv[]) {
+
 
 	char *ip;
 	char *puerto;
@@ -13,7 +28,7 @@ int main(int argc, char *argv[]) {
 	t_mensaje* mensaje_struct = malloc(sizeof(t_mensaje));
 	t_buffer* buffer;
 
-	t_log* logger;
+
 	t_config* config;
 
 	char* conf = "/home/utnso/tp-2020-1c-NN/gameboy/src/gameboy.config";
@@ -35,25 +50,31 @@ int main(int argc, char *argv[]) {
 		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
 
 		if(strcmp(argv[2],"NEW_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_NEW);
+			enviar_mensaje("99",conexion,SUS_NEW);
 		}else if(strcmp(argv[2],"APPEARED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_APP);
+			enviar_mensaje("99",conexion,SUS_APP);
 		}else if(strcmp(argv[2],"CATCH_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CATCH);
+			enviar_mensaje("99",conexion,SUS_CATCH);
 		}else if(strcmp(argv[2],"CAUGHT_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_CAUGHT);
+			enviar_mensaje("99",conexion,SUS_CAUGHT);
 		}else if(strcmp(argv[2],"GET_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_GET);
+			enviar_mensaje("99",conexion,SUS_GET);
 		}else if(strcmp(argv[2],"LOCALIZED_POKEMON") == 0){
-			enviar_mensaje("Sr Broker Suscribame",conexion,SUS_LOC);
+			enviar_mensaje("99",conexion,SUS_LOC);
 		}
 
-		log_info(logger,"Suscripcion a cola %s por %d segundos",argv[2],argv[3]);
+		log_info(logger,"Suscripcion a cola %s por %s segundos",argv[2],argv[3]);
 
 		//temporal_get_string_time() devuelve el tiempo en hh:mm:ss:mmmm (es un char*)
-
 		int segundosPermitidos = atoi(argv[3]);
-		char ** tiempo = string_split(temporal_get_string_time(),":");
+		uint64_t time = timestamp();
+		uint64_t final_time = time + segundosPermitidos * 1000;
+
+		while(time < final_time){
+			time = timestamp();
+			recibir_y_mostrar(conexion);
+		}
+/*		char ** tiempo = string_split(temporal_get_string_time(),":");
 		int horas = atoi(tiempo[0]);
 		int minutos = atoi(tiempo[1]);
 		int segundos = atoi(tiempo[2]);
@@ -70,7 +91,7 @@ int main(int argc, char *argv[]) {
 			segundos = segundos + horas*60*60 + minutos*60;
 		}
 		freeDoblePuntero(tiempo);
-
+*/
 	}else{
 
 		string_append_with_format(&ips,"%s_%s","IP",argv[1]);

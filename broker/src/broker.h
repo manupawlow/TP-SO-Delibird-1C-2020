@@ -23,6 +23,19 @@ typedef struct {
 
 }Colas;
 
+
+t_list* SUSCRITOS_NEW;
+
+t_list* SUSCRITOS_LOCALIZED;
+
+t_list* SUSCRITOS_GET;
+
+t_list* SUSCRITOS_APPEARED;
+
+t_list* SUSCRITOS_CATCH;
+
+t_list* SUSCRITOS_CAUGHT;
+
 pthread_mutex_t mx_lista_new;
 pthread_mutex_t mx_lista_localized;
 pthread_mutex_t mx_lista_get;

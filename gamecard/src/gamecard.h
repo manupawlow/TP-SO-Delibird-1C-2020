@@ -4,6 +4,10 @@ char* ID_PROCESO;
 
 pthread_mutex_t mxArchivo;
 
+
+int cantBlocks=1024;
+int blockSize = 64;
+
 char* montajePokemon;
 char* montajeBlock;
 
@@ -11,8 +15,7 @@ char* ip;
 char* puerto;
 int tiempoReconexion,tiempoDeRetardo,tiempoDeReintento;
 
-int blockSize = 24;
-int cantBlocks = 5192;
+
 
 void buscarPokemon(t_mensaje* mensaje);
 void nuevoPokemon(t_mensaje* mensaje);
@@ -42,6 +45,7 @@ char** agarrarBlocks(t_mensaje* mensaje);
 int existePokemon(t_mensaje* mensaje);
 char* montarPoke(t_mensaje* mensaje);
 void esperaOpen(char* montaje);
+
 
 int process_request(int socket_cliente);
 void conexion_gameboy();

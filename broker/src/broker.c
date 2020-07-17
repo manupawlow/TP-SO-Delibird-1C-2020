@@ -90,7 +90,7 @@ int main(void) {
 
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
-
+/*
 	Colas *colas = malloc(sizeof(Colas));
 	colas->SUSCRITOS_NEW = list_create();
 	colas->SUSCRITOS_LOCALIZED = list_create();
@@ -106,14 +106,38 @@ int main(void) {
     	socketero[i]= colas->socket_cliente;
     	log_info(logger,"socketero: %d", socketero[i]);
     	i++;
-/*
+
     	pthread_t cliente_thread;
-    	pthread_create(&cliente_thread, NULL,(void*) process_request,colas);//TODO*/
+    	pthread_create(&cliente_thread, NULL,(void*) process_request,colas);//TODO
 
     	process_request(colas);
     }
 
     terminar_programa(socket_servidor, logger, config);
+
+*/
+
+	SUSCRITOS_NEW = list_create();
+	SUSCRITOS_LOCALIZED = list_create();
+	SUSCRITOS_GET = list_create();
+	SUSCRITOS_APPEARED = list_create();
+	SUSCRITOS_CATCH = list_create();
+	SUSCRITOS_CAUGHT = list_create();
+
+
+    while(1){
+    	int socket_cliente = esperar_cliente(socket_servidor);
+
+    	socketero[i]= socket_cliente;
+    	log_info(logger,"socketero: %d", socketero[i]);
+    	i++;
+
+    	//process_request(socket_cliente);
+
+    	pthread_t cliente_thread;
+    	pthread_create(&cliente_thread, NULL,(void*) process_request,(void*)socket_cliente);//TODO
+    }
+
 
 
 	return EXIT_SUCCESS;

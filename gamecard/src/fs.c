@@ -5,10 +5,13 @@ void fs(t_config* config, int block_size, int blocks){
 	FILE* f;
 	char* mnt = string_new();
 	string_append(&mnt,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
-
 	f = fopen(mnt,"r");
 
 	if(f==NULL){
+
+
+		log_info(logger, "File System inexistente.");
+		log_info(logger,"Creando File System...");
 
 		mkdir(mnt,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	//----------------FILES-------------------------------------
@@ -18,16 +21,23 @@ void fs(t_config* config, int block_size, int blocks){
 	//----------------BLOQUES-----------------------------------
 		crearBlocks(blocks, mnt);
 	//----------------BITMAP------------------------------------
-		char data[blocks];
-
+		char dataLoco[blocks];
 		for(int i=1; i< blocks+1;i++){
-			data[i]=0;
+			//data[i]=0;
+			dataLoco[i]=0;
 		}
-		bitmap = bitarray_create(data,sizeof(data));
-
+		dataLoco[3]=0;
+		bitmap = bitarray_create(dataLoco,sizeof(dataLoco));
+		escribirBitmap();
+		log_info(logger, "File System creado!\n\n");
 	}else{
+		log_info(logger,"File System encontrado!\n\n");
+
 		fclose(f);
-		char data[blocks];
+
+
+
+		char* data=malloc(blocks);
 		int length;
 		for(int i=1;i<blocks;i++){
 			char* mntBlocks = string_new();
@@ -47,6 +57,7 @@ void fs(t_config* config, int block_size, int blocks){
 			free(mntBlocks);
 		}
 		bitmap = bitarray_create(data,sizeof(data));
+		escribirBitmap();
 	}
 
 	free(mnt);
@@ -122,10 +133,5 @@ void crearMetadata(int block_size, int blocks, char* mnt){
 	free(blockString);
 	fclose(f);
 }
-
-
-
-
-
 
 
