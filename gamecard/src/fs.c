@@ -35,9 +35,14 @@ void fs(t_config* config, int block_size, int blocks){
 
 		fclose(f);
 
+		char dataLoco[blocks];
+		for(int i=1; i< blocks+1;i++){
+			//data[i]=0;
+			dataLoco[i]=0;
+		}
+		dataLoco[3]=0;
+		bitmap = bitarray_create(dataLoco,sizeof(dataLoco));
 
-
-		char* data=malloc(blocks);
 		int length;
 		for(int i=1;i<blocks;i++){
 			char* mntBlocks = string_new();
@@ -49,14 +54,13 @@ void fs(t_config* config, int block_size, int blocks){
 			length = ftell(f);
 			fclose(f);
 			if(length>0)
-				data[i] = 1;
+				bitarray_set_bit(bitmap, i);
 			else if(length==-1)
 				log_info(logger,"aiudaaaaaaaaaaaaaaaaaaa");
 			else if(length==0)
-				data[i] = 0;
+				bitarray_clean_bit(bitmap, i);
 			free(mntBlocks);
 		}
-		bitmap = bitarray_create(data,sizeof(data));
 		escribirBitmap();
 	}
 

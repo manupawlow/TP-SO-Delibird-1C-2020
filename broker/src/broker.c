@@ -12,17 +12,19 @@ int main(void) {
 	int i=0;
 
 	fflush(stdout);
-
+	system("clear");
 	char* conf = "/home/utnso/tp-2020-1c-NN/broker/src/broker.config";
 
-	logger = log_create("/home/utnso/broker.txt", "Broker", 1, LOG_LEVEL_INFO);
-
 	config=config_create(conf);
+
+	char* path= config_get_string_value(config, "LOG_FILE");
+
+	logger = log_create(path, "Broker", 1, LOG_LEVEL_INFO);
 
 	ip= config_get_string_value(config,"IP_BROKER");
 	puerto= config_get_string_value(config,"PUERTO_BROKER");
 
-	log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
+	//log_info(logger,"Servidor con IP %s y puerto %s", ip, puerto);
 
 	contador_de_id = 1;
 
@@ -74,8 +76,8 @@ int main(void) {
 			list_add(buddies, primer_buddy);
 		}
 
-		log_info(logger, "<BROKER CONFIGURATION> %s | %s | %s | %d | %d | %d ",
-			algoritmo_memoria, algoritmo_particion_libre, algoritmo_reemplazo, memory_size, tamanio_minimo, frecuencia_compactacion);
+	//	log_info(logger, "<BROKER CONFIGURATION> %s | %s | %s | %d | %d | %d ",
+		//	algoritmo_memoria, algoritmo_particion_libre, algoritmo_reemplazo, memory_size, tamanio_minimo, frecuencia_compactacion);
 
 
 	int socketero[100];
@@ -94,13 +96,14 @@ int main(void) {
 
     	if(socket_cliente != -1){
         	socketero[i]= socket_cliente;
-        	log_info(logger,"socketero: %d", socketero[i]);
+        	//log_info(logger,"socketero: %d", socketero[i]);
         	i++;
 
         	pthread_t cliente_thread;
         	pthread_create(&cliente_thread, NULL,(void*) process_request,(void*)socket_cliente);
 
         }
+    	fflush(stdout);
     }
 
 
@@ -201,7 +204,7 @@ if(strcmp(algoritmo_memoria, "BS") == 0){
 	fprintf(f, "-----------------------------------------------------------------------------------------------------------------\n");
 	fclose(f);
 
-	log_info(logger, "<CACHE> Actualize el dump de la cache!");
+	log_info(logger, "<CACHE> Actualice el dump de la cache!");
 }
 
 
