@@ -130,7 +130,7 @@ int crear_conexion(char *ip, char* puerto)
 	return socket_cliente;
 }
 
-void crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, t_log *logger, int reconexion, op_code codigo)
+int crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, t_log *logger, int reconexion, op_code codigo)
 {
 
 	if(conexion ==-1){
@@ -143,7 +143,7 @@ void crear_conexion_broker(char* ID_PROCESO,int conexion,char* ip,char* puerto, 
 
 	 //para pruebas con debug
 	 //enviar_mensaje("Suscribime",conexion, codigo);
-
+	 return conexion;
 }
 
 int reintentar_conexion(char* ip, char* puerto , int tiempo)

@@ -1,26 +1,36 @@
 #include <bibliotec.h>
 	t_log* logger;
+	pthread_mutex_t mx;
 
 void recibir_y_mostrar(int conexion){
+	pthread_mutex_lock(&mx);
 	int cod_op;
 	recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
 	t_mensaje* mensaje= recibir_mensaje_struct(conexion);
 	log_info(logger,"Recibi el mensaje %d", mensaje->id_mensaje);
 	free(mensaje->pokemon);
 	free(mensaje);
+	pthread_mutex_unlock(&mx);
 }
-
-
-
-
+void recibir_y_mostrar_localized(int conexion){
+	pthread_mutex_lock(&mx);
+	int cod_op;
+	recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+	t_mensaje_get* mensaje = recibir_mensaje_struct_get(conexion);
+	log_info(logger,"Recibi el mensaje %d", mensaje->id_mensaje);
+	free(mensaje->pokemon);
+	free(mensaje);
+	pthread_mutex_unlock(&mx);
+}
 
 int main(int argc, char *argv[]) {
 
 
-	argv[1]="SUSCRIPTOR";
-	argv[2]="NEW_POKEMON";
-	argv[3]="10";
+	//argv[1]="SUSCRIPTOR";
+	//argv[2]="NEW_POKEMON";
+	//argv[3]="10";
 
+	pthread_mutex_init(&mx,NULL);
 	char *ip;
 	char *puerto;
 	int conexion;
@@ -69,14 +79,16 @@ int main(int argc, char *argv[]) {
 
 		log_info(logger,"Suscripcion a cola %s por %s segundos",argv[2],argv[3]);
 
-		//temporal_get_string_time() devuelve el tiempo en hh:mm:ss:mmmm (es un char*)
 		int segundosPermitidos = atoi(argv[3]);
 		uint64_t time = timestamp();
 		uint64_t final_time = time + segundosPermitidos * 1000;
 		pthread_t hilo;
 		while(time < final_time){
+			if(strcmp(argv[2],"LOCALIZED_POKEMON") == 0)
+				pthread_create(&hilo,NULL,(void*)recibir_y_mostrar_localized,(void*) conexion);
+			else
+				pthread_create(&hilo,NULL,(void*)recibir_y_mostrar,(void*) conexion);
 
-			pthread_create(&hilo,NULL,(void*)recibir_y_mostrar,(void*) conexion);
 			time = timestamp();
 		}
 		log_info(logger,"sali.");

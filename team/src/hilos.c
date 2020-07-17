@@ -47,7 +47,7 @@ void conexion_localized(){
 
 	while(1){
 
-		crear_conexion_broker(ID_PROCESO,conexionLocalized,ip,puerto,logger, config->reconexion, SUS_LOC);
+		conexionLocalized = crear_conexion_broker(ID_PROCESO,conexionLocalized,ip,puerto,logger, config->reconexion, SUS_LOC);
 
 		log_info(logger,"Me suscribi a la cola Localized!");
 
@@ -63,7 +63,7 @@ void conexion_caugth(){
 	int conexionCaugth = crear_conexion(ip,puerto);
 
 	while(1){
-		crear_conexion_broker(ID_PROCESO,conexionCaugth,ip,puerto,logger, config->reconexion, SUS_CAUGHT);
+		conexionCaugth = crear_conexion_broker(ID_PROCESO,conexionCaugth,ip,puerto,logger, config->reconexion, SUS_CAUGHT);
 
 		log_info(logger,"Me suscribi a la cola Caugth!");
 
@@ -79,7 +79,7 @@ void conexion_appeared(){
 	int conexionAppeared = crear_conexion(ip,puerto);
 
 	while(1){
-		crear_conexion_broker(ID_PROCESO,conexionAppeared,ip,puerto,logger, config->reconexion, SUS_APP);
+		conexionAppeared = crear_conexion_broker(ID_PROCESO,conexionAppeared,ip,puerto,logger, config->reconexion, SUS_APP);
 
 		log_info(logger,"Me suscribi a la cola Appeared!");
 

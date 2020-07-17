@@ -3,16 +3,6 @@
 #include <signal.h>
 
 
-/*
-uint64_t timestamp(void){ //EN BIBLIOTEC.H CAMBIAR INCLUDE <TIME.H> POR <SYS/TIME.H>
-	struct timeval tv;
-	gettimeofday(&tv,NULL);
-	unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec) / 1000);
-	//unsigned long long result = (((unsigned long long)tv.tv_sec) * 1000 + ((unsigned long) tv.tv_usec));
-	uint64_t a = result;
-	return a;
-}*/
-
 int main(void) {
 
 	signal(SIGUSR1, dump_cache);
@@ -90,32 +80,6 @@ int main(void) {
 
 	int socketero[100];
 	int socket_servidor = iniciar_servidor(ip,puerto);
-/*
-	Colas *colas = malloc(sizeof(Colas));
-	colas->SUSCRITOS_NEW = list_create();
-	colas->SUSCRITOS_LOCALIZED = list_create();
-	colas->SUSCRITOS_GET = list_create();
-	colas->SUSCRITOS_APPEARED = list_create();
-	colas->SUSCRITOS_CATCH = list_create();
-	colas->SUSCRITOS_CAUGHT = list_create();
-
-
-    while(1){
-    	colas->socket_cliente = esperar_cliente(socket_servidor);
-
-    	socketero[i]= colas->socket_cliente;
-    	log_info(logger,"socketero: %d", socketero[i]);
-    	i++;
-
-    	pthread_t cliente_thread;
-    	pthread_create(&cliente_thread, NULL,(void*) process_request,colas);//TODO
-
-    	process_request(colas);
-    }
-
-    terminar_programa(socket_servidor, logger, config);
-
-*/
 
 	SUSCRITOS_NEW = list_create();
 	SUSCRITOS_LOCALIZED = list_create();
@@ -128,14 +92,14 @@ int main(void) {
     while(1){
     	int socket_cliente = esperar_cliente(socket_servidor);
 
-    	socketero[i]= socket_cliente;
-    	log_info(logger,"socketero: %d", socketero[i]);
-    	i++;
+    	if(socket_cliente != -1){
+        	socketero[i]= socket_cliente;
+        	log_info(logger,"socketero: %d", socketero[i]);
+        	i++;
 
-    	//process_request(socket_cliente);
-
-    	pthread_t cliente_thread;
-    	pthread_create(&cliente_thread, NULL,(void*) process_request,(void*)socket_cliente);//TODO
+        	pthread_t cliente_thread;
+        	pthread_create(&cliente_thread, NULL,(void*) process_request,(void*)socket_cliente);
+    	}
     }
 
 

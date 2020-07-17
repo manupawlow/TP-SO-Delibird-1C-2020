@@ -338,7 +338,7 @@ void funcionNew(int socket){
     int conexionNew = crear_conexion(ip,puerto);
     while(1){
 
-    	crear_conexion_broker(ID_PROCESO,conexionNew,ip,puerto,logger, tiempoReconexion, SUS_NEW);
+    	conexionNew = crear_conexion_broker(ID_PROCESO,conexionNew,ip,puerto,logger, tiempoReconexion, SUS_NEW);
 
         log_info(logger,"Me suscribi a la cola NEW!");
 
@@ -354,7 +354,7 @@ void funcionCatch(int socket){
     int conexionCatch =	crear_conexion(ip,puerto);
     while(1){
 
-    	crear_conexion_broker(ID_PROCESO,conexionCatch,ip,puerto,logger, tiempoReconexion, SUS_CATCH);
+    	conexionCatch = crear_conexion_broker(ID_PROCESO,conexionCatch,ip,puerto,logger, tiempoReconexion, SUS_CATCH);
 
         log_info(logger,"Me suscribi a la cola CATCH!");
 
@@ -369,7 +369,7 @@ void funcionGet(){
 	int conexionGet = crear_conexion(ip,puerto);
 	while(1){
 
-		crear_conexion_broker(ID_PROCESO,conexionGet,ip,puerto,logger, tiempoReconexion, SUS_GET);
+		conexionGet = crear_conexion_broker(ID_PROCESO,conexionGet,ip,puerto,logger, tiempoReconexion, SUS_GET);
 
 		log_info(logger,"Me suscribi a la cola GET!");
 
@@ -445,13 +445,14 @@ int process_request(int socket){
 	case -1:
 		log_info(logger,"Codigo de operacion invalido, iniciando servidor gamecard");
 		liberar_conexion(socket);
-		socket=crear_conexion(ip, puerto);
+		socket = crear_conexion(ip, puerto);
 		return socket;
 		break;
 	default:
-		log_info(logger,"Que paso rey, te caiste?");
-		exit(1);
-		return -1;
+		log_info(logger,"Que paso rey, te caiste? O quiza...");
+		liberar_conexion(socket);
+		socket = crear_conexion(ip, puerto);
+		return socket;
 		break;
 	}
 	return -1;
