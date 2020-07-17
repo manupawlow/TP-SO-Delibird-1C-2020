@@ -13,6 +13,7 @@ void crearBlocks(int blocks,char* mnt);
 void crearFiles(char* mnt);
 void crearMetadata(int block_size, int blocks,char* mnt);
 void escribirBitmap();
+void escribirBitmapInicio();
 
 
 //void esperarReintentar(void tiempoConfig);

@@ -941,3 +941,31 @@ t_config* config=config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.
 
 }
 
+void escribirBitmapInicio(){
+
+    char* datosBitmap= string_new();
+t_config* config=config_create("/home/utnso/tp-2020-1c-NN/gamecard/src/gamecard.config");
+
+    for(off_t i=1; i<cantBlocks+1;i++){
+        if(bitarray_test_bit(bitmap, i)){
+        	bitarray_clean_bit(bitmap, i);
+            string_append(&datosBitmap, "0");
+        }else
+            string_append(&datosBitmap, "0");
+    }
+
+    FILE* f;
+    char* mnt = string_new();
+    string_append(&mnt,config_get_string_value(config,"PUNTO_MONTAJE_TALLGRASS"));
+    string_append(&mnt, "/Metadata/Bitmap.bin");
+
+    f=fopen(mnt,"w+");
+
+    fprintf(f,"%s", datosBitmap);
+    fclose(f);
+    free(datosBitmap);
+    free(mnt);
+    config_destroy(config);
+
+}
+

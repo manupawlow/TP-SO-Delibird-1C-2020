@@ -28,7 +28,7 @@ void fs(t_config* config, int block_size, int blocks){
 		}
 		dataLoco[3]=0;
 		bitmap = bitarray_create(dataLoco,sizeof(dataLoco));
-		escribirBitmap();
+		escribirBitmapInicio();
 		log_info(logger, "File System creado!\n\n");
 	}else{
 		log_info(logger,"File System encontrado!\n\n");
