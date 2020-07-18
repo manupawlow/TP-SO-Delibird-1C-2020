@@ -157,7 +157,7 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	free(posiciones);
 	    	free(buffer->stream);
 	    	free(buffer);
-	    	log_info(logger, "Pokemon encontrado. Mandando mensaje LOCALIZED.");
+	    	log_info(logger, "<GET> %s encontrado. Mandando mensaje LOCALIZED.",mensaje->pokemon);
 	    }
 	    free(montaje);
 	}else{
@@ -176,15 +176,15 @@ void buscarPokemon(t_mensaje* mensaje){
 			mensajeGet->id_mensaje = 0;
 			mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
 			mensajeGet->cantidad = 0;
+	    	log_info(logger, "<GET> %s NO encontrado. Mandando mensaje LOCALIZED vacio.", mensaje->pokemon);
 			buffer = serializar_mensaje_struct_get(mensajeGet);
 			enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
 			free(buffer->stream);
 			free(buffer);
-	    	log_info(logger, "Pokemon NO encontrado. Mandando mensaje LOCALIZED vacio.");
 		}
 	}
+	log_info(logger,"<GET> Finaliza busqueda de %s.\n\n", mensaje->pokemon);
 	free(mensaje);
-	log_info(logger,"Finaliza busqueda de pokemon.\n\n");
 }
 
 
@@ -203,7 +203,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 		log_info(logger,"No se pudo conectar con el broker");
 	}else{
 		if(existePokemon(mensaje)){
-			log_info(logger,"Pokemon encontrado! Analizando posiciones...");
+			log_info(logger,"<CATCH> %s encontrado! Analizando posiciones...", mensaje->pokemon);
 			char* x=string_itoa(mensaje->posx);
 			char* y=string_itoa(mensaje->posy);
 			int existePos=0;
@@ -216,7 +216,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			esperaOpen(montaje);
 			pthread_mutex_lock(&mxArchivo);
 			char* arrayTodo=guardarDatosBins(mensaje);
-			log_info(logger,"Actualmente en los bloques hay: %s", arrayTodo);
+			log_info(logger,"<CATCH> Actualmente en los bloques hay: %s", arrayTodo);
 			char** arrayBloques=agarrarBlocks(mensaje);
 
 			char** datosSeparados=string_split(arrayTodo, "\n");
@@ -261,7 +261,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 //si no existe informa error
 			if(existePos==0){
-				log_info(logger,"ERROR. No existe esa posicion.");
+				log_info(logger,"<CATCH> ERROR. No existe la posicion %d-%d.",mensaje->posx, mensaje->posy);
 				//manda a broker q no existe.
 				mensaje->resultado= 0;
 				mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
@@ -272,7 +272,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 				free(montaje);
 				free(datosNuevos);
 			}else{
-				log_info(logger,"Posicion encontrada!");
+				log_info(logger,"<CATCH> Posicion %d-%d encontrada!", mensaje->posx, mensaje->posy);
 					off_t offsetVacio = primerBloqueDisponible();
 
 					FILE* f;
@@ -295,16 +295,16 @@ int socketCaugth = crear_conexion(ip, puerto);
 					//mandar CAUGTH
 					mensaje->resultado= 1;
 					mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
+					log_info(logger,"<CATCH> %s capturado!",mensaje->pokemon);
 					buffer = serializar_mensaje_struct(mensaje);
 					enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
 					free(buffer->stream);
 					free(buffer);
-					log_info(logger,"Pokemon capturado!");
 				}
 			freeDoblePuntero(arrayBloques);
 			freeDoblePuntero(datosSeparados);
 		}else{
-			log_info(logger,"ERROR. Pokemon No existente.");
+			log_info(logger,"<CATCH> ERROR. %s No existente.", mensaje->pokemon);
 			//mandar a broker q no existe
 			mensaje->resultado= 0;
 			mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
@@ -315,7 +315,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(montaje);
 		}
 	}
-	log_info(logger,"Finalizo la busqueda y captura de pokemon.\n\n");
+	log_info(logger,"<CATCH> Finalizo la busqueda y captura de pokemon.\n\n");
 }
 
 
@@ -404,22 +404,20 @@ int process_request(int socket){
 
 	switch (cod_op){
 	case GET_POKEMON:
-		log_info(logger,"Mensaje GET.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
-		log_info(logger,"Iniciando busqueda de %s.",mensaje->pokemon);
+		log_info(logger,"Mensaje GET %s y confirme recepcion.\n", mensaje->pokemon);
+		log_info(logger,"<GET> Iniciando busqueda de %s.",mensaje->pokemon);
 		pthread_t solicitudGet;
 		pthread_create(&solicitudGet, NULL,(void *) buscarPokemon, mensaje);
 		pthread_detach(solicitudGet);
 		return socket;
 		break;
 	case NEW_POKEMON:
-		log_info(logger,"Mensaje NEW.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
-		log_info(logger,"Creando nuevo %s...",mensaje->pokemon);
+		log_info(logger,"Mensaje NEW %s y confirme recepcion.\n", mensaje->pokemon);
+		log_info(logger,"<NEW> Creando nuevo %s...",mensaje->pokemon);
 		pthread_t solicitudNew;
 		pthread_create(&solicitudNew, NULL,(void *) nuevoPokemon, mensaje);
 		pthread_detach(solicitudNew);
@@ -430,11 +428,10 @@ int process_request(int socket){
 		break;
 	case CATCH_POKEMON:
 
-		log_info(logger,"Mensaje CATCH.\n");
 		mensaje = recibir_mensaje_struct(socket);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Recibi pokemon %s y envie confirmacion de su recepcion\n",mensaje->pokemon);
-		log_info(logger,"Buscando %s para agarrar...",mensaje->pokemon);
+		log_info(logger,"Mensaje CATCH %s y confirme su recepcion.\n", mensaje->pokemon);
+		log_info(logger,"<CATCH> Buscando %s para agarrar...",mensaje->pokemon);
 		pthread_t solicitud;
 		pthread_create(&solicitud, NULL,(void*) agarrarPokemon, mensaje);
 		pthread_detach(solicitud);
@@ -472,12 +469,12 @@ void nuevoPokemon(t_mensaje* mensaje){
 
 	//Si el fopen devuelve NULL significa que el archivo no existe entonces creamos uno de 0
 	if(f==NULL){
-		log_info(logger, "NUEVO Pokemon, creando directorio y metadata.");
+		log_info(logger, "<NEW> Nuevo %s, creando directorio y metadata.", mensaje->pokemon);
 		asignarBloqueYcrearMeta(mensaje,montaje);
 	}
 	pthread_mutex_unlock(&mxArchivo);
 	if(f!=NULL){
-		log_info(logger,"%s ya existente!",mensaje->pokemon);
+		log_info(logger,"<NEW> %s ya existente!",mensaje->pokemon);
 			fclose(f);
 			string_append(&montaje,"/Metadata.bin");
 			f = fopen(montaje,"r");
@@ -493,13 +490,12 @@ void nuevoPokemon(t_mensaje* mensaje){
 		log_info(logger,"No se pudo conectar con el broker.");
 	}else{
 		mensaje->id_mensaje_correlativo = mensaje->id_mensaje;
+		log_info(logger,"<NEW> %s añadido al File System.\n\n", mensaje->pokemon);
 		buffer = serializar_mensaje_struct(mensaje);
-		log_info(logger,"%d",socketAppeared);
 		enviar_mensaje_struct(buffer, socketAppeared,APPEARED_POKEMON);
 		free(buffer->stream);
 		free(buffer);
 	}
-	log_info(logger,"Pokemon añadido al File System.\n\n");
 }
 
 //-------------------------------------------------------------------------------------
@@ -673,7 +669,7 @@ void escrituraDeMeta(FILE* f,t_mensaje* mensaje,char** listaBloquesUsados,char* 
 	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
 	fprintf(f,"OPEN=Y");
 	fclose(f);
-	log_info(logger,"Empiezo a esperar %d segundos.",tiempoDeRetardo);
+	log_info(logger,"Espera de:%d segundos.",tiempoDeRetardo);
 	sleep(tiempoDeRetardo);
 	f=fopen(montaje,"w+");
 	escribirMeta(f,mensaje,listaBloquesUsados,bloquesActualizados);
@@ -718,10 +714,10 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     pthread_mutex_lock(&mxArchivo);
     datosBins = guardarDatosBins(mensaje);
 
-    log_info(logger,"Actualmente en los bloques hay: %s", datosBins);
+    log_info(logger,"<NEW> Actualmente en los bloques hay: %s", datosBins);
 
 
-    log_info(logger,"Verifiando posiciones.");
+    log_info(logger,"<NEW> Verifiando posiciones.");
     bloquesActualizados = verificarCoincidenciasYsumarCantidad(datosBins,mensaje);
 
     off_t offsetVacio = primerBloqueDisponible();
@@ -731,7 +727,7 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
     fblocks = fopen(montajeBlocks,"w");
     listaBloquesUsados = agregarBloquesAPartirDeString(bloquesActualizados,fblocks,offsetVacio);
-    log_info(logger,"Reescribiendo bloques y metadata.");
+    log_info(logger,"<NEW> Reescribiendo bloques y metadata.");
     escrituraDeMeta(fblocks,mensaje,listaBloquesUsados,montaje,bloquesActualizados);
     escribirBitmap();
     pthread_mutex_unlock(&mxArchivo);
