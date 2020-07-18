@@ -3,7 +3,7 @@
 #include "hilos.h"
 
 int main(int argc, char* argv[]){
-	argv[1] =  "1";
+	//argv[1] =  "1";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	strcpy(ID_PROCESO,argv[1]);
 	char* conf;
@@ -36,8 +36,8 @@ int main(int argc, char* argv[]){
 
     //Escuchar gameboy
 
-    //pthread_t conexionGameboy;
-    //pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
+    pthread_t conexionGameboy;
+    pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
@@ -51,13 +51,15 @@ int main(int argc, char* argv[]){
 
     pthread_join(deadLock, NULL);
 
-
+    log_info(logger, "<RESULTADO TEAM>");
     log_info(logger, "Ciculos totales CPU: %d", ciclos_totales_cpu);
 
     for(int i=0; i<list_size(ciclos_por_entrenador);i++){
     	log_info(logger,"Ciclos CPU entrenador %d: %d", i+1, (int) list_get(ciclos_por_entrenador,i));
     }
 
+    log_info(logger,"Cantidad de deadlocks producidos y resueltos %d", deadlocks);
+    log_info(logger,"Cantidad cambios de contexto %d", cambios_contexto);
 
     log_destroy(logger);
     config_destroy(config_team);

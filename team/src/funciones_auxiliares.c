@@ -39,6 +39,8 @@ void setearVariablesGlobales(){
 	puerto= config->puerto_broker;
 	cantEntrenadores = list_size(new);
 	ciclos_totales_cpu = 0;
+	deadlocks = 0;
+	cambios_contexto = 0;
 
 	id_localized = list_create();
 
@@ -77,17 +79,37 @@ t_list *obtenerObjetivoGlobal(){
 	 return objetivoGlobal;
 }
 
+
 void solicitar_pokemones(t_list *objetivoGlobal){
 
 	t_buffer *buffer;
     t_mensaje* mensaje = malloc(sizeof(t_mensaje));
 
-	for(int i=0; i< list_size(objetivoGlobal); i++){
+    t_list *duplicada = list_duplicate(objetivoGlobal);
+
+    for(int i=0; i< list_size(duplicada); i++){
+    	char *pokemon = list_get(duplicada,i);
+
+    	for(int j=0; j< list_size(duplicada); j++){
+    		char *comparar = list_get(duplicada,j);
+
+    		if(i==j){
+
+    		}else{
+    			if(strcmp(comparar,pokemon)==0)
+    				list_remove(duplicada,j);
+    		}
+
+
+    	}
+    }
+
+	for(int i=0; i< list_size(duplicada); i++){
 		int conexionGet = crear_conexion(ip,puerto);
-		char *pokemon = list_get(objetivoGlobal,i);
+		char *pokemon = list_get(duplicada,i);
 
 		if(conexionGet == -1){
-			log_info(logger,"Fallo conexion broker, no se pudo enviar mensaje Get %s", pokemon);
+			log_info(logger,"<MENSAJE> Fallo conexion broker, no se pudo enviar mensaje Get %s", pokemon);
 		}else{
 
 			mensaje->pokemon = malloc(strlen(pokemon)+1);
@@ -100,7 +122,7 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 			mensaje->id_mensaje = 0;
 			mensaje->id_mensaje_correlativo = 0;
 
-			log_info(logger,"Se envio mensaje Get %s", mensaje->pokemon);
+			log_info(logger,"<MENSAJE> Se envio mensaje Get %s", mensaje->pokemon);
 			buffer = serializar_mensaje_struct(mensaje);
 			enviar_mensaje_struct(buffer,conexionGet,GET_POKEMON);
 			free(buffer->stream);
@@ -111,7 +133,7 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 
 			mensaje = recibir_mensaje_struct(conexionGet);
 			list_add(id_localized,(void *) mensaje->id_mensaje);
-			log_info(logger, "Id %d mensaje Get %s ", mensaje->id_mensaje, mensaje->pokemon);
+			log_info(logger,"<MENSAJE> Id %d mensaje Get %s ", mensaje->id_mensaje, mensaje->pokemon);
 
 			close(conexionGet);
 
@@ -317,7 +339,8 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
 
     entrenador->block_agarrar= false;
 	list_add(ready,entrenador);
-	log_info(logger,"Entrenador %d en ready por ser el mas cercano a %s", entrenador->entrenadorNumero, entrenador->pokemon_a_caputar);
+	log_info(logger,"Entrenador %d en ready por ser el mas cercano a %s x:%d y:%d",
+			entrenador->entrenadorNumero, entrenador->pokemon_a_caputar, entrenador->posicion_a_capturar->x, entrenador->posicion->y);
 
 	sem_post(&semaforoExce);
 }
@@ -426,7 +449,7 @@ void menorDistancia (Poketeam *pokemon){
 		pendiente->pos = pokemon->pos;
 		memcpy(pendiente->pokemon, pokemon->pokemon, strlen(pokemon->pokemon)+1);
 		list_add(pokemones_pendientes,pendiente);
-		log_info(logger,"Se agrego pokemon %s a la lista de pokemones PENDIENTES", pokemon->pokemon);
+		log_info(logger,"Se agrego pokemon %s a la lista de pokemones pendientes", pokemon->pokemon);
 
 		}
     else if(!list_is_empty(new) && !list_is_empty(blockAgarrar)){
@@ -500,7 +523,7 @@ void enviar_catch(Entrenador *entrenador, int conexion_catch){
 	mensaje = recibir_mensaje_struct(conexion_catch);
 	entrenador->idCatch = mensaje->id_mensaje;
 
-	log_info(logger,"Id mensaje catch %s:%d, entrenador:%d",mensaje->pokemon, mensaje->id_mensaje, entrenador->entrenadorNumero);
+	log_info(logger,"<MENSAJE> Id mensaje catch %s:%d, entrenador:%d",mensaje->pokemon, mensaje->id_mensaje, entrenador->entrenadorNumero);
 	free(mensaje->pokemon);//agregado
 	free(mensaje);//agregado
 	close(conexion_catch);
@@ -524,7 +547,6 @@ t_list* recibirLocalized(t_mensaje_get* mensaje){
 
         list_add(listaPoke, pokemon);
 
-        //free(pokemon);
         freeDoblePuntero(posiciones);
         i++;
     }

@@ -52,6 +52,8 @@ char* puerto;
 int cantEntrenadores;
 
 int ciclos_totales_cpu;
+int deadlocks;
+int cambios_contexto;
 t_list *ciclos_por_entrenador;
 
 t_log* logger;
