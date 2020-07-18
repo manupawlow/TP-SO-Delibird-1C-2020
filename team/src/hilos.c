@@ -184,7 +184,7 @@ int process_request(int socket_cliente){
 		entrenador = id_coincidente(mensaje->id_mensaje_correlativo,blockCaugth);
 
 		if(entrenador == NULL)
-			log_info(logger,"<MENSAJE> LLego mensaje caugth con id correlativo: %d, no coincide con ningun id catch, descarto mensaje", mensaje->id_mensaje_correlativo);
+			log_info(logger,"<MENSAJE> LLego mensaje caugth, no coincide con ningun id catch, descarto mensaje");
 		else{
 			entrenador->block_capturar= false;
 			remover_entrenador(entrenador->entrenadorNumero,block);
