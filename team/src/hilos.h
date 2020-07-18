@@ -18,5 +18,6 @@ void llegada_pokemon(Poketeam *pokemon);
 void round_robin(Entrenador *entrenador, int cpu);
 void llegada_localized(t_list* localized);
 void aumentar_ciclos(Entrenador *entrenador, int cant);
+void funcionACK(int id_mensaje);
 
 #endif /* HILOS_H_ */

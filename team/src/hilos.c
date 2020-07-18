@@ -118,7 +118,7 @@ int process_request(int socket_cliente){
 	switch (cod_op){
 	case APPEARED_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
-
+		funcionACK(mensaje->id_mensaje);
 		pthread_mutex_lock(&mx_llegada_pokemon);
 
 		Poketeam *pokemon = malloc(sizeof(Poketeam));
@@ -144,16 +144,16 @@ int process_request(int socket_cliente){
 		pthread_mutex_lock(&mx_llegada_localized);
 
 		mensajeGet = recibir_mensaje_struct_get(socket_cliente);
-
+		funcionACK(mensajeGet->id_mensaje);
 		if(id_en_lista(mensajeGet->id_mensaje_correlativo) && mensajeGet->cantidad !=0){
 			loca = recibirLocalized(mensajeGet);
 
-			t_list *locaa = list_duplicate(loca);
-			for(int i=0;i<list_size(locaa);i++){
-				Poketeam* pokemon = list_get(locaa,i);
+
+			for(int i=0;i<list_size(loca);i++){
+				Poketeam* pokemon = list_get(loca,i);
 				log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 			}
-		    llegada_localized(locaa);
+		    llegada_localized(loca);
 		}
 		else
 		    log_info(logger,"Id no correspondiente, descarto mensaje %d",mensajeGet->id_mensaje_correlativo);
@@ -167,7 +167,7 @@ int process_request(int socket_cliente){
 		break;
 	case CAUGHT_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
-
+		funcionACK(mensaje->id_mensaje);
 		log_info(logger,"Llego mensaje caught pokemon:%s %d (1:OK)(0:FAIL)",mensaje->pokemon,mensaje->resultado);
 
 		t_list *blockCaugth = list_filter(block, (void*) bloqueado_por_capturar);
@@ -529,7 +529,7 @@ void llegada_localized(t_list* localized){
         for(int i = 0;i<list_size(localized);i++){
             Poketeam* pokemon = list_get(localized, i);
 
-            log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
+//            log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
 
 
             list_add(pokemones,pokemon);
@@ -553,7 +553,7 @@ void llegada_localized(t_list* localized){
 
         llegada_pokemon(list_get(pokemones,indiceMenor));
         Poketeam* pokemon = list_get(pokemones,indiceMenor);
-        log_info(logger,"Llego pokemon %s x:%d y:%d a la cola lozalized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
+      //  log_info(logger,"Llego pokemon %s x:%d y:%d a la cola lozalized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
         int i=0;
         while(list_get(pokemones,i)!=NULL){
             if(i!=indiceMenor){
@@ -575,3 +575,15 @@ void aumentar_ciclos(Entrenador *entrenador, int cant){
 	ciclos_entrenador += cant;
 	list_add_in_index(ciclos_por_entrenador,entrenador->entrenadorNumero -1,(void*)ciclos_entrenador);
 }
+
+void funcionACK(int id_mensaje){
+	int conexionRespuesta;
+	conexionRespuesta = crear_conexion(ip,puerto);
+	char* ack = string_new();
+	string_append_with_format(&ack,"%s-",ID_PROCESO);
+	string_append_with_format(&ack,"%d",id_mensaje);
+	enviar_mensaje(ack,conexionRespuesta,ACK);
+	free(ack);
+	liberar_conexion(conexionRespuesta);
+}
+

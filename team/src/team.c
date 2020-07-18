@@ -3,11 +3,15 @@
 #include "hilos.h"
 
 int main(int argc, char* argv[]){
-	argv[1] =  "4";
+	//argv[1] =  "4";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	strcpy(ID_PROCESO,argv[1]);
+	char* conf;
+	if(strcmp(argv[1],"1")==0)
+		conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
+	else
+		conf = "/home/utnso/tp-2020-1c-NN/team/src/team2.config";
 
-	char* conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 	t_config *config_team = config_create(conf);
 	config = construirConfigTeam(config_team);
 	logger = log_create(config->log, "Team", 1, LOG_LEVEL_INFO);
@@ -27,8 +31,8 @@ int main(int argc, char* argv[]){
     pthread_t conexionCaugth;
     pthread_create(&conexionCaugth, NULL, (void*) conexion_caugth, NULL);
 
-    //pthread_t conexionAppeared;
-    //pthread_create(&conexionAppeared, NULL,(void*) conexion_appeared ,NULL);
+    pthread_t conexionAppeared;
+    pthread_create(&conexionAppeared, NULL,(void*) conexion_appeared ,NULL);
 
     //Escuchar gameboy
 

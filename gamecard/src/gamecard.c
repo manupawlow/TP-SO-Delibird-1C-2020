@@ -171,8 +171,8 @@ void buscarPokemon(t_mensaje* mensaje){
 			t_mensaje_get* mensajeGet = malloc(sizeof(t_mensaje_get));
 			mensajeGet->pokemon = mensaje->pokemon;
 			mensajeGet->pokemon_length = mensaje->pokemon_length;
-			mensajeGet->posiciones = string_new();
-			mensajeGet->posiciones_length = sizeof(mensajeGet->posiciones);
+			mensajeGet->posiciones =string_new();
+			mensajeGet->posiciones_length = strlen(mensajeGet->posiciones)+1;
 			mensajeGet->id_mensaje = 0;
 			mensajeGet->id_mensaje_correlativo = mensaje->id_mensaje;
 			mensajeGet->cantidad = 0;

@@ -932,17 +932,17 @@ void delete_buddy(Buddy* buddy){
 	int indice = buscar_particion_por_id(buddy->particion->id_particion);
 
 	Particion* p = list_remove(particiones, indice);
+	log_info(logger,"Se elimino la particion %d con base: %d ", p->id_particion, p->offset_init);
 	list_destroy(p->suscriptores_ack);
 	list_destroy(p->suscriptores_enviados);
 	//free(p->cola);
+
+
 	free(p);
 
 	buddy->esta_libre = 1;
 
-	log_info(logger,"Se elimino la particion %d con base: %d ", p->id_particion, p->offset_init);
-
 	consolidar_buddies(buddy);
-
 }
 
 void consolidar_buddies(Buddy* buddy1){
@@ -1172,6 +1172,7 @@ int mensaje_mas_antiguo_mayor_a_n(int n){ //RETORNA EL i DE LA PARTICION CON EL 
 }
 
 void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
+	pthread_mutex_lock(&mx_memoria);
 	int n = 0;
 	for(int i=0; i<list_size(particiones); i++){
 
@@ -1221,6 +1222,7 @@ void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
 			}
 
 	}
+	pthread_mutex_unlock(&mx_memoria);
 }
 
 bool se_le_envio_el_mensaje(Proceso* proceso, Particion* particion){
@@ -1250,7 +1252,7 @@ bool devolvio_ack(Proceso* proceso, Particion* particion){
 
 void* leer_particion(Particion* p){
 
-pthread_mutex_lock(&mx_memoria);
+//pthread_mutex_lock(&mx_memoria);
 
 char* barra_cero = "\0";
 
@@ -1299,7 +1301,7 @@ if(strcmp(p->cola, "LOCALIZED") == 0 ){
 
 	mensaje->pokemon_length += 1;
 
-pthread_mutex_unlock(&mx_memoria);
+//pthread_mutex_unlock(&mx_memoria);
 	return mensaje;
 
 }
@@ -1359,7 +1361,7 @@ pthread_mutex_unlock(&mx_memoria);
 		mensaje->posy = 0;
 	}
 
-pthread_mutex_unlock(&mx_memoria);
+//pthread_mutex_unlock(&mx_memoria);
 
 	return mensaje;
 }
