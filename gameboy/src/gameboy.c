@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 		if(conexion == -1)
 			log_info(logger,"No me pude conectar :(");
 
-		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
+		log_info(logger,"Me suscribi a la cola %s", argv[2]);
 
 		if(strcmp(argv[2],"NEW_POKEMON") == 0){
 			enviar_mensaje("99",conexion,SUS_NEW);
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
 
 			time = timestamp();
 		}
-		log_info(logger,"sali.");
+		log_info(logger,"Finalizo la suscripcion a la cola %s.", argv[2]);
 		exit(1);
 
 	}else{
@@ -107,8 +107,7 @@ int main(int argc, char *argv[]) {
 		if(conexion == -1)
 			log_info(logger,"No me pude conectar :(");
 
-		log_info(logger,"socket: %d",conexion);
-		log_info(logger,"Me conecte a la IP %s y puerto %s", ip, puerto);
+		log_info(logger,"Me conecte al proceso %s", argv[1]);
 
 		mensaje_struct->pokemon = string_new();
 		mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
