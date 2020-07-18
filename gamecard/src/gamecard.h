@@ -1,7 +1,7 @@
 #include "fs.h"
 t_config* config;
 char* ID_PROCESO;
-
+char* ip_gameboy;
 pthread_mutex_t mxArchivo;
 
 

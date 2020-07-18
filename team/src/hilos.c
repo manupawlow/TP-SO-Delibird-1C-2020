@@ -93,7 +93,7 @@ void conexion_appeared(){
 }
 
 void conexion_gameboy(){
-	char *ip = "127.0.0.2";
+	char *ip = config->ip_gameboy;
 	char *puerto;
 
 	if((strcmp(ID_PROCESO,"1")==0))

@@ -5,6 +5,7 @@ Config_Team* construirConfigTeam(t_config* config){
 	Config_Team* config_team = malloc(sizeof(Config_Team));
 
 	config_team->ip_broker = config_get_string_value(config, "IP_BROKER");
+	config_team->ip_gameboy = config_get_string_value(config, "IP_GAMECARD");
 	config_team->puerto_broker = config_get_string_value(config, "PUERTO_BROKER");
 
 	config_team->objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
@@ -15,6 +16,7 @@ Config_Team* construirConfigTeam(t_config* config){
 	config_team->reconexion = config_get_int_value(config, "TIEMPO_RECONEXION");
 	config_team->quantum = config_get_int_value(config, "QUANTUM");
 	config_team->log = config_get_string_value(config, "LOG_FILE");
+
 
 	return config_team;
 }

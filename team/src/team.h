@@ -9,6 +9,7 @@ typedef struct{
 	char *ip_broker;
 	char *puerto_broker;
 	char *log;
+	char *ip_gameboy;
 	int retardo_cpu;
 	int reconexion;
 	int quantum;

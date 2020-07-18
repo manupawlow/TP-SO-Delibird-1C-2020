@@ -15,6 +15,7 @@ system("clear");
 	ip = config_get_string_value(config,"IP_BROKER");
 	puerto = config_get_string_value(config,"PUERTO_BROKER");
 
+    ip_gameboy = config_get_string_value(config,"IP_GAMEBOY");
 
 	montajePokemon=string_new();
 	montajeBlock=string_new();
@@ -320,9 +321,8 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 
 void conexion_gameboy(){
-	char *ip = "127.0.0.3";
 	char *puerto = "5001";
-	int socket_gamecard = iniciar_servidor(ip,puerto);
+	int socket_gamecard = iniciar_servidor(ip_gameboy,puerto);
 
 	while(1){
 		int socket_cliente = esperar_cliente(socket_gamecard);
