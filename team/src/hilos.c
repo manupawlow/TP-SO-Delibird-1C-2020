@@ -148,18 +148,21 @@ int process_request(int socket_cliente){
 		if(id_en_lista(mensajeGet->id_mensaje_correlativo) && mensajeGet->cantidad !=0){
 			loca = recibirLocalized(mensajeGet);
 
-
 			for(int i=0;i<list_size(loca);i++){
 				Poketeam* pokemon = list_get(loca,i);
-				log_info(logger,"Llego %s x:%d y:%d a la cola localized",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y);
+				log_info(logger,"Llego %s x:%d y:%d a la cola localized, id correlativo:%d ",pokemon->pokemon,pokemon->pos.x,pokemon->pos.y,mensajeGet->id_mensaje_correlativo);
 			}
+
 		    llegada_localized(loca);
 		}
 		else
-		    log_info(logger,"Id no correspondiente, descarto mensaje %d",mensajeGet->id_mensaje_correlativo);
+		    log_info(logger,"LLego mensaje localized con id correlativo: %d , no corresponde a ningun id get, descarto mensaje",mensajeGet->id_mensaje_correlativo);
 
 		pthread_mutex_unlock(&mx_llegada_localized);
 
+		free(mensajeGet->pokemon);
+		free(mensajeGet->posiciones);
+		free(mensajeGet);
 		return socket_cliente;
 
 
@@ -168,13 +171,16 @@ int process_request(int socket_cliente){
 	case CAUGHT_POKEMON:
 		mensaje = recibir_mensaje_struct(socket_cliente);
 		funcionACK(mensaje->id_mensaje);
-		log_info(logger,"Llego mensaje caught pokemon:%s %d (1:OK)(0:FAIL)",mensaje->pokemon,mensaje->resultado);
+		if(mensaje->resultado == 0)
+			log_info(logger,"Llego mensaje caught pokemon:%s FAIL, id correlativo:%d",mensaje->pokemon,mensaje->id_mensaje_correlativo);
+		else
+			log_info(logger,"Llego mensaje caught pokemon:%s OK, id correlativo:%d",mensaje->pokemon,mensaje->id_mensaje_correlativo);
 
 		t_list *blockCaugth = list_filter(block, (void*) bloqueado_por_capturar);
 		entrenador = id_coincidente(mensaje->id_mensaje_correlativo,blockCaugth);
 
 		if(entrenador == NULL)
-			log_info(logger,"Id no coincidente");
+			log_info(logger,"LLego mensaje caugth con id correlativo: %s, no coincide con ningun id catch, descarto mensaje", mensaje->id_mensaje_correlativo);
 		else{
 			entrenador->block_capturar= false;
 			remover_entrenador(entrenador->entrenadorNumero,block);
@@ -273,14 +279,13 @@ void realizar_tareas(Entrenador *entrenador){
 		}
 		//Si la conexion no falla pasa el entrenador pasa a block
 		else{
-			enviar_catch(entrenador, catch);
-			sleep(config->retardo_cpu);
-			aumentar_ciclos(entrenador, config->retardo_cpu);
-
-
 			entrenador->block_capturar= true;
 			list_add(block,entrenador);
 			log_info(logger,"Entrenador %d en block a la espera de caugth",entrenador->entrenadorNumero);
+
+			sleep(config->retardo_cpu);
+			enviar_catch(entrenador, catch);
+			aumentar_ciclos(entrenador, config->retardo_cpu);
 
 			pthread_mutex_unlock(&mxExce);
 			sem_wait(&entrenador->sem_entrenador);
@@ -303,7 +308,7 @@ void realizar_tareas(Entrenador *entrenador){
 
 		//Respuesta cacth FAIL
 		}else{
-			log_info(logger,"Entrenador %d no pudo agarrar pokemon %s",
+			log_info(logger,"Entrenador %d no pudo agarrar pokemon %s, catch FAIL",
 					entrenador->entrenadorNumero, entrenador->pokemon_a_caputar);
 			eliminar_pokemon(entrenador->pokemon_a_caputar, pokemones_en_busqueda);
 

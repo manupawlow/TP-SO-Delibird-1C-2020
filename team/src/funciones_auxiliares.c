@@ -100,6 +100,7 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 			mensaje->id_mensaje = 0;
 			mensaje->id_mensaje_correlativo = 0;
 
+			log_info(logger,"Se envio mensaje Get %s", mensaje->pokemon);
 			buffer = serializar_mensaje_struct(mensaje);
 			enviar_mensaje_struct(buffer,conexionGet,GET_POKEMON);
 			free(buffer->stream);
@@ -107,9 +108,11 @@ void solicitar_pokemones(t_list *objetivoGlobal){
 
 			int cod_op;
 			recv(conexionGet, &cod_op, sizeof(op_code), MSG_WAITALL);
+
 			mensaje = recibir_mensaje_struct(conexionGet);
 			list_add(id_localized,(void *) mensaje->id_mensaje);
-			log_info(logger, "Se agrego el id %d", mensaje->id_mensaje);
+			log_info(logger, "Id %d mensaje Get %s ", mensaje->id_mensaje, mensaje->pokemon);
+
 			close(conexionGet);
 
 			free(mensaje->pokemon);
@@ -491,11 +494,13 @@ void enviar_catch(Entrenador *entrenador, int conexion_catch){
 	enviar_mensaje_struct(buffer,conexion_catch,CATCH_POKEMON);
 	free(buffer->stream);//agregado
 	free(buffer);//agregado
+
 	int cod_op;
 	recv(conexion_catch, &cod_op, sizeof(op_code), MSG_WAITALL);
 	mensaje = recibir_mensaje_struct(conexion_catch);
 	entrenador->idCatch = mensaje->id_mensaje;
-	log_info(logger,"Id:%d", mensaje->id_mensaje);
+
+	log_info(logger,"Id mensaje catch %s:%d, entrenador:%d",mensaje->pokemon, mensaje->id_mensaje, entrenador->entrenadorNumero);
 	free(mensaje->pokemon);//agregado
 	free(mensaje);//agregado
 	close(conexion_catch);

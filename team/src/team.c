@@ -3,7 +3,7 @@
 #include "hilos.h"
 
 int main(int argc, char* argv[]){
-	//argv[1] =  "4";
+	argv[1] =  "1";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	strcpy(ID_PROCESO,argv[1]);
 	char* conf;
@@ -36,8 +36,8 @@ int main(int argc, char* argv[]){
 
     //Escuchar gameboy
 
-    pthread_t conexionGameboy;
-    pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
+    //pthread_t conexionGameboy;
+    //pthread_create(&conexionGameboy, NULL,(void*) conexion_gameboy, NULL);
 
     //Envio mensaje a la cola get_pokemon por cada pokemon que necesito
 
