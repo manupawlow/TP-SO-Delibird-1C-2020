@@ -320,7 +320,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 
 
 void conexion_gameboy(){
-	char *ip = "104.131.21.198";
+	char *ip = "127.0.0.3";
 	char *puerto = "5001";
 	int socket_gamecard = iniciar_servidor(ip,puerto);
 

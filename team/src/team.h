@@ -8,8 +8,10 @@ char* ID_PROCESO;
 typedef struct{
 	char *ip_broker;
 	char *puerto_broker;
+	char *ip_team;
+	char *puerto_team;
 	char *log;
-	char *ip_gameboy;
+
 	int retardo_cpu;
 	int reconexion;
 	int quantum;

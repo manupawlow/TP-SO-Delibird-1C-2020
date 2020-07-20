@@ -7,6 +7,7 @@ int main(int argc, char* argv[]){
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	strcpy(ID_PROCESO,argv[1]);
 	char* conf;
+
 	if(strcmp(argv[1],"1")==0)
 		conf = "/home/utnso/tp-2020-1c-NN/team/src/team.config";
 	else

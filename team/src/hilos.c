@@ -93,13 +93,8 @@ void conexion_appeared(){
 }
 
 void conexion_gameboy(){
-	char *ip = config->ip_gameboy;
-	char *puerto;
-
-	if((strcmp(ID_PROCESO,"1")==0))
-		puerto = "5002";
-	else
-		puerto = "5007";
+	char *ip = config->ip_team;
+	char *puerto = config->puerto_team;
 
 	int socket_team = iniciar_servidor(ip,puerto);
 
@@ -123,9 +118,11 @@ int process_request(int socket_cliente){
 
 	switch (cod_op){
 	case APPEARED_POKEMON:
+
+		pthread_mutex_lock(&mx_llegada_pokemon);
+
 		mensaje = recibir_mensaje_struct(socket_cliente);
 		funcionACK(mensaje->id_mensaje);
-		pthread_mutex_lock(&mx_llegada_pokemon);
 
 		Poketeam *pokemon = malloc(sizeof(Poketeam));
 		pokemon->pokemon = malloc(mensaje->pokemon_length);

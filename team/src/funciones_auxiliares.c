@@ -5,8 +5,9 @@ Config_Team* construirConfigTeam(t_config* config){
 	Config_Team* config_team = malloc(sizeof(Config_Team));
 
 	config_team->ip_broker = config_get_string_value(config, "IP_BROKER");
-	config_team->ip_gameboy = config_get_string_value(config, "IP_GAMECARD");
+	config_team->ip_team = config_get_string_value(config, "IP_TEAM");
 	config_team->puerto_broker = config_get_string_value(config, "PUERTO_BROKER");
+	config_team->puerto_team = config_get_string_value(config, "PUERTO_TEAM");
 
 	config_team->objetivos_entrenadores = listaDeListas(config,"OBJETIVOS_ENTRENADORES");
 	config_team->pokemon_entrenadores = listaDeListas(config, "POKEMON_ENTRENADORES");
@@ -342,7 +343,7 @@ void ponerEnReady(Entrenador *entrenador, Poketeam *pokemon){
     entrenador->block_agarrar= false;
 	list_add(ready,entrenador);
 	log_info(logger,"Entrenador %d en ready por ser el mas cercano a %s x:%d y:%d",
-			entrenador->entrenadorNumero, entrenador->pokemon_a_caputar, entrenador->posicion_a_capturar->x, entrenador->posicion->y);
+			entrenador->entrenadorNumero, entrenador->pokemon_a_caputar, entrenador->posicion_a_capturar->x, entrenador->posicion_a_capturar->y);
 
 	sem_post(&semaforoExce);
 }
@@ -441,7 +442,9 @@ void menorDistancia (Poketeam *pokemon){
 	int indiceblockAgarrar;
 	Entrenador *entrenadorMasCercaNew;
 	Entrenador *entrenadorMasCercaBlock;
-	Posicion posicion = pokemon->pos;
+	Posicion posicion;
+	posicion.x = pokemon->pos.x;
+	posicion.y = pokemon->pos.y;
 
 	t_list *blockAgarrar = list_filter(block,(void*)bloqueado_por_agarrar);
 
