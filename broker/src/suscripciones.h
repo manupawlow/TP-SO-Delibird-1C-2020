@@ -43,7 +43,9 @@ int buscar_particion_por_id(int);
 int buscar_particion_por_id_mensaje(int);
 int buscar_proceso_en_enviados_por_id(int, t_list*);
 void agregar_enviados_localized(t_mensaje_get*, t_list*);
-int mensaje_mas_antiguo_mayor_a_n(int);
+int mensaje_mas_antiguo_mayor_a_n(int, t_list*);
+bool es_misma_respuesta(int);
+t_list* mensajes_a_enviar();
 
 //buddy
 int potencia_dos_mas_cercana(int);

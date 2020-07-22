@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->pokemon_length = strlen(mensaje_struct->pokemon)+1;
 			mensaje_struct->posx = atoi(argv[4]);
 			mensaje_struct->posy = atoi(argv[5]);
-			//mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
+			mensaje_struct->id_mensaje_correlativo = atoi(argv[6]);
 			buffer = serializar_mensaje_struct(mensaje_struct);
 			enviar_mensaje_struct(buffer,conexion,APPEARED_POKEMON);
 			recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
@@ -214,7 +214,13 @@ int main(int argc, char *argv[]) {
 			mensaje_struct->resultado = 1;
 		buffer = serializar_mensaje_struct(mensaje_struct);
 		enviar_mensaje_struct(buffer,conexion,CAUGHT_POKEMON);
+		recv(conexion, &cod_op, sizeof(op_code), MSG_WAITALL);
+		mensaje_a_recibir = recibir_mensaje_struct(conexion);
 		log_info(logger,"Envie un mensaje a la cola %s",argv[2]);
+		free(buffer->stream);
+		free(buffer);
+		free(mensaje_a_recibir->pokemon);
+		free(mensaje_a_recibir);
 	}
 	else if(strcmp(argv[2],"GET_POKEMON") == 0){
 		if(strcmp(argv[1],"GAMECARD") == 0){
