@@ -709,9 +709,9 @@ void cambiar_meta_blocks(char* montaje,t_mensaje* mensaje){
     char** listaBloquesUsados;
     char* bloquesActualizados;
 
+    pthread_mutex_lock(&mxArchivo);
     esperaOpen(montaje);
 
-    pthread_mutex_lock(&mxArchivo);
     datosBins = guardarDatosBins(mensaje);
 
     log_info(logger,"<NEW> Actualmente en los bloques hay: %s", datosBins);
