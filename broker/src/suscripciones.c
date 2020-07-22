@@ -1,4 +1,3 @@
-
 #include "suscripciones.h"
 
 
@@ -12,6 +11,7 @@ void process_request(int socket_cliente) {
 	Proceso* proceso;
 	int id;
 	int indice;
+	bool es_misma;
 
 	if(recv(socket_cliente, &cod_op, sizeof(op_code), MSG_WAITALL) == -1)
 			cod_op = -1;
@@ -56,6 +56,8 @@ void process_request(int socket_cliente) {
 
 			mensaje->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensaje->id_mensaje_correlativo);
+
 			almacenar_mensaje(mensaje, "GET");
 
 			agregar_enviados(mensaje, SUSCRITOS_GET);
@@ -64,11 +66,12 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, GET_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_GET); i++){
-				Proceso* suscripto = list_get(SUSCRITOS_GET, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, GET_POKEMON);
-				log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_GET); i++){
+					Proceso* suscripto = list_get(SUSCRITOS_GET, i);
+					enviar_mensaje_struct(buffer, suscripto->socket, GET_POKEMON);
+					log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 
 			free(buffer->stream);
 			free(buffer);
@@ -116,6 +119,8 @@ void process_request(int socket_cliente) {
 
 			mensajeGet->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensajeGet->id_mensaje_correlativo);
+
 			almacenar_mensaje_localized(mensajeGet, "LOCALIZED");
 
 			agregar_enviados_localized(mensajeGet, SUSCRITOS_LOCALIZED);
@@ -124,16 +129,19 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, LOCALIZED_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_LOCALIZED); i++){
-				Proceso* suscripto = list_get(SUSCRITOS_LOCALIZED, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, LOCALIZED_POKEMON);
-				log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_LOCALIZED); i++){
+					Proceso* suscripto = list_get(SUSCRITOS_LOCALIZED, i);
+					enviar_mensaje_struct(buffer, suscripto->socket, LOCALIZED_POKEMON);
+					log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 
 			free(buffer->stream);
 			free(buffer);
 
 			//log_info(logger,"Se envio mensaje a todos los suscriptos!");
+
+
 			pthread_mutex_unlock(&mx_lista_localized);
 			break;
 
@@ -175,6 +183,8 @@ void process_request(int socket_cliente) {
 
 			mensaje->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensaje->id_mensaje_correlativo);
+
 			almacenar_mensaje(mensaje, "CATCH");
 
 			agregar_enviados(mensaje, SUSCRITOS_CATCH);
@@ -184,11 +194,12 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, CATCH_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_CATCH); i++){
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_CATCH); i++){
 				Proceso* suscripto = list_get(SUSCRITOS_CATCH, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, CATCH_POKEMON);
-				log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+					enviar_mensaje_struct(buffer, suscripto->socket, CATCH_POKEMON);
+					log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 			free(buffer->stream);
 			free(buffer);
 			//log_info(logger,"Se envio mensaje a todos los suscriptos!");
@@ -234,7 +245,10 @@ void process_request(int socket_cliente) {
 
 			mensaje->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensaje->id_mensaje_correlativo);
+
 			almacenar_mensaje(mensaje, "CAUGHT");
+
 			agregar_enviados(mensaje, SUSCRITOS_CAUGHT);
 
 			buffer = serializar_mensaje_struct(mensaje);
@@ -242,11 +256,12 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, CAUGHT_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_CAUGHT); i++){
-				Proceso* suscripto = list_get(SUSCRITOS_CAUGHT, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, CAUGHT_POKEMON);
-				log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_CAUGHT); i++){
+					Proceso* suscripto = list_get(SUSCRITOS_CAUGHT, i);
+					enviar_mensaje_struct(buffer, suscripto->socket, CAUGHT_POKEMON);
+					log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 
 			free(buffer->stream);
 			free(buffer);
@@ -293,7 +308,10 @@ void process_request(int socket_cliente) {
 
 			mensaje->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensaje->id_mensaje_correlativo);
+
 			almacenar_mensaje(mensaje, "NEW");
+
 			agregar_enviados(mensaje, (void*) SUSCRITOS_NEW);
 
 			buffer = serializar_mensaje_struct(mensaje);
@@ -301,16 +319,15 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, NEW_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_NEW); i++){
-				Proceso* suscripto = list_get(SUSCRITOS_NEW, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, NEW_POKEMON);
-				log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_NEW); i++){
+					Proceso* suscripto = list_get(SUSCRITOS_NEW, i);
+					enviar_mensaje_struct(buffer, suscripto->socket, NEW_POKEMON);
+					log_info(logger,"<MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 
 			free(buffer->stream);
 			free(buffer);
-
-			//log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			pthread_mutex_unlock(&mx_lista_new);
 			break;
@@ -354,6 +371,8 @@ void process_request(int socket_cliente) {
 
 			mensaje->id_mensaje = asignar_id();
 
+			es_misma = es_misma_respuesta(mensaje->id_mensaje_correlativo);
+
 			almacenar_mensaje(mensaje, "APPEARED");
 
 			agregar_enviados(mensaje, SUSCRITOS_APPEARED);
@@ -363,15 +382,15 @@ void process_request(int socket_cliente) {
 			//Notifico el id del mensaje
 			enviar_mensaje_struct(buffer, socket_cliente, APPEARED_POKEMON);
 
-			for(int i=0; i<list_size(SUSCRITOS_APPEARED); i++){
-				Proceso* suscripto = list_get(SUSCRITOS_APPEARED, i);
-				enviar_mensaje_struct(buffer, suscripto->socket, APPEARED_POKEMON);
-				log_info(logger,"MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
-			}
+			if(!es_misma)
+				for(int i=0; i<list_size(SUSCRITOS_APPEARED); i++){
+					Proceso* suscripto = list_get(SUSCRITOS_APPEARED, i);
+					enviar_mensaje_struct(buffer, suscripto->socket, APPEARED_POKEMON);
+					log_info(logger,"MENSAJE> Envie mensaje al proceso %d", suscripto->id_proceso);
+				}
 
 			free(buffer->stream);
 			free(buffer);
-			//log_info(logger,"Se envio mensaje a todos los suscriptos!");
 
 			pthread_mutex_unlock(&mx_lista_appeared);
 			break;
@@ -417,6 +436,38 @@ pthread_mutex_unlock(&mx_id_mensaje);
 	return id;
 }
 
+bool es_misma_respuesta(int id_correlativo){
+	for(int i=0; i<list_size(particiones); i++){
+		Particion* p = list_get(particiones, i);
+		if(id_correlativo != 0 && p->id_mensaje_correlativo == id_correlativo)
+			return 1;
+	}
+
+	return 0;
+}
+
+t_list* mensajes_a_enviar(){
+
+	t_list* a_enviar = list_create();
+
+	for(int i=0; i<list_size(particiones); i++){
+		Particion* p = list_get(particiones, i);
+		bool ya_se_envio = 0;
+
+		for(int j=0; j<list_size(a_enviar); j++){
+			Particion* enviar = list_get(a_enviar, j);
+			if(p->id_mensaje_correlativo != 0 && p->id_mensaje_correlativo == enviar->id_mensaje_correlativo){
+				ya_se_envio = 1;
+			}
+		}
+
+		if(!ya_se_envio)
+			list_add(a_enviar, p);
+
+	}
+
+	return a_enviar;
+}
 
 
 void actualizar_lista_suscritos(t_list* lista, Proceso* nuevo_proceso){
@@ -1149,10 +1200,10 @@ int buscar_buddy_por_id_particion(int id_particion){
 
 // ENVIO DE MENSAJES
 
-int mensaje_mas_antiguo_mayor_a_n(int n){ //RETORNA EL i DE LA PARTICION CON EL ID_MANSAJE MAS CHICO
+int mensaje_mas_antiguo_mayor_a_n(int n, t_list* lista){ //RETORNA EL i DE LA PARTICION CON EL ID_MANSAJE MAS CHICO
 	int i_fifo ;
-	for(int i=0; i<list_size(particiones); i++){
-		Particion* p = list_get(particiones, i);
+	for(int i=0; i<list_size(lista); i++){
+		Particion* p = list_get(lista, i);
 		if(p->id_mensaje > n){
 			i_fifo = i;
 			break;
@@ -1160,9 +1211,9 @@ int mensaje_mas_antiguo_mayor_a_n(int n){ //RETORNA EL i DE LA PARTICION CON EL 
 	}
 
 
-	for(int i=0; i<list_size(particiones); i++){
-		Particion* p = list_get(particiones, i);
-		Particion* fifo = list_get(particiones, i_fifo);
+	for(int i=0; i<list_size(lista); i++){
+		Particion* p = list_get(lista, i);
+		Particion* fifo = list_get(lista, i_fifo);
 		if(p->id_mensaje > n && p->id_mensaje < fifo->id_mensaje){
 			i_fifo = i;
 		}
@@ -1174,11 +1225,22 @@ int mensaje_mas_antiguo_mayor_a_n(int n){ //RETORNA EL i DE LA PARTICION CON EL 
 void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
 	pthread_mutex_lock(&mx_memoria);
 	int n = 0;
-	for(int i=0; i<list_size(particiones); i++){
+
+	t_list* a_enviar = mensajes_a_enviar();
+
+	/*for(int i=0; i<list_size(particiones); i++){
 
 		int indice = mensaje_mas_antiguo_mayor_a_n(n);
 
 		Particion* p = list_get(particiones, indice);
+
+		n = p->id_mensaje;
+		*/
+	for(int i=0; i<list_size(a_enviar); i++){
+
+		int indice = mensaje_mas_antiguo_mayor_a_n(n, a_enviar);
+
+		Particion* p = list_get(a_enviar, indice);
 
 		n = p->id_mensaje;
 
@@ -1222,6 +1284,9 @@ void enviar_mensajes_en_memoria(Proceso* proceso, char* cola){
 			}
 
 	}
+
+	list_destroy(a_enviar);
+
 	pthread_mutex_unlock(&mx_memoria);
 }
 
@@ -1355,7 +1420,7 @@ if(strcmp(p->cola, "LOCALIZED") == 0 ){
 		memcpy(&mensaje->resultado, memoria + p->offset_init, sizeof(uint32_t));//RESPUESTA
 
 		memcpy(mensaje->pokemon, barra_cero, 1); // (agrego el \0 para que este inicializada la variable a la hora de enviarla)
-		mensaje->pokemon_length = 0;
+		mensaje->pokemon_length = 1;
 		mensaje->cantidad = 0;
 		mensaje->posx = 0;
 		mensaje->posy = 0;
@@ -1755,7 +1820,7 @@ list_add(particiones, new_particion);
 
 }
 
-void cachear_mensaje_appeared_or_catch(t_mensaje *msg, int indice_libre, char* cola){ //uint32 largo, nombre, 2 * uint32 posicion
+void cachear_mensaje_appeared_or_catch(t_mensaje* msg, int indice_libre, char* cola){ //uint32 largo, nombre, 2 * uint32 posicion
 
 
 	int offset_init;
@@ -1903,5 +1968,3 @@ void cachear_mensaje_caught(t_mensaje *msg, int indice_libre){ //uint32 respuest
 	list_add(particiones, new_particion);
 
 }
-
-

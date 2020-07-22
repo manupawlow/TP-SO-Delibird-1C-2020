@@ -11,6 +11,8 @@ int blockSize = 64;
 char* montajePokemon;
 char* montajeBlock;
 
+char* ipGamecard;
+char* puertoGamecard;
 char* ip;
 char* puerto;
 int tiempoReconexion,tiempoDeRetardo,tiempoDeReintento;
