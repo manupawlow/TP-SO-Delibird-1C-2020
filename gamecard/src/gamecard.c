@@ -1,7 +1,7 @@
 #include "gamecard.h"
 int main(int argc, char* argv[]) {
 
-	argv[1]="1";
+	//argv[1]="1";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	ID_PROCESO = argv[1];
 
