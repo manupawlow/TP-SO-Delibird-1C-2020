@@ -1,6 +1,7 @@
 #include "gamecard.h"
 int main(int argc, char* argv[]) {
 
+	argv[1]="1";
 	ID_PROCESO = malloc(strlen(argv[1])+1);
 	ID_PROCESO = argv[1];
 
@@ -154,12 +155,13 @@ void buscarPokemon(t_mensaje* mensaje){
 	    	mensajeGet->posiciones = malloc(mensajeGet->posiciones_length);
 	    	strcpy(mensajeGet->posiciones,posiciones);
 
+	    	log_info(logger, "<GET> %s encontrado. Mandando mensaje LOCALIZED.",mensaje->pokemon);
 	    	buffer = serializar_mensaje_struct_get(mensajeGet);
 	    	enviar_mensaje_struct(buffer,socketLoc,LOCALIZED_POKEMON);
 	    	free(posiciones);
 	    	free(buffer->stream);
 	    	free(buffer);
-	    	log_info(logger, "<GET> %s encontrado. Mandando mensaje LOCALIZED.",mensaje->pokemon);
+
 	    }
 	    free(montaje);
 	}else{
@@ -203,6 +205,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 	if(socketCaugth ==-1){
 		log_info(logger,"No se pudo conectar con el broker");
 	}else{
+		pthread_mutex_lock(&mxArchivo);
 		if(existePokemon(mensaje)){
 			log_info(logger,"<CATCH> %s encontrado! Analizando posiciones...", mensaje->pokemon);
 			char* x=string_itoa(mensaje->posx);
@@ -215,7 +218,6 @@ int socketCaugth = crear_conexion(ip, puerto);
 			string_append_with_format(&posicionMensaje, "-%s",y);
 
 			esperaOpen(montaje);
-			pthread_mutex_lock(&mxArchivo);
 			char* arrayTodo=guardarDatosBins(mensaje);
 			log_info(logger,"<CATCH> Actualmente en los bloques hay: %s", arrayTodo);
 			char** arrayBloques=agarrarBlocks(mensaje);
@@ -224,7 +226,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(arrayTodo);
 			int j=0;
 
-			char* datosNuevos= string_new();
+ 			char* datosNuevos= string_new();
 
 			while(datosSeparados[j]!=NULL){
 
@@ -274,33 +276,47 @@ int socketCaugth = crear_conexion(ip, puerto);
 				free(datosNuevos);
 			}else{
 				log_info(logger,"<CATCH> Posicion %d-%d encontrada!", mensaje->posx, mensaje->posy);
+				FILE* f;
+				char* montajeBlocks = string_new();
+				char **listaBloquesUsados;
+				if(ultimoPoke==1 && ultimoPokePos==1){
+					string_append(&montajeBlocks,montajeBlock);
+					string_append_with_format(&montajeBlocks,"/%s.bin",arrayBloques[0]);
+
+					f =fopen(montajeBlocks, "w");
+					fclose(f);
+					bitarray_clean_bit(bitmap,atoi(arrayBloques[0]) );
+
+					char* basura=string_new();
+					string_append(&basura, ",");
+
+					listaBloquesUsados= string_split(basura, ",");
+
+				}else{
 					off_t offsetVacio = primerBloqueDisponible();
 
-					FILE* f;
-					char* montajeBlocks = string_new();
 					string_append(&montajeBlocks,montajeBlock);
 					string_append_with_format(&montajeBlocks,"/%d.bin",offsetVacio);
 					f = fopen(montajeBlocks,"w");
-					char **listaBloquesUsados = agregarBloquesAPartirDeString(datosNuevos,f,offsetVacio);
+					listaBloquesUsados = agregarBloquesAPartirDeString(datosNuevos,f,offsetVacio);
 
-					escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,datosNuevos);
+				}
 
-					if(ultimoPoke==1 && ultimoPokePos==1)
-						bitarray_clean_bit(bitmap,atoi(arrayBloques[0]) );
-					escribirBitmap();
-					pthread_mutex_unlock(&mxArchivo);
+				escrituraDeMeta(f,mensaje,listaBloquesUsados,montaje,datosNuevos);
+				freeDoblePuntero(listaBloquesUsados);
+				escribirBitmap();
 
-					freeDoblePuntero(listaBloquesUsados);
-					free(datosNuevos);
-					free(montajeBlocks);
-					//mandar CAUGTH
-					mensaje->resultado= 1;
-					mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
-					log_info(logger,"<CATCH> %s capturado!",mensaje->pokemon);
-					buffer = serializar_mensaje_struct(mensaje);
-					enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
-					free(buffer->stream);
-					free(buffer);
+
+				free(datosNuevos);
+				free(montajeBlocks);
+				//mandar CAUGTH
+				mensaje->resultado= 1;
+				mensaje->id_mensaje_correlativo= mensaje->id_mensaje;
+				log_info(logger,"<CATCH> %s capturado!",mensaje->pokemon);
+				buffer = serializar_mensaje_struct(mensaje);
+				enviar_mensaje_struct(buffer, socketCaugth, CAUGHT_POKEMON);
+				free(buffer->stream);
+				free(buffer);
 				}
 			freeDoblePuntero(arrayBloques);
 			freeDoblePuntero(datosSeparados);
@@ -315,6 +331,7 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(buffer);
 			free(montaje);
 		}
+	pthread_mutex_unlock(&mxArchivo);
 	}
 	log_info(logger,"<CATCH> Finalizo la busqueda y captura de pokemon.\n\n");
 }

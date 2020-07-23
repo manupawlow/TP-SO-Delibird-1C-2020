@@ -181,7 +181,7 @@ int process_request(int socket_cliente){
 		entrenador = id_coincidente(mensaje->id_mensaje_correlativo,blockCaugth);
 
 		if(entrenador == NULL)
-			log_info(logger,"<MENSAJE> LLego mensaje caugth con id correlativo:%d, no coincide con ningun id catch, descarto mensaje",mensaje->id_mensaje_correlativo);
+			log_info(logger,"<MENSAJE> Mensaje caugth con id correlativo:%d, no coincide con ningun id catch, descarto mensaje",mensaje->id_mensaje_correlativo);
 		else{
 			entrenador->block_capturar= false;
 			remover_entrenador(entrenador->entrenadorNumero,block);
@@ -214,8 +214,8 @@ void poner_en_exce(){
 		list_remove(ready,0);
 		cambios_contexto += 1;
 
-		sem_post(&entrenador->sem_entrenador);
 		log_info(logger,"Entrenador %d ejecutando", entrenador->entrenadorNumero);
+		sem_post(&entrenador->sem_entrenador);
 	}
 
 }
@@ -255,9 +255,9 @@ void realizar_tareas(Entrenador *entrenador){
 		else{
 			entrenador->block_capturar= true;
 			list_add(block,entrenador);
-			log_info(logger,"Entrenador %d en block a la espera de caugth %s",entrenador->entrenadorNumero, entrenador->pokemon_a_caputar);
 
 			sleep(config->retardo_cpu);
+			log_info(logger,"Entrenador %d en block a la espera de caugth %s",entrenador->entrenadorNumero, entrenador->pokemon_a_caputar);
 			enviar_catch(entrenador, catch);
 			aumentar_ciclos(entrenador, config->retardo_cpu);
 
