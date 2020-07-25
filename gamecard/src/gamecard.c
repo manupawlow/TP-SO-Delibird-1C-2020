@@ -202,9 +202,9 @@ t_buffer* buffer;
 
 
 int socketCaugth = crear_conexion(ip, puerto);
-	if(socketCaugth ==-1){
+	if(socketCaugth ==-1)
 		log_info(logger,"No se pudo conectar con el broker");
-	}else{
+
 		pthread_mutex_lock(&mxArchivo);
 		if(existePokemon(mensaje)){
 			log_info(logger,"<CATCH> %s encontrado! Analizando posiciones...", mensaje->pokemon);
@@ -332,9 +332,10 @@ int socketCaugth = crear_conexion(ip, puerto);
 			free(montaje);
 		}
 	pthread_mutex_unlock(&mxArchivo);
-	}
 	log_info(logger,"<CATCH> Finalizo la busqueda y captura de pokemon.\n\n");
 }
+
+
 
 
 void conexion_gameboy(){
